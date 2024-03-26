@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# specialized
+server/src/backEnd/build/*
+utils/build/*
+third_party/*/build/*
+.vscode/*
