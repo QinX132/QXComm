@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package QXSCMsg;
+
+enum MsgType {
+    QX_MSG_TYPE_UKNOWN                      = 0;
+    QX_MSG_TYPE_REGISTER                    = 1;
+    QX_MSG_TYPE_REGISTER_REPLY              = 2;
+}
+
+message MsgPayload {
+    uint32             transId             = 1;
+    uint32             msgType             = 2;    // MsgType
+    int32              errCode             = 3;
+    string             bussinessKey        = 4;
+    ClientInfo         clientInfo          = 5;
+    ServerInfo         ServerId            = 6;
+    MsgBase            msgBase             = 7;
+}
+
+message ClientInfo {
+    uint32             clientId            = 1;   
+}
+
+message ServerInfo {
+    uint32             serverId            = 1;
+    string             serverName          = 2;
+}
+
+message MsgBase {
+    ClientRegister             clientRegister          = 1;    // QX_MSG_TYPE_REGISTER
+    ClientRegisterReply        clientRegisterReply     = 2;    // QX_MSG_TYPE_REGISTER_REPLY
+}
+
+message ClientRegister {
+    uint32             clientId            = 1;
+}
+
+message ClientRegisterReply {
+    int32              errCode             = 1;
+}
