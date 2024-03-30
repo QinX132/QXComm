@@ -18,6 +18,7 @@ find_package(Threads REQUIRED)
 set(SOURCES
 	QXClientMain.cpp
 	QXClientWorker.cpp
+	QXClientMsgBussiness.cpp
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 ############################# include dir ###################################

@@ -224,15 +224,15 @@ class MsgPayload final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kBussinessKeyFieldNumber = 4,
-    kClientInfoFieldNumber = 5,
-    kServerIdFieldNumber = 6,
+    kBussinessKeyFieldNumber = 3,
+    kClientInfoFieldNumber = 4,
+    kServerInfoFieldNumber = 5,
     kMsgBaseFieldNumber = 7,
+    kTimestampFieldNumber = 2,
     kTransIdFieldNumber = 1,
-    kMsgTypeFieldNumber = 2,
-    kErrCodeFieldNumber = 3,
+    kErrCodeFieldNumber = 6,
   };
-  // string bussinessKey = 4;
+  // string bussinessKey = 3;
   void clear_bussinesskey();
   const std::string& bussinesskey() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -246,7 +246,7 @@ class MsgPayload final :
   std::string* _internal_mutable_bussinesskey();
   public:
 
-  // .QXSCMsg.ClientInfo clientInfo = 5;
+  // .QXSCMsg.ClientInfo clientInfo = 4;
   bool has_clientinfo() const;
   private:
   bool _internal_has_clientinfo() const;
@@ -264,23 +264,23 @@ class MsgPayload final :
       ::QXSCMsg::ClientInfo* clientinfo);
   ::QXSCMsg::ClientInfo* unsafe_arena_release_clientinfo();
 
-  // .QXSCMsg.ServerInfo ServerId = 6;
-  bool has_serverid() const;
+  // .QXSCMsg.ServerInfo serverInfo = 5;
+  bool has_serverinfo() const;
   private:
-  bool _internal_has_serverid() const;
+  bool _internal_has_serverinfo() const;
   public:
-  void clear_serverid();
-  const ::QXSCMsg::ServerInfo& serverid() const;
-  PROTOBUF_NODISCARD ::QXSCMsg::ServerInfo* release_serverid();
-  ::QXSCMsg::ServerInfo* mutable_serverid();
-  void set_allocated_serverid(::QXSCMsg::ServerInfo* serverid);
+  void clear_serverinfo();
+  const ::QXSCMsg::ServerInfo& serverinfo() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ServerInfo* release_serverinfo();
+  ::QXSCMsg::ServerInfo* mutable_serverinfo();
+  void set_allocated_serverinfo(::QXSCMsg::ServerInfo* serverinfo);
   private:
-  const ::QXSCMsg::ServerInfo& _internal_serverid() const;
-  ::QXSCMsg::ServerInfo* _internal_mutable_serverid();
+  const ::QXSCMsg::ServerInfo& _internal_serverinfo() const;
+  ::QXSCMsg::ServerInfo* _internal_mutable_serverinfo();
   public:
-  void unsafe_arena_set_allocated_serverid(
-      ::QXSCMsg::ServerInfo* serverid);
-  ::QXSCMsg::ServerInfo* unsafe_arena_release_serverid();
+  void unsafe_arena_set_allocated_serverinfo(
+      ::QXSCMsg::ServerInfo* serverinfo);
+  ::QXSCMsg::ServerInfo* unsafe_arena_release_serverinfo();
 
   // .QXSCMsg.MsgBase msgBase = 7;
   bool has_msgbase() const;
@@ -300,6 +300,15 @@ class MsgPayload final :
       ::QXSCMsg::MsgBase* msgbase);
   ::QXSCMsg::MsgBase* unsafe_arena_release_msgbase();
 
+  // uint64 timestamp = 2;
+  void clear_timestamp();
+  uint64_t timestamp() const;
+  void set_timestamp(uint64_t value);
+  private:
+  uint64_t _internal_timestamp() const;
+  void _internal_set_timestamp(uint64_t value);
+  public:
+
   // uint32 transId = 1;
   void clear_transid();
   uint32_t transid() const;
@@ -309,16 +318,7 @@ class MsgPayload final :
   void _internal_set_transid(uint32_t value);
   public:
 
-  // uint32 msgType = 2;
-  void clear_msgtype();
-  uint32_t msgtype() const;
-  void set_msgtype(uint32_t value);
-  private:
-  uint32_t _internal_msgtype() const;
-  void _internal_set_msgtype(uint32_t value);
-  public:
-
-  // int32 errCode = 3;
+  // int32 errCode = 6;
   void clear_errcode();
   int32_t errcode() const;
   void set_errcode(int32_t value);
@@ -337,10 +337,10 @@ class MsgPayload final :
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr bussinesskey_;
     ::QXSCMsg::ClientInfo* clientinfo_;
-    ::QXSCMsg::ServerInfo* serverid_;
+    ::QXSCMsg::ServerInfo* serverinfo_;
     ::QXSCMsg::MsgBase* msgbase_;
+    uint64_t timestamp_;
     uint32_t transid_;
-    uint32_t msgtype_;
     int32_t errcode_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
@@ -782,10 +782,11 @@ class MsgBase final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kClientRegisterFieldNumber = 1,
-    kClientRegisterReplyFieldNumber = 2,
+    kClientRegisterFieldNumber = 2,
+    kClientRegisterReplyFieldNumber = 3,
+    kMsgTypeFieldNumber = 1,
   };
-  // .QXSCMsg.ClientRegister clientRegister = 1;
+  // .QXSCMsg.ClientRegister clientRegister = 2;
   bool has_clientregister() const;
   private:
   bool _internal_has_clientregister() const;
@@ -803,7 +804,7 @@ class MsgBase final :
       ::QXSCMsg::ClientRegister* clientregister);
   ::QXSCMsg::ClientRegister* unsafe_arena_release_clientregister();
 
-  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 2;
+  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
   bool has_clientregisterreply() const;
   private:
   bool _internal_has_clientregisterreply() const;
@@ -821,6 +822,15 @@ class MsgBase final :
       ::QXSCMsg::ClientRegisterReply* clientregisterreply);
   ::QXSCMsg::ClientRegisterReply* unsafe_arena_release_clientregisterreply();
 
+  // uint32 msgType = 1;
+  void clear_msgtype();
+  uint32_t msgtype() const;
+  void set_msgtype(uint32_t value);
+  private:
+  uint32_t _internal_msgtype() const;
+  void _internal_set_msgtype(uint32_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:QXSCMsg.MsgBase)
  private:
   class _Internal;
@@ -831,6 +841,7 @@ class MsgBase final :
   struct Impl_ {
     ::QXSCMsg::ClientRegister* clientregister_;
     ::QXSCMsg::ClientRegisterReply* clientregisterreply_;
+    uint32_t msgtype_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1163,47 +1174,27 @@ inline void MsgPayload::set_transid(uint32_t value) {
   // @@protoc_insertion_point(field_set:QXSCMsg.MsgPayload.transId)
 }
 
-// uint32 msgType = 2;
-inline void MsgPayload::clear_msgtype() {
-  _impl_.msgtype_ = 0u;
+// uint64 timestamp = 2;
+inline void MsgPayload::clear_timestamp() {
+  _impl_.timestamp_ = uint64_t{0u};
 }
-inline uint32_t MsgPayload::_internal_msgtype() const {
-  return _impl_.msgtype_;
+inline uint64_t MsgPayload::_internal_timestamp() const {
+  return _impl_.timestamp_;
 }
-inline uint32_t MsgPayload::msgtype() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.MsgPayload.msgType)
-  return _internal_msgtype();
+inline uint64_t MsgPayload::timestamp() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgPayload.timestamp)
+  return _internal_timestamp();
 }
-inline void MsgPayload::_internal_set_msgtype(uint32_t value) {
+inline void MsgPayload::_internal_set_timestamp(uint64_t value) {
   
-  _impl_.msgtype_ = value;
+  _impl_.timestamp_ = value;
 }
-inline void MsgPayload::set_msgtype(uint32_t value) {
-  _internal_set_msgtype(value);
-  // @@protoc_insertion_point(field_set:QXSCMsg.MsgPayload.msgType)
+inline void MsgPayload::set_timestamp(uint64_t value) {
+  _internal_set_timestamp(value);
+  // @@protoc_insertion_point(field_set:QXSCMsg.MsgPayload.timestamp)
 }
 
-// int32 errCode = 3;
-inline void MsgPayload::clear_errcode() {
-  _impl_.errcode_ = 0;
-}
-inline int32_t MsgPayload::_internal_errcode() const {
-  return _impl_.errcode_;
-}
-inline int32_t MsgPayload::errcode() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.MsgPayload.errCode)
-  return _internal_errcode();
-}
-inline void MsgPayload::_internal_set_errcode(int32_t value) {
-  
-  _impl_.errcode_ = value;
-}
-inline void MsgPayload::set_errcode(int32_t value) {
-  _internal_set_errcode(value);
-  // @@protoc_insertion_point(field_set:QXSCMsg.MsgPayload.errCode)
-}
-
-// string bussinessKey = 4;
+// string bussinessKey = 3;
 inline void MsgPayload::clear_bussinesskey() {
   _impl_.bussinesskey_.ClearToEmpty();
 }
@@ -1253,7 +1244,7 @@ inline void MsgPayload::set_allocated_bussinesskey(std::string* bussinesskey) {
   // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgPayload.bussinessKey)
 }
 
-// .QXSCMsg.ClientInfo clientInfo = 5;
+// .QXSCMsg.ClientInfo clientInfo = 4;
 inline bool MsgPayload::_internal_has_clientinfo() const {
   return this != internal_default_instance() && _impl_.clientinfo_ != nullptr;
 }
@@ -1343,45 +1334,45 @@ inline void MsgPayload::set_allocated_clientinfo(::QXSCMsg::ClientInfo* clientin
   // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgPayload.clientInfo)
 }
 
-// .QXSCMsg.ServerInfo ServerId = 6;
-inline bool MsgPayload::_internal_has_serverid() const {
-  return this != internal_default_instance() && _impl_.serverid_ != nullptr;
+// .QXSCMsg.ServerInfo serverInfo = 5;
+inline bool MsgPayload::_internal_has_serverinfo() const {
+  return this != internal_default_instance() && _impl_.serverinfo_ != nullptr;
 }
-inline bool MsgPayload::has_serverid() const {
-  return _internal_has_serverid();
+inline bool MsgPayload::has_serverinfo() const {
+  return _internal_has_serverinfo();
 }
-inline void MsgPayload::clear_serverid() {
-  if (GetArenaForAllocation() == nullptr && _impl_.serverid_ != nullptr) {
-    delete _impl_.serverid_;
+inline void MsgPayload::clear_serverinfo() {
+  if (GetArenaForAllocation() == nullptr && _impl_.serverinfo_ != nullptr) {
+    delete _impl_.serverinfo_;
   }
-  _impl_.serverid_ = nullptr;
+  _impl_.serverinfo_ = nullptr;
 }
-inline const ::QXSCMsg::ServerInfo& MsgPayload::_internal_serverid() const {
-  const ::QXSCMsg::ServerInfo* p = _impl_.serverid_;
+inline const ::QXSCMsg::ServerInfo& MsgPayload::_internal_serverinfo() const {
+  const ::QXSCMsg::ServerInfo* p = _impl_.serverinfo_;
   return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ServerInfo&>(
       ::QXSCMsg::_ServerInfo_default_instance_);
 }
-inline const ::QXSCMsg::ServerInfo& MsgPayload::serverid() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.MsgPayload.ServerId)
-  return _internal_serverid();
+inline const ::QXSCMsg::ServerInfo& MsgPayload::serverinfo() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgPayload.serverInfo)
+  return _internal_serverinfo();
 }
-inline void MsgPayload::unsafe_arena_set_allocated_serverid(
-    ::QXSCMsg::ServerInfo* serverid) {
+inline void MsgPayload::unsafe_arena_set_allocated_serverinfo(
+    ::QXSCMsg::ServerInfo* serverinfo) {
   if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.serverid_);
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.serverinfo_);
   }
-  _impl_.serverid_ = serverid;
-  if (serverid) {
+  _impl_.serverinfo_ = serverinfo;
+  if (serverinfo) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgPayload.ServerId)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgPayload.serverInfo)
 }
-inline ::QXSCMsg::ServerInfo* MsgPayload::release_serverid() {
+inline ::QXSCMsg::ServerInfo* MsgPayload::release_serverinfo() {
   
-  ::QXSCMsg::ServerInfo* temp = _impl_.serverid_;
-  _impl_.serverid_ = nullptr;
+  ::QXSCMsg::ServerInfo* temp = _impl_.serverinfo_;
+  _impl_.serverinfo_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
   auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
   temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
@@ -1393,44 +1384,64 @@ inline ::QXSCMsg::ServerInfo* MsgPayload::release_serverid() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::QXSCMsg::ServerInfo* MsgPayload::unsafe_arena_release_serverid() {
-  // @@protoc_insertion_point(field_release:QXSCMsg.MsgPayload.ServerId)
+inline ::QXSCMsg::ServerInfo* MsgPayload::unsafe_arena_release_serverinfo() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.MsgPayload.serverInfo)
   
-  ::QXSCMsg::ServerInfo* temp = _impl_.serverid_;
-  _impl_.serverid_ = nullptr;
+  ::QXSCMsg::ServerInfo* temp = _impl_.serverinfo_;
+  _impl_.serverinfo_ = nullptr;
   return temp;
 }
-inline ::QXSCMsg::ServerInfo* MsgPayload::_internal_mutable_serverid() {
+inline ::QXSCMsg::ServerInfo* MsgPayload::_internal_mutable_serverinfo() {
   
-  if (_impl_.serverid_ == nullptr) {
+  if (_impl_.serverinfo_ == nullptr) {
     auto* p = CreateMaybeMessage<::QXSCMsg::ServerInfo>(GetArenaForAllocation());
-    _impl_.serverid_ = p;
+    _impl_.serverinfo_ = p;
   }
-  return _impl_.serverid_;
+  return _impl_.serverinfo_;
 }
-inline ::QXSCMsg::ServerInfo* MsgPayload::mutable_serverid() {
-  ::QXSCMsg::ServerInfo* _msg = _internal_mutable_serverid();
-  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgPayload.ServerId)
+inline ::QXSCMsg::ServerInfo* MsgPayload::mutable_serverinfo() {
+  ::QXSCMsg::ServerInfo* _msg = _internal_mutable_serverinfo();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgPayload.serverInfo)
   return _msg;
 }
-inline void MsgPayload::set_allocated_serverid(::QXSCMsg::ServerInfo* serverid) {
+inline void MsgPayload::set_allocated_serverinfo(::QXSCMsg::ServerInfo* serverinfo) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
-    delete _impl_.serverid_;
+    delete _impl_.serverinfo_;
   }
-  if (serverid) {
+  if (serverinfo) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(serverid);
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(serverinfo);
     if (message_arena != submessage_arena) {
-      serverid = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, serverid, submessage_arena);
+      serverinfo = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, serverinfo, submessage_arena);
     }
     
   } else {
     
   }
-  _impl_.serverid_ = serverid;
-  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgPayload.ServerId)
+  _impl_.serverinfo_ = serverinfo;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgPayload.serverInfo)
+}
+
+// int32 errCode = 6;
+inline void MsgPayload::clear_errcode() {
+  _impl_.errcode_ = 0;
+}
+inline int32_t MsgPayload::_internal_errcode() const {
+  return _impl_.errcode_;
+}
+inline int32_t MsgPayload::errcode() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgPayload.errCode)
+  return _internal_errcode();
+}
+inline void MsgPayload::_internal_set_errcode(int32_t value) {
+  
+  _impl_.errcode_ = value;
+}
+inline void MsgPayload::set_errcode(int32_t value) {
+  _internal_set_errcode(value);
+  // @@protoc_insertion_point(field_set:QXSCMsg.MsgPayload.errCode)
 }
 
 // .QXSCMsg.MsgBase msgBase = 7;
@@ -1625,7 +1636,27 @@ inline void ServerInfo::set_allocated_servername(std::string* servername) {
 
 // MsgBase
 
-// .QXSCMsg.ClientRegister clientRegister = 1;
+// uint32 msgType = 1;
+inline void MsgBase::clear_msgtype() {
+  _impl_.msgtype_ = 0u;
+}
+inline uint32_t MsgBase::_internal_msgtype() const {
+  return _impl_.msgtype_;
+}
+inline uint32_t MsgBase::msgtype() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.msgType)
+  return _internal_msgtype();
+}
+inline void MsgBase::_internal_set_msgtype(uint32_t value) {
+  
+  _impl_.msgtype_ = value;
+}
+inline void MsgBase::set_msgtype(uint32_t value) {
+  _internal_set_msgtype(value);
+  // @@protoc_insertion_point(field_set:QXSCMsg.MsgBase.msgType)
+}
+
+// .QXSCMsg.ClientRegister clientRegister = 2;
 inline bool MsgBase::_internal_has_clientregister() const {
   return this != internal_default_instance() && _impl_.clientregister_ != nullptr;
 }
@@ -1715,7 +1746,7 @@ inline void MsgBase::set_allocated_clientregister(::QXSCMsg::ClientRegister* cli
   // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.clientRegister)
 }
 
-// .QXSCMsg.ClientRegisterReply clientRegisterReply = 2;
+// .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
 inline bool MsgBase::_internal_has_clientregisterreply() const {
   return this != internal_default_instance() && _impl_.clientregisterreply_ != nullptr;
 }

@@ -501,3 +501,287 @@ QXUtil_ClearMsgCont(
         memset(Msg->Cont.VarLenCont, 0, sizeof(Msg->Cont.VarLenCont));
     }
 }
+
+int
+QXUtil_RecvQMsg(
+    int Fd,
+    __inout QX_UTIL_Q_MSG *RetMsg
+    )
+{
+    int ret = QX_SUCCESS;
+    int recvLen = 0;
+    int currentLen = 0;
+    int recvRet = 0;
+
+    if (!sg_MsgStats.Inited)
+    {
+        goto CommonReturn;
+    }
+
+    if (!RetMsg)
+    {
+        ret = -QX_EINVAL;
+        LogErr("NULL ptr!");
+        goto CommonReturn;
+    }
+    // recv head
+    currentLen = 0;
+    recvLen = sizeof(QX_UTIL_Q_MSG_HEAD);
+    for(; currentLen < recvLen;)
+    {
+        recvRet = recv(Fd, ((char*)RetMsg) + currentLen, recvLen - currentLen, 0);
+        if (recvRet > 0)
+        {
+            currentLen += recvRet;
+        }
+        else if (recvRet == 0)
+        {
+            ret = -QX_ERR_PEER_CLOSED; // peer close connection
+            goto CommonReturn;
+        }
+        else
+        {
+            if (errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                // should retry
+                continue;
+            }
+            else
+            {
+                ret = -errno;
+                LogErr("recvRet = %d, %d:%s", recvRet, errno, QX_StrErr(errno));
+                goto CommonReturn;
+            }
+        }
+    }
+    RetMsg->Head.ContentLen = ntohl(RetMsg->Head.ContentLen);
+    // recv cont
+    RetMsg->Cont.VarLenCont = (uint8_t*)_MsgCalloc((size_t)RetMsg->Head.ContentLen);
+    if (!RetMsg->Cont.VarLenCont)
+    {
+        ret = -QX_ENOBUFS;
+        LogErr("apply for %u failed!", RetMsg->Head.ContentLen);
+        goto CommonReturn;
+    }
+    currentLen = 0;
+    recvLen = RetMsg->Head.ContentLen;
+    for(; currentLen < recvLen;)
+    {
+        recvRet = recv(Fd, RetMsg->Cont.VarLenCont + currentLen, recvLen - currentLen, 0);
+        if (recvRet > 0)
+        {
+            currentLen += recvRet;
+        }
+        else if (recvRet == 0)
+        {
+            ret = -QX_ERR_PEER_CLOSED; // peer close connection
+            goto CommonReturn;
+        }
+        else
+        {
+            if (errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                // should retry
+                continue;
+            }
+            else
+            {
+                ret = -errno;
+                LogErr("recvRet = %d, %d:%s", recvRet, errno, QX_StrErr(errno));
+                goto CommonReturn;
+            }
+        }
+    }
+CommonReturn:
+    if (sg_MsgStats.Inited)
+    {
+        pthread_spin_lock(&sg_MsgStats.Lock);
+        if (ret != QX_SUCCESS && ret != -QX_ERR_PEER_CLOSED)
+        {
+            sg_MsgStats.MsgRecvFailed ++;
+        }
+        else
+        {
+            sg_MsgStats.MsgRecv ++;
+            sg_MsgStats.MsgRecvBytes += sizeof(QX_UTIL_Q_MSG_HEAD) + RetMsg->Head.ContentLen;
+        }
+        pthread_spin_unlock(&sg_MsgStats.Lock);
+    }
+    if (ret < 0) {
+        _MsgFree(RetMsg->Cont.VarLenCont);
+        RetMsg->Cont.VarLenCont = NULL;
+    }
+    return ret;
+}
+MUST_CHECK
+QX_UTIL_Q_MSG *
+QXUtil_NewSendQMsg(
+    uint32_t ContLen
+    )
+{
+    QX_UTIL_Q_MSG* retMsg = NULL;
+    
+    if (!sg_MsgStats.Inited)
+    {
+        goto CommonReturn;
+    }
+    
+    retMsg = (QX_UTIL_Q_MSG*)_MsgCalloc(sizeof(QX_UTIL_Q_MSG));
+    if (retMsg)
+    {
+        retMsg->Cont.VarLenCont = (uint8_t*)_MsgCalloc(ContLen);
+        if (!retMsg->Cont.VarLenCont)
+        {
+            _MsgFree(retMsg);
+            retMsg = NULL;
+            LogErr("Apply for %u failed!\n", ContLen);
+            goto CommonReturn;
+        }
+    }
+    retMsg->Head.ContentLen = ContLen;
+
+CommonReturn:
+    return retMsg;
+}
+void
+QXUtil_FreeSendQMsg(
+    QX_UTIL_Q_MSG *Msg
+    )
+{
+    if (Msg)
+    {
+        if (Msg->Cont.VarLenCont) _MsgFree(Msg->Cont.VarLenCont);
+        _MsgFree(Msg);
+        Msg = NULL;
+    }
+}
+MUST_CHECK
+QX_UTIL_Q_MSG* 
+QXUtil_NewRecvQMsg(
+    void
+    )
+{
+    QX_UTIL_Q_MSG* retMsg = NULL;
+    
+    if (!sg_MsgStats.Inited)
+    {
+        goto CommonReturn;
+    }
+    
+    retMsg = (QX_UTIL_Q_MSG*)_MsgCalloc(sizeof(QX_UTIL_Q_MSG));
+    memset(retMsg, 0, sizeof(QX_UTIL_Q_MSG));
+
+CommonReturn:
+    return retMsg;
+}
+void
+QXUtil_FreeRecvQMsg(
+    QX_UTIL_Q_MSG *Msg
+    )
+{
+    if (Msg)
+    {
+        if (Msg->Cont.VarLenCont) _MsgFree(Msg->Cont.VarLenCont);
+        _MsgFree(Msg);
+        Msg = NULL;
+    }
+}
+void
+QXUtil_FreeRecvQMsgCont(
+    QX_UTIL_Q_MSG *Msg
+    )
+{
+    if (Msg && Msg->Cont.VarLenCont)
+    {
+        _MsgFree(Msg->Cont.VarLenCont);
+        Msg->Cont.VarLenCont = NULL;
+    }
+}
+int
+QXUtil_SendQMsg(
+    int Fd,
+    QX_UTIL_Q_MSG *Msg
+    )
+{
+    int ret = 0;
+    int sendLen = 0;
+    int currentLen = 0;
+    int sendRet = 0;
+    
+    if (!sg_MsgStats.Inited || !Msg || !Msg->Cont.VarLenCont)
+    {
+        goto CommonReturn;
+    }
+    
+    //send msg header
+    Msg->Head.ContentLen = htonl(Msg->Head.ContentLen);
+    sendLen = sizeof(QX_UTIL_Q_MSG_HEAD);
+    currentLen = 0;
+    for(; currentLen < sendLen;)
+    {
+        sendRet = send(Fd, ((char*)&Msg->Head) + currentLen, sendLen - currentLen, 0);
+        if (sendRet > 0)
+        {
+            currentLen += sendRet;
+        }
+        else if (sendRet == 0)
+        {
+            ret = -QX_ERR_PEER_CLOSED; // peer close connection
+            goto CommonReturn;
+        }
+        else
+        {
+            if (errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                // should retry
+                continue;
+            }
+            ret = -errno;
+            LogErr("Send failed %d:%s", errno, QX_StrErr(errno));
+            goto CommonReturn;
+        }
+    }
+    // send msg content
+    sendLen = ntohl(Msg->Head.ContentLen);
+    currentLen = 0;
+    for(; currentLen < sendLen;)
+    {
+        sendRet = send(Fd, Msg->Cont.VarLenCont + currentLen, sendLen - currentLen, 0);
+        if (sendRet > 0)
+        {
+            currentLen += sendRet;
+        }
+        else if (sendRet == 0)
+        {
+            ret = -QX_ERR_PEER_CLOSED; // peer close connection
+            goto CommonReturn;
+        }
+        else
+        {
+            if (errno == EWOULDBLOCK || errno == EAGAIN)
+            {
+                // should retry
+                continue;
+            }
+            ret = -errno;
+            LogErr("Send failed %d:%s", errno, QX_StrErr(errno));
+            goto CommonReturn;
+        }
+    }
+CommonReturn:
+    if (sg_MsgStats.Inited)
+    {
+        pthread_spin_lock(&sg_MsgStats.Lock);
+        if (ret != 0)
+        {
+            sg_MsgStats.MsgSendFailed ++;
+        }
+        else
+        {
+            sg_MsgStats.MsgSend ++;
+            sg_MsgStats.MsgSendBytes += sizeof(QX_UTIL_Q_MSG_HEAD) + ntohl(Msg->Head.ContentLen);
+        }
+        pthread_spin_unlock(&sg_MsgStats.Lock);
+    }
+    return ret;
+}

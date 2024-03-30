@@ -417,7 +417,7 @@ _CmdServerWorkerProc(
                 }
                 else if (recvLen == 0)
                 {
-                    LogInfo("Client %d closed connection.", waitEvents[loop].data.fd);
+                    LogInfo("CmdLineClient closed connection.");
                     epoll_ctl(epollFd, EPOLL_CTL_DEL, waitEvents[loop].data.fd, NULL);
                     close(waitEvents[loop].data.fd);
                 }

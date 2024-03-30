@@ -35,6 +35,7 @@ _UT_Msg_Client(
     struct sockaddr_in serverAddr;
     int32_t reuseable = 1; // set port reuseable when fd closed
     QX_UTIL_MSG msg;
+    QX_UTIL_Q_MSG *qMsg = NULL;
     UNUSED(arg);
     
     clientFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -67,12 +68,31 @@ _UT_Msg_Client(
     ret = QXUtil_SendMsg(clientFd, &msg);
     if (ret)
     {
-        UTLog("Recv msg failed!\n");
+        UTLog("send msg failed!\n");
         goto CommonReturn;
     }
     UTLog("Send msg: Type = %u\n", msg.Head.Type);
 
+    qMsg = QXUtil_NewSendQMsg(4);
+    if (!qMsg)
+    {
+        ret = -1;
+        UTLog("new msg failed!\n");
+        goto CommonReturn;
+    }
+    memcpy(qMsg->Cont.VarLenCont, "123", sizeof("123"));
+    ret = QXUtil_SendQMsg(clientFd, qMsg);
+    if (ret)
+    {
+        UTLog("send msg failed!\n");
+        goto CommonReturn;
+    }
+
 CommonReturn:
+    if (qMsg)
+    {
+        QXUtil_FreeSendQMsg(qMsg);
+    }
     return NULL;
 }
 
@@ -83,6 +103,7 @@ _UT_Msg_ForwardT(
 {
     int ret = QX_SUCCESS;
     QX_UTIL_MSG *msg = NULL;
+    QX_UTIL_Q_MSG *qMsg = NULL;
     pthread_t clientId;
     int serverFd = -1;
     int clientFd = -1;
@@ -101,6 +122,12 @@ _UT_Msg_ForwardT(
     }
     msg = QXUtil_NewMsg();
     if (!msg)
+    {
+        ret = -QX_ENOMEM;
+        goto CommonReturn;
+    }
+    qMsg = QXUtil_NewRecvQMsg();
+    if (!qMsg)
     {
         ret = -QX_ENOMEM;
         goto CommonReturn;
@@ -162,10 +189,27 @@ _UT_Msg_ForwardT(
         goto CommonReturn;
     }
 
+    ret = QXUtil_RecvQMsg(clientFd, qMsg);
+    if (ret)
+    {
+        UTLog("Recv qmsg failed!\n");
+        goto CommonReturn;
+    }
+    if (qMsg->Head.ContentLen != 4 || strcmp((char*)(qMsg->Cont.VarLenCont), "123"))
+    {
+        ret = -QX_EIO;
+        UTLog("Recv qmsg failed! %u %s\n", qMsg->Head.ContentLen, qMsg->Cont.VarLenCont);
+        goto CommonReturn;
+    }
+
 CommonReturn:
     if (msg)
     {
         QXUtil_FreeMsg(msg);
+    }
+    if (qMsg)
+    {
+        QXUtil_FreeRecvQMsg(qMsg);
     }
     if (QXUtil_MsgModuleExit())
     {

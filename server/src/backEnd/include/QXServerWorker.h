@@ -3,7 +3,9 @@
 #include <iostream>
 #include <map>
 
+#include "QXSCMsg.pb.h"
 #include "QXUtilsModuleCommon.h"
+#include "QXServerMsgBussiness.h"
 
 typedef struct _QX_SERVER_WORKER_INIT_PARAM {
     std::pair<uint16_t, uint16_t> PortRange;
@@ -15,36 +17,40 @@ QX_SERVER_WORKER_INIT_PARAM;
 typedef struct _QXS_CLIENT_NODE {
     int Fd;
     int ClientId;
-    int ServerId;
     int RecvMsgCnt;
     int ForwardMsgCnt;
-    BOOL Registered;
-    struct event *RecvEvent;
+    bool Registered;
+    struct epoll_event *RecvEvent;
     struct sockaddr_in ClientAddr;
 }
 QXS_CLIENT_NODE;
 
 class QXServerWorker{
+    friend class QXServerMsgHandler;
 private:
-    std::string ServerName;
+    QX_SERVER_WORKER_INIT_PARAM InitParam;
     int ServerFd;
-    BOOL Inited;
+    bool Inited;
     int MemId;
-    struct event_base* EventBase;
-    struct event ListenEvent;
+    int EpollFd;
+    struct epoll_event ListenEvent;
     pthread_t ThreadId;
     std::map<int, QXS_CLIENT_NODE*> ClientMap;
+    std::map<int, uint32_t> ClientIdMap;
     pthread_spinlock_t Lock;   // this lock for client map
 
     QX_ERR_T InitServerFd(std::pair<uint16_t, uint16_t>, uint32_t);
     QX_ERR_T InitClientMap();
     QX_ERR_T InitEventBaseAndRun();
     static void* _WorkerThreadFn(void*);
-    static void _ServerAccept(evutil_socket_t ,short ,void *);
-    static void _ClientRecv(evutil_socket_t ,short ,void *);
+    void ServerAccept(void);
+    void ClientRecv(int32_t);
+    void EraseClient_NL(int32_t);
+    void EraseClient(int32_t);
+    QXServerMsgHandler *MsgHandler;
+public:
     void* Calloc(size_t);
     void Free(void*);
-public:
     QXServerWorker();
     ~QXServerWorker();
     QX_ERR_T Init(QX_SERVER_WORKER_INIT_PARAM);
