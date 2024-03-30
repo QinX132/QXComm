@@ -145,3 +145,43 @@ QXUtil_ChangeCharA2B(
             *(String + StringLen) = B;
 }
 
+int
+QXUtil_ParseStringToIpv4(
+    const char* String,
+    size_t StringLen,
+    uint32_t *Ip
+    )
+{
+    uint32_t ip1, ip2, ip3, ip4;
+    if (!String || !StringLen || !Ip)
+        return -1;
+    if (sscanf(String, "%d.%d.%d.%d", &ip1, &ip2, &ip3, &ip4) != 4)
+        return -1;
+
+    *Ip = ip1 << 24 | ip2 << 16 | ip3 << 8 | ip4;
+
+    return 0;
+}
+
+int
+QXUtil_ParseStringToIpv4AndPort(
+    const char* String,
+    size_t StringLen,
+    uint32_t *Ip,
+    uint16_t *Port
+    )
+{
+    uint32_t ip1, ip2, ip3, ip4, port;
+
+    if (!String || !StringLen || !Ip || !Port)
+        return -1;
+    if (sscanf(String, "%u.%u.%u.%u:%u", &ip1, &ip2, &ip3, &ip4, &port) != 5)
+        return -1;
+    if (ip1 > 0xff || ip2 > 0xff || ip3 > 0xff || ip4 > 0xff || port > 0xffff)
+        return -1;
+    
+    *Ip = ip1 << 24 | ip2 << 16 | ip3 << 8 | ip4;
+    *Port = port;
+
+    return 0;
+}

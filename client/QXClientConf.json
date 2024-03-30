@@ -1,0 +1,56 @@
+﻿{
+    "Server": [
+        {
+            "Addr" : "127.0.0.1:13231"
+        },
+        {
+            "Addr" : "127.0.0.1:13232"
+        },
+        {
+            "Addr" : "127.0.0.1:13233"
+        },
+        {
+            "Addr" : "127.0.0.1:13234"
+        },
+        {
+            "Addr" : "127.0.0.1:13235"
+        },
+        {
+            "Addr" : "127.0.0.1:13236"
+        },
+        {
+            "Addr" : "127.0.0.1:13237"
+        },
+        {
+            "Addr" : "127.0.0.1:13238"
+        }
+    ],
+    "UtilConf" : {
+        "CmdLineInit": false,
+        "LogConf": {
+            "Init": true,
+            "LogPath": "/var/log/QXCllient.log",
+            "LogLevel": 0,
+            "LogSize": 50,
+            "LogMaxNum": 1
+        },
+        "TPoolConf": {
+            "Init": false,
+            "TPoolSize": 0,
+            "TPoolTimeout": 0,
+            "TPoolQueueMaxLen": 0
+        },
+        "HealthCheckConf": {
+            "Init": true,
+            "LogHealthIntervalS": -1,
+            "MsgHealthIntervalS": -1,
+            "TPoolHealthIntervalS": -1,
+            "CmdLineHealthIntervalS": -1,
+            "MHHealthIntervalS": -1,
+            "MemHealthIntervalS": 600,
+            "TimerHealthIntervalS": -1
+        },
+        "MsgModInit" : false,
+        "TimerModInit" : false
+    }
+}

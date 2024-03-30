@@ -9,6 +9,7 @@ QXServerWorker::InitServerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) 
     QX_ERR_T ret = QX_SUCCESS;
     uint16_t loop = 0;
     int option = 1, flags = 0;
+    struct timeval tv;
     // socket
     ServerFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (ServerFd < 0) {
@@ -34,6 +35,19 @@ QXServerWorker::InitServerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) 
         ret = -QX_EIO; 
         goto CommErr;
     }
+    // timeout
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    if (setsockopt(ServerFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        printf("Set recv timeout failed\n");
+        goto CommErr;
+    }
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    if (setsockopt(ServerFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0) {
+        printf("Set send timeout failed\n");
+        goto CommErr;
+    }
     // bind port
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = INADDR_ANY;
@@ -57,6 +71,7 @@ QXServerWorker::InitServerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) 
 
     LogInfo("Create server worker, using port %u, fd %d.", loop, ServerFd);
     goto Success;
+    
 CommErr:
     close(ServerFd);
     ServerFd = -1;

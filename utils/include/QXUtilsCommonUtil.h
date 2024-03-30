@@ -68,6 +68,19 @@ QXUtil_ChangeCharA2B(
     char B
     );
 
+int
+QXUtil_ParseStringToIpv4(
+    const char* String,
+    size_t StringLen,
+    uint32_t *Ip
+    );
+int
+QXUtil_ParseStringToIpv4AndPort(
+    const char* String,
+    size_t StringLen,
+    uint32_t *Ip,
+    uint16_t *Port
+    );
 #ifdef __cplusplus
  }
 #endif

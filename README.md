@@ -3,7 +3,7 @@ my cpp http server
 
 ### 一、构建流程
 
-##### linux：（cmake version 3.22.1）
+##### linux：（cmake version 3.22.1 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)）
 
 ###### 1. 构建第三方库
 

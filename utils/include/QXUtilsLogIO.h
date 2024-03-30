@@ -19,10 +19,10 @@ extern "C"{
 #define QX_UTIL_FUNC_NAME               __func__
 #endif
 
-#define LogInfo(Fmt, ...)               QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_INFO, __FILE__, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
-#define LogDbg(Fmt, ...)                QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_DEBUG, __FILE__, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
-#define LogWarn(Fmt, ...)               QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_WARNING, __FILE__, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
-#define LogErr(Fmt, ...)                QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_ERROR, __FILE__, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
+#define LogInfo(Fmt, ...)               QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_INFO, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
+#define LogDbg(Fmt, ...)                QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_DEBUG, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
+#define LogWarn(Fmt, ...)               QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_WARNING, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
+#define LogErr(Fmt, ...)                QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_ERROR, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
 
 typedef enum _QX_UTIL_LOG_LEVEL
 {
@@ -53,7 +53,6 @@ QXUtil_LogModuleInit(
 void
 QXUtil_LogPrint(
     int level,
-    const char* File,
     const char* Function,
     int Line,
     const char* Fmt,

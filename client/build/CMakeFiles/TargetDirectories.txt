@@ -1,0 +1,3 @@
+/home/yuzb/yuzb/QinXHttpServer/client/build/CMakeFiles/QXClient.dir
+/home/yuzb/yuzb/QinXHttpServer/client/build/CMakeFiles/edit_cache.dir
+/home/yuzb/yuzb/QinXHttpServer/client/build/CMakeFiles/rebuild_cache.dir

@@ -5,7 +5,6 @@
 
 #include "QXUtilsModuleCommon.h"
 
-
 typedef struct _QX_SERVER_WORKER_INIT_PARAM {
     std::pair<uint16_t, uint16_t> PortRange;
     std::string WorkerName;
@@ -43,11 +42,11 @@ private:
     static void* _WorkerThreadFn(void*);
     static void _ServerAccept(evutil_socket_t ,short ,void *);
     static void _ClientRecv(evutil_socket_t ,short ,void *);
+    void* Calloc(size_t);
+    void Free(void*);
 public:
     QXServerWorker();
     ~QXServerWorker();
-    void* Calloc(size_t);
-    void Free(void*);
     QX_ERR_T Init(QX_SERVER_WORKER_INIT_PARAM);
     void Exit();
     std::string GetStatus();
