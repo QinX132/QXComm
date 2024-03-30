@@ -36,3 +36,4 @@ server/src/backEnd/build/*
 utils/build/*
 third_party/*/build/*
 .vscode/*
+SCShare/build/*

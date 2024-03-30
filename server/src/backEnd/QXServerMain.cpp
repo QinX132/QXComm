@@ -4,13 +4,14 @@
 #include <nlohmann/json.hpp>
 
 #include "QXUtilsModuleCommon.h"
+#include "QXSCShare.h"
 #include "QXServerWorker.h"
 
 using namespace std;
 using json = nlohmann::json;
 
 #define QX_SERVER_CONF_FILE_PATH                        "QXServerConf.json"
-#define QX_SERVER_RULE_NAME                             "QXServer"
+#define QX_SERVER_ROLE_NAME                             "QXServer"
 
 static QXServerWorker *sg_ServerWorkers = NULL;
 static int sg_ServerWorkerTotalNum = 0;
@@ -45,25 +46,38 @@ QXS_MainExit(
         }
     }
     QXUtil_ModuleCommonExit();
-    cmd += string("killall ") + string(QX_SERVER_RULE_NAME);
+    cmd += string("killall ") + string(QX_SERVER_ROLE_NAME);
     system(cmd.c_str());
 }
-static QX_ERR_T 
-_QXS_MainInit(
-    int Argc,
-    char* Argv[]
-    )
-{
+
+static QX_ERR_T _QXS_MainPreRegisterUtil(void) {
     QX_ERR_T ret = QX_SUCCESS;
-    string ConfFilePath(QX_SERVER_CONF_FILE_PATH);
-    ifstream file(ConfFilePath);
-    json fileJson;
-    QX_UTIL_MODULES_INIT_PARAM InitParam;
-    string RuleName(QX_SERVER_RULE_NAME);
+    QX_UTIL_CMD_EXTERNAL_CONT cmdLineCont;
+    // register out special cmd line
+    memset(&cmdLineCont, 0 ,sizeof(cmdLineCont));
+    cmdLineCont.Argc = 2;
+    (void)snprintf(cmdLineCont.Opt, sizeof(cmdLineCont.Opt), "GetAllClientMap");
+    (void)snprintf(cmdLineCont.Help, sizeof(cmdLineCont.Help), "Get server worker stats(ClientMap)");
+    cmdLineCont.Cb = QXS_CmdGetAllClientMap;
+    ret = QXUtil_CmdExternalRegister(cmdLineCont);
+    if (ret < QX_SUCCESS) {
+        LogErr("Register cmdline failed! ret %d", ret);
+        return ret;
+    }
+
+    return ret;
+}
+
+static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
+    QX_ERR_T ret = QX_SUCCESS;
+    string confFilePath(QX_SERVER_CONF_FILE_PATH);
+    ifstream file(confFilePath);
+    QX_UTIL_MODULES_INIT_PARAM initParam;
+    string RoleName(QX_SERVER_ROLE_NAME);
     int32_t loop = 0;
     QX_SERVER_WORKER_INIT_PARAM workerInitParam;
-    QX_UTIL_CMD_EXTERNAL_CONT cmdLineCont;
-    // load fileJson
+    json fileJson;
+
     if (!file.is_open()) {
         LogErr("Cannot open config file!");
         ret = -QX_ENOENT;
@@ -73,89 +87,23 @@ _QXS_MainInit(
         file >> fileJson;
     } catch (json::parse_error& e) {
         ret = -QX_EIO;
-        LogErr("Parse json from %s failed!", ConfFilePath.c_str());
+        LogErr("Parse json from %s failed!", confFilePath.c_str());
         goto CommErr;
     }
-    // init utils modules params
-    try {
-        InitParam.CmdLineArg = new QX_UTIL_CMDLINE_MODULE_INIT_ARG;
-        memset(InitParam.CmdLineArg, 0, sizeof(QX_UTIL_CMDLINE_MODULE_INIT_ARG));
-        if (fileJson.contains("LogConf") && !fileJson["LogConf"].is_null()) {
-            InitParam.LogArg = new QX_UTIL_LOG_MODULE_INIT_ARG;
-            memset(InitParam.LogArg, 0, sizeof(QX_UTIL_LOG_MODULE_INIT_ARG));
-        }
-        if (fileJson.contains("HealthCheckConf") && !fileJson["HealthCheckConf"].is_null()) {
-            InitParam.HealthArg = new QX_UTIL_HEALTH_MODULE_INIT_ARG;
-            memset(InitParam.HealthArg, 0, sizeof(QX_UTIL_HEALTH_MODULE_INIT_ARG));
-        }
-        if (fileJson.contains("TPoolConf") && !fileJson["TPoolConf"].is_null()) {
-            InitParam.TPoolArg = new QX_UTIL_TPOOL_MODULE_INIT_ARG;
-            memset(InitParam.TPoolArg, 0, sizeof(QX_UTIL_TPOOL_MODULE_INIT_ARG));
-        }
-    } catch(const std::exception& e) {
-        ret = -QX_EIO;
-        LogErr("New conf failed!");
-        goto CommErr;
+    // init param
+    ret = QX_ParseConfFromJson(initParam, confFilePath, RoleName, Argc, Argv, QXS_MainExit);
+    if (ret < QX_SUCCESS) {
+        LogErr("Init param from conf failed! ret %d", ret);
+        return ret;
     }
-    InitParam.CmdLineArg->Argc = Argc;
-    InitParam.CmdLineArg->Argv = Argv;
-    InitParam.CmdLineArg->ExitFunc = QXS_MainExit;
-    copy(RuleName.begin(), RuleName.end(), InitParam.CmdLineArg->RoleName);
-    if (InitParam.LogArg) {
-        try {
-            string tmpPath = fileJson["LogConf"]["LogPath"];
-            copy(tmpPath.begin(), tmpPath.end(), InitParam.LogArg->LogFilePath);
-            InitParam.LogArg->LogLevel = fileJson["LogConf"]["LogLevel"];
-            InitParam.LogArg->LogMaxSize = fileJson["LogConf"]["LogSize"];
-            InitParam.LogArg->LogMaxNum = fileJson["LogConf"]["LogMaxNum"];
-            copy(RuleName.begin(), RuleName.end(), InitParam.LogArg->RoleName);
-        } catch (const std::exception& e){
-            ret = -QX_EIO;
-            LogErr("Init Log conf failed!");
-            goto CommErr;
-        }
-    }
-    if (InitParam.TPoolArg) {
-        try {
-            InitParam.TPoolArg->TaskListMaxLength = fileJson["TPoolConf"]["TPoolQueueMaxLen"];
-            InitParam.TPoolArg->ThreadPoolSize = fileJson["TPoolConf"]["TPoolSize"];
-            InitParam.TPoolArg->Timeout = fileJson["TPoolConf"]["TPoolTimeout"];
-        } catch (const std::exception& e){
-            ret = -QX_EIO;
-            LogErr("Init TPool conf failed!");
-            goto CommErr;
-        }
-    }
-    if (InitParam.HealthArg) {
-        try {
-            InitParam.HealthArg->CmdLineHealthIntervalS = fileJson["HealthCheckConf"]["CmdLineHealthIntervalS"];
-            InitParam.HealthArg->LogHealthIntervalS = fileJson["HealthCheckConf"]["LogHealthIntervalS"];
-            InitParam.HealthArg->MemHealthIntervalS = fileJson["HealthCheckConf"]["MemHealthIntervalS"];
-            InitParam.HealthArg->MHHealthIntervalS = fileJson["HealthCheckConf"]["MHHealthIntervalS"];
-            InitParam.HealthArg->MsgHealthIntervalS = fileJson["HealthCheckConf"]["MsgHealthIntervalS"];
-            InitParam.HealthArg->TimerHealthIntervalS = fileJson["HealthCheckConf"]["TimerHealthIntervalS"];
-            InitParam.HealthArg->TPoolHealthIntervalS = fileJson["HealthCheckConf"]["TPoolHealthIntervalS"];
-        } catch (const std::exception& e){
-            ret = -QX_EIO;
-            LogErr("Init Health conf failed!");
-            goto CommErr;
-        }
-    }
-    InitParam.InitMsgModule = TRUE;
-    InitParam.InitTimerModule = TRUE;
-    // register out special cmd line
-    memset(&cmdLineCont, 0 ,sizeof(cmdLineCont));
-    cmdLineCont.Argc = 2;
-    (void)snprintf(cmdLineCont.Opt, sizeof(cmdLineCont.Opt), "GetAllClientMap");
-    (void)snprintf(cmdLineCont.Help, sizeof(cmdLineCont.Help), "Get server worker stats(ClientMap)");
-    cmdLineCont.Cb = QXS_CmdGetAllClientMap;
-    ret = QXUtil_CmdExternalRegister(cmdLineCont);
-    if (ret != QX_SUCCESS) {
-        LogErr("Register cmdline failed! ret %d", ret);
+    // pre register in utils
+    ret = _QXS_MainPreRegisterUtil();
+    if (ret < QX_SUCCESS) {
+        LogErr("Register in util failed! ret %d", ret);
         goto CommErr;
     }
     // init utils modules
-    ret = QXUtil_ModuleCommonInit(InitParam);
+    ret = QXUtil_ModuleCommonInit(initParam);
     if (ret != QX_SUCCESS) {
         if (ret != -QX_ERR_EXIT_WITH_SUCCESS)
             LogErr("Init utils modules failed! ret %d", ret);

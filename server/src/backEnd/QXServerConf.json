@@ -4,24 +4,32 @@
         "LoadPerWorker": 1024,
         "WorkerPortStart": 13231
     },
-    "LogConf": {
-        "LogPath": "/var/log/QXServer.log",
-        "LogLevel": 0,
-        "LogSize": 50,
-        "LogMaxNum": 10
-    },
-    "TPoolConf": {
-        "TPoolSize": 16,
-        "TPoolTimeout": 60,
-        "TPoolQueueMaxLen": 1024
-    },
-    "HealthCheckConf": {
-        "LogHealthIntervalS": -1,
-        "MsgHealthIntervalS": 600,
-        "TPoolHealthIntervalS": 600,
-        "CmdLineHealthIntervalS": -1,
-        "MHHealthIntervalS": -1,
-        "MemHealthIntervalS": 600,
-        "TimerHealthIntervalS": -1
+    "UtilConf" : {
+        "CmdLineInit": true,
+        "LogConf": {
+            "Init": true,
+            "LogPath": "/var/log/QXServer.log",
+            "LogLevel": 0,
+            "LogSize": 50,
+            "LogMaxNum": 10
+        },
+        "TPoolConf": {
+            "Init": true,
+            "TPoolSize": 16,
+            "TPoolTimeout": 60,
+            "TPoolQueueMaxLen": 1024
+        },
+        "HealthCheckConf": {
+            "Init": true,
+            "LogHealthIntervalS": -1,
+            "MsgHealthIntervalS": -1,
+            "TPoolHealthIntervalS": 600,
+            "CmdLineHealthIntervalS": -1,
+            "MHHealthIntervalS": -1,
+            "MemHealthIntervalS": 600,
+            "TimerHealthIntervalS": -1
+        },
+        "MsgModInit" : false,
+        "TimerModInit" : true
     }
 }

@@ -140,7 +140,6 @@ _LogRotate(
 void
 QXUtil_LogPrint(
     int Level,
-    const char* File,
     const char* Function,
     int Line,
     const char* Fmt,
@@ -148,7 +147,6 @@ QXUtil_LogPrint(
     )
 {
     va_list args;
-    char* fileNamePos = NULL;
 
     if (Level < (int)sg_LogWorker.LogLevel)
     {
@@ -175,13 +173,7 @@ QXUtil_LogPrint(
     char timestamp[24] = {0};
     strftime(timestamp, sizeof(timestamp), "%Y/%m/%d_%H:%M:%S", tm_info);
     int milliseconds = tv.tv_usec / 1000;
-#ifndef WINNT
-    fileNamePos = strrchr(File, '/');
-#else
-    fileNamePos = strrchr(File, '\\')
-#endif
-    fileNamePos = fileNamePos != NULL ? fileNamePos + 1 : (char*)File;
-    fprintf(sg_LogWorker.Fp, "[%s.%03d]<%s:%s>[%s:%s-%d]:", timestamp, milliseconds, sg_LogWorker.RoleName, sg_LogLevelStr[Level], fileNamePos, Function, Line);
+    fprintf(sg_LogWorker.Fp, "[%s.%03d]<%s:%s>[%s-%d]:", timestamp, milliseconds, sg_LogWorker.RoleName, sg_LogLevelStr[Level], Function, Line);
     vfprintf(sg_LogWorker.Fp, Fmt, args);
     va_end(args);
     fprintf(sg_LogWorker.Fp, "\n");

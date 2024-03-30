@@ -1,14 +1,14 @@
 ########################### cmake version need ##############################
 cmake_minimum_required(VERSION 3.0)
 ############################## project name #################################
-project(QXServer VERSION 1.0.0)
+project(QXClient VERSION 1.0.0)
 ############################### c++ standard ################################
 set(CMAKE_CXX_STANDARD 14)
 ########################## project directories ##############################
 set(BUILD_ROOT .)
-set(UTILS_ROOT ${BUILD_ROOT}/../../../utils)
-set(THIRD_PARTY_ROOT ${BUILD_ROOT}/../../../third_party)
-set(SC_SHARE_ROOT ${BUILD_ROOT}/../../../SCShare)
+set(UTILS_ROOT ${BUILD_ROOT}/../utils)
+set(THIRD_PARTY_ROOT ${BUILD_ROOT}/../third_party)
+set(SC_SHARE_ROOT ${BUILD_ROOT}/../SCShare)
 ######################### global set ########################################
 ## find static lib first
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
@@ -16,18 +16,18 @@ find_package(Protobuf REQUIRED)
 find_package(Threads REQUIRED)
 ################################ src files ##################################
 set(SOURCES
-	QXServerMain.cpp
-	QXServerWorker.cpp
+	QXClientMain.cpp
+	QXClientWorker.cpp
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 ############################# include dir ###################################
 include_directories(
     ${BUILD_ROOT}/include
     ${UTILS_ROOT}/include
+    ${SC_SHARE_ROOT}/include
     ${THIRD_PARTY_ROOT}/libevent/include
     ${THIRD_PARTY_ROOT}/libevent/build/include
 	${THIRD_PARTY_ROOT}/json/include
-    ${SC_SHARE_ROOT}/include
 	${PROTOBUF_INCLUDE_DIRS}
 )
 ############################# cc option ###################################
