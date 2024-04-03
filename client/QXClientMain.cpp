@@ -11,6 +11,7 @@ using namespace std;
 using json = nlohmann::json;
 
 #define QX_CLIENT_CONF_FILE_PATH                        "QXClientConf.json"
+#define QX_CLIENT_TRUSTED_CONF_FILE_PATH                "QXClientTrust.json"
 #define QX_CLIENT_RULE_NAME                             "QXClient"
 
 static QXClientWorker sg_ClientWorker;
@@ -20,6 +21,35 @@ static void _QXC_MainExit(void) {
     QXUtil_ModuleCommonExit();
 }
 
+static QX_ERR_T _QXC_MainGetSpecailConfFromJson(
+    json FileJson,
+    QXC_WORKER_INIT_PARAM &InitParam
+    ) 
+{
+    // init client workers
+    if (FileJson.find("ServerConf") != FileJson.end()) {
+        json serverArray = FileJson["ServerConf"];
+        for (const auto& server : serverArray) {
+            QXC_WORKER_SERVER_CONF serverConf;
+            serverConf.Addr = server["Addr"];
+            InitParam.Servers.push_back(serverConf);
+        }
+    } else {
+        LogErr("Array 'ServerConf' not found in JSON");
+        return -QX_EIO;
+    }
+    if (!FileJson.contains("ClientConf") || FileJson["ClientConf"].is_null()) {
+        LogErr("Parse ClientConf from conf failed!");
+        return -QX_EIO;
+    }
+    if (!FileJson["ClientConf"].contains("Id") || FileJson["ClientConf"]["Id"].is_null()) {
+        LogErr("Parse Id from ClientConf failed!");
+        return -QX_EIO;
+    }
+    InitParam.ClientId = FileJson["ClientConf"]["Id"];
+    return QX_SUCCESS;
+}
+
 static QX_ERR_T _QXC_MainInit(int Argc, char* Argv[]) {
     QX_ERR_T ret = QX_SUCCESS;
     string roleName(QX_CLIENT_RULE_NAME);
@@ -27,7 +57,7 @@ static QX_ERR_T _QXC_MainInit(int Argc, char* Argv[]) {
     ifstream file(confPath);
     QX_UTIL_MODULES_INIT_PARAM initParam;
     json fileJson;
-    QX_CLIENT_WORKER_INIT_PARAM clientWorkerParam;
+    QXC_WORKER_INIT_PARAM clientWorkerParam;
     
     if (!file.is_open()) {
         LogErr("Cannot open config file!");
@@ -54,24 +84,22 @@ static QX_ERR_T _QXC_MainInit(int Argc, char* Argv[]) {
             LogErr("Init utils modules failed! ret %d", ret);
         goto CommRet;
     }
-    // init client workers
-    clientWorkerParam.WorkerName = "ClientWorker0";
-    if (fileJson.find("Server") != fileJson.end()) {
-        json serverArray = fileJson["Server"];
-        for (const auto& server : serverArray) {
-            QX_CLIENT_SERVER_CONF serverConf;
-            serverConf.Addr = server["Addr"];
-            clientWorkerParam.Servers.push_back(serverConf);
-        }
-        std::cout << std::endl;
-    } else {
-        LogErr("Array 'Server' not found in JSON", ret);
+    // get client init param
+    ret = _QXC_MainGetSpecailConfFromJson(fileJson, clientWorkerParam);
+    if (ret < QX_SUCCESS) {
+        LogErr("Get client param from conf failed! ret %d", ret);
+        goto CommRet;
     }
-    sg_ClientWorker.Init(clientWorkerParam);
+    // init client
+    ret = sg_ClientWorker.Init(clientWorkerParam);
+    if (ret < QX_SUCCESS) {
+        LogErr("Init client failed! ret %d", ret);
+        goto CommRet;
+    }
 
-FileOpenErr:
-    file.close();
 CommRet:
+    file.close();
+FileOpenErr:
     return ret;
 }
 static void

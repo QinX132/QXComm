@@ -6,7 +6,7 @@ s_flag='false'
 c_flag='false'
 t_flag='false'
 u_flag='false'
-p_flag='false'
+h_flag='false'
 help_str="supposed: a(all)s(server)c(client)t(thired_party)u(utils)h(share) such as ./build.sh -sc"
 
 if [ $# -eq 0 ]; then

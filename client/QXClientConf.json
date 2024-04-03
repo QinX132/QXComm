@@ -1,5 +1,5 @@
 ﻿{
-    "Server": [
+    "ServerConf": [
         {
             "Addr" : "127.0.0.1:13231"
         },
@@ -25,6 +25,9 @@
             "Addr" : "127.0.0.1:13238"
         }
     ],
+    "ClientConf" : {
+        "Id" : 13231
+    },
     "UtilConf" : {
         "CmdLineInit": false,
         "LogConf": {
@@ -50,7 +53,7 @@
             "MemHealthIntervalS": 600,
             "TimerHealthIntervalS": -1
         },
-        "MsgModInit" : false,
+        "MsgModInit" : true,
         "TimerModInit" : false
     }
 }

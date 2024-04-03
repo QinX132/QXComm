@@ -29,7 +29,7 @@
             "MemHealthIntervalS": 600,
             "TimerHealthIntervalS": -1
         },
-        "MsgModInit" : false,
+        "MsgModInit" : true,
         "TimerModInit" : true
     }
 }

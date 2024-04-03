@@ -25,10 +25,10 @@ PROTOBUF_CONSTEXPR MsgPayload::MsgPayload(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.bussinesskey_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_.clientinfo_)*/nullptr
-  , /*decltype(_impl_.serverid_)*/nullptr
+  , /*decltype(_impl_.serverinfo_)*/nullptr
   , /*decltype(_impl_.msgbase_)*/nullptr
+  , /*decltype(_impl_.timestamp_)*/uint64_t{0u}
   , /*decltype(_impl_.transid_)*/0u
-  , /*decltype(_impl_.msgtype_)*/0u
   , /*decltype(_impl_.errcode_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct MsgPayloadDefaultTypeInternal {
@@ -71,6 +71,7 @@ PROTOBUF_CONSTEXPR MsgBase::MsgBase(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.clientregister_)*/nullptr
   , /*decltype(_impl_.clientregisterreply_)*/nullptr
+  , /*decltype(_impl_.msgtype_)*/0u
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct MsgBaseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR MsgBaseDefaultTypeInternal()
@@ -120,11 +121,11 @@ const uint32_t TableStruct_QXSCMsg_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.transid_),
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.msgtype_),
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.errcode_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.timestamp_),
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.bussinesskey_),
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.clientinfo_),
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.serverid_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.serverinfo_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.errcode_),
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgPayload, _impl_.msgbase_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientInfo, _internal_metadata_),
@@ -147,6 +148,7 @@ const uint32_t TableStruct_QXSCMsg_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.msgtype_),
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.clientregister_),
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.clientregisterreply_),
   ~0u,  // no _has_bits_
@@ -169,8 +171,8 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 13, -1, -1, sizeof(::QXSCMsg::ClientInfo)},
   { 20, -1, -1, sizeof(::QXSCMsg::ServerInfo)},
   { 28, -1, -1, sizeof(::QXSCMsg::MsgBase)},
-  { 36, -1, -1, sizeof(::QXSCMsg::ClientRegister)},
-  { 43, -1, -1, sizeof(::QXSCMsg::ClientRegisterReply)},
+  { 37, -1, -1, sizeof(::QXSCMsg::ClientRegister)},
+  { 44, -1, -1, sizeof(::QXSCMsg::ClientRegisterReply)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -183,26 +185,26 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_QXSCMsg_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\rQXSCMsg.proto\022\007QXSCMsg\"\310\001\n\nMsgPayload\022"
-  "\017\n\007transId\030\001 \001(\r\022\017\n\007msgType\030\002 \001(\r\022\017\n\007err"
-  "Code\030\003 \001(\005\022\024\n\014bussinessKey\030\004 \001(\t\022\'\n\nclie"
-  "ntInfo\030\005 \001(\0132\023.QXSCMsg.ClientInfo\022%\n\010Ser"
-  "verId\030\006 \001(\0132\023.QXSCMsg.ServerInfo\022!\n\007msgB"
-  "ase\030\007 \001(\0132\020.QXSCMsg.MsgBase\"\036\n\nClientInf"
-  "o\022\020\n\010clientId\030\001 \001(\r\"2\n\nServerInfo\022\020\n\010ser"
-  "verId\030\001 \001(\r\022\022\n\nserverName\030\002 \001(\t\"u\n\007MsgBa"
-  "se\022/\n\016clientRegister\030\001 \001(\0132\027.QXSCMsg.Cli"
-  "entRegister\0229\n\023clientRegisterReply\030\002 \001(\013"
-  "2\034.QXSCMsg.ClientRegisterReply\"\"\n\016Client"
-  "Register\022\020\n\010clientId\030\001 \001(\r\"&\n\023ClientRegi"
-  "sterReply\022\017\n\007errCode\030\001 \001(\005*[\n\007MsgType\022\026\n"
-  "\022QX_MSG_TYPE_UKNOWN\020\000\022\030\n\024QX_MSG_TYPE_REG"
-  "ISTER\020\001\022\036\n\032QX_MSG_TYPE_REGISTER_REPLY\020\002b"
-  "\006proto3"
+  "\n\rQXSCMsg.proto\022\007QXSCMsg\"\314\001\n\nMsgPayload\022"
+  "\017\n\007transId\030\001 \001(\r\022\021\n\ttimestamp\030\002 \001(\004\022\024\n\014b"
+  "ussinessKey\030\003 \001(\t\022\'\n\nclientInfo\030\004 \001(\0132\023."
+  "QXSCMsg.ClientInfo\022\'\n\nserverInfo\030\005 \001(\0132\023"
+  ".QXSCMsg.ServerInfo\022\017\n\007errCode\030\006 \001(\005\022!\n\007"
+  "msgBase\030\007 \001(\0132\020.QXSCMsg.MsgBase\"\036\n\nClien"
+  "tInfo\022\020\n\010clientId\030\001 \001(\r\"2\n\nServerInfo\022\020\n"
+  "\010serverId\030\001 \001(\r\022\022\n\nserverName\030\002 \001(\t\"\206\001\n\007"
+  "MsgBase\022\017\n\007msgType\030\001 \001(\r\022/\n\016clientRegist"
+  "er\030\002 \001(\0132\027.QXSCMsg.ClientRegister\0229\n\023cli"
+  "entRegisterReply\030\003 \001(\0132\034.QXSCMsg.ClientR"
+  "egisterReply\"\"\n\016ClientRegister\022\020\n\010client"
+  "Id\030\001 \001(\r\"&\n\023ClientRegisterReply\022\017\n\007errCo"
+  "de\030\001 \001(\005*[\n\007MsgType\022\026\n\022QX_MSG_TYPE_UKNOW"
+  "N\020\000\022\030\n\024QX_MSG_TYPE_REGISTER\020\001\022\036\n\032QX_MSG_"
+  "TYPE_REGISTER_REPLY\020\002b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_QXSCMsg_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_QXSCMsg_2eproto = {
-    false, false, 607, descriptor_table_protodef_QXSCMsg_2eproto,
+    false, false, 629, descriptor_table_protodef_QXSCMsg_2eproto,
     "QXSCMsg.proto",
     &descriptor_table_QXSCMsg_2eproto_once, nullptr, 0, 6,
     schemas, file_default_instances, TableStruct_QXSCMsg_2eproto::offsets,
@@ -237,7 +239,7 @@ bool MsgType_IsValid(int value) {
 class MsgPayload::_Internal {
  public:
   static const ::QXSCMsg::ClientInfo& clientinfo(const MsgPayload* msg);
-  static const ::QXSCMsg::ServerInfo& serverid(const MsgPayload* msg);
+  static const ::QXSCMsg::ServerInfo& serverinfo(const MsgPayload* msg);
   static const ::QXSCMsg::MsgBase& msgbase(const MsgPayload* msg);
 };
 
@@ -246,8 +248,8 @@ MsgPayload::_Internal::clientinfo(const MsgPayload* msg) {
   return *msg->_impl_.clientinfo_;
 }
 const ::QXSCMsg::ServerInfo&
-MsgPayload::_Internal::serverid(const MsgPayload* msg) {
-  return *msg->_impl_.serverid_;
+MsgPayload::_Internal::serverinfo(const MsgPayload* msg) {
+  return *msg->_impl_.serverinfo_;
 }
 const ::QXSCMsg::MsgBase&
 MsgPayload::_Internal::msgbase(const MsgPayload* msg) {
@@ -265,10 +267,10 @@ MsgPayload::MsgPayload(const MsgPayload& from)
   new (&_impl_) Impl_{
       decltype(_impl_.bussinesskey_){}
     , decltype(_impl_.clientinfo_){nullptr}
-    , decltype(_impl_.serverid_){nullptr}
+    , decltype(_impl_.serverinfo_){nullptr}
     , decltype(_impl_.msgbase_){nullptr}
+    , decltype(_impl_.timestamp_){}
     , decltype(_impl_.transid_){}
-    , decltype(_impl_.msgtype_){}
     , decltype(_impl_.errcode_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
@@ -284,15 +286,15 @@ MsgPayload::MsgPayload(const MsgPayload& from)
   if (from._internal_has_clientinfo()) {
     _this->_impl_.clientinfo_ = new ::QXSCMsg::ClientInfo(*from._impl_.clientinfo_);
   }
-  if (from._internal_has_serverid()) {
-    _this->_impl_.serverid_ = new ::QXSCMsg::ServerInfo(*from._impl_.serverid_);
+  if (from._internal_has_serverinfo()) {
+    _this->_impl_.serverinfo_ = new ::QXSCMsg::ServerInfo(*from._impl_.serverinfo_);
   }
   if (from._internal_has_msgbase()) {
     _this->_impl_.msgbase_ = new ::QXSCMsg::MsgBase(*from._impl_.msgbase_);
   }
-  ::memcpy(&_impl_.transid_, &from._impl_.transid_,
+  ::memcpy(&_impl_.timestamp_, &from._impl_.timestamp_,
     static_cast<size_t>(reinterpret_cast<char*>(&_impl_.errcode_) -
-    reinterpret_cast<char*>(&_impl_.transid_)) + sizeof(_impl_.errcode_));
+    reinterpret_cast<char*>(&_impl_.timestamp_)) + sizeof(_impl_.errcode_));
   // @@protoc_insertion_point(copy_constructor:QXSCMsg.MsgPayload)
 }
 
@@ -303,10 +305,10 @@ inline void MsgPayload::SharedCtor(
   new (&_impl_) Impl_{
       decltype(_impl_.bussinesskey_){}
     , decltype(_impl_.clientinfo_){nullptr}
-    , decltype(_impl_.serverid_){nullptr}
+    , decltype(_impl_.serverinfo_){nullptr}
     , decltype(_impl_.msgbase_){nullptr}
+    , decltype(_impl_.timestamp_){uint64_t{0u}}
     , decltype(_impl_.transid_){0u}
-    , decltype(_impl_.msgtype_){0u}
     , decltype(_impl_.errcode_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
@@ -329,7 +331,7 @@ inline void MsgPayload::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.bussinesskey_.Destroy();
   if (this != internal_default_instance()) delete _impl_.clientinfo_;
-  if (this != internal_default_instance()) delete _impl_.serverid_;
+  if (this != internal_default_instance()) delete _impl_.serverinfo_;
   if (this != internal_default_instance()) delete _impl_.msgbase_;
 }
 
@@ -348,17 +350,17 @@ void MsgPayload::Clear() {
     delete _impl_.clientinfo_;
   }
   _impl_.clientinfo_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && _impl_.serverid_ != nullptr) {
-    delete _impl_.serverid_;
+  if (GetArenaForAllocation() == nullptr && _impl_.serverinfo_ != nullptr) {
+    delete _impl_.serverinfo_;
   }
-  _impl_.serverid_ = nullptr;
+  _impl_.serverinfo_ = nullptr;
   if (GetArenaForAllocation() == nullptr && _impl_.msgbase_ != nullptr) {
     delete _impl_.msgbase_;
   }
   _impl_.msgbase_ = nullptr;
-  ::memset(&_impl_.transid_, 0, static_cast<size_t>(
+  ::memset(&_impl_.timestamp_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&_impl_.errcode_) -
-      reinterpret_cast<char*>(&_impl_.transid_)) + sizeof(_impl_.errcode_));
+      reinterpret_cast<char*>(&_impl_.timestamp_)) + sizeof(_impl_.errcode_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -376,25 +378,17 @@ const char* MsgPayload::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
         } else
           goto handle_unusual;
         continue;
-      // uint32 msgType = 2;
+      // uint64 timestamp = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.msgtype_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          _impl_.timestamp_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // int32 errCode = 3;
+      // string bussinessKey = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          _impl_.errcode_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // string bussinessKey = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
           auto str = _internal_mutable_bussinesskey();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
@@ -402,18 +396,26 @@ const char* MsgPayload::_InternalParse(const char* ptr, ::_pbi::ParseContext* ct
         } else
           goto handle_unusual;
         continue;
-      // .QXSCMsg.ClientInfo clientInfo = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+      // .QXSCMsg.ClientInfo clientInfo = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
           ptr = ctx->ParseMessage(_internal_mutable_clientinfo(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // .QXSCMsg.ServerInfo ServerId = 6;
+      // .QXSCMsg.ServerInfo serverInfo = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_serverinfo(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 errCode = 6;
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
-          ptr = ctx->ParseMessage(_internal_mutable_serverid(), ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
+          _impl_.errcode_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -461,40 +463,40 @@ uint8_t* MsgPayload::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_transid(), target);
   }
 
-  // uint32 msgType = 2;
-  if (this->_internal_msgtype() != 0) {
+  // uint64 timestamp = 2;
+  if (this->_internal_timestamp() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(2, this->_internal_msgtype(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(2, this->_internal_timestamp(), target);
   }
 
-  // int32 errCode = 3;
-  if (this->_internal_errcode() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_errcode(), target);
-  }
-
-  // string bussinessKey = 4;
+  // string bussinessKey = 3;
   if (!this->_internal_bussinesskey().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_bussinesskey().data(), static_cast<int>(this->_internal_bussinesskey().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "QXSCMsg.MsgPayload.bussinessKey");
     target = stream->WriteStringMaybeAliased(
-        4, this->_internal_bussinesskey(), target);
+        3, this->_internal_bussinesskey(), target);
   }
 
-  // .QXSCMsg.ClientInfo clientInfo = 5;
+  // .QXSCMsg.ClientInfo clientInfo = 4;
   if (this->_internal_has_clientinfo()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(5, _Internal::clientinfo(this),
+      InternalWriteMessage(4, _Internal::clientinfo(this),
         _Internal::clientinfo(this).GetCachedSize(), target, stream);
   }
 
-  // .QXSCMsg.ServerInfo ServerId = 6;
-  if (this->_internal_has_serverid()) {
+  // .QXSCMsg.ServerInfo serverInfo = 5;
+  if (this->_internal_has_serverinfo()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(6, _Internal::serverid(this),
-        _Internal::serverid(this).GetCachedSize(), target, stream);
+      InternalWriteMessage(5, _Internal::serverinfo(this),
+        _Internal::serverinfo(this).GetCachedSize(), target, stream);
+  }
+
+  // int32 errCode = 6;
+  if (this->_internal_errcode() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(6, this->_internal_errcode(), target);
   }
 
   // .QXSCMsg.MsgBase msgBase = 7;
@@ -520,25 +522,25 @@ size_t MsgPayload::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string bussinessKey = 4;
+  // string bussinessKey = 3;
   if (!this->_internal_bussinesskey().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_bussinesskey());
   }
 
-  // .QXSCMsg.ClientInfo clientInfo = 5;
+  // .QXSCMsg.ClientInfo clientInfo = 4;
   if (this->_internal_has_clientinfo()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *_impl_.clientinfo_);
   }
 
-  // .QXSCMsg.ServerInfo ServerId = 6;
-  if (this->_internal_has_serverid()) {
+  // .QXSCMsg.ServerInfo serverInfo = 5;
+  if (this->_internal_has_serverinfo()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.serverid_);
+        *_impl_.serverinfo_);
   }
 
   // .QXSCMsg.MsgBase msgBase = 7;
@@ -548,17 +550,17 @@ size_t MsgPayload::ByteSizeLong() const {
         *_impl_.msgbase_);
   }
 
+  // uint64 timestamp = 2;
+  if (this->_internal_timestamp() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_timestamp());
+  }
+
   // uint32 transId = 1;
   if (this->_internal_transid() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_transid());
   }
 
-  // uint32 msgType = 2;
-  if (this->_internal_msgtype() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_msgtype());
-  }
-
-  // int32 errCode = 3;
+  // int32 errCode = 6;
   if (this->_internal_errcode() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_errcode());
   }
@@ -588,19 +590,19 @@ void MsgPayload::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PRO
     _this->_internal_mutable_clientinfo()->::QXSCMsg::ClientInfo::MergeFrom(
         from._internal_clientinfo());
   }
-  if (from._internal_has_serverid()) {
-    _this->_internal_mutable_serverid()->::QXSCMsg::ServerInfo::MergeFrom(
-        from._internal_serverid());
+  if (from._internal_has_serverinfo()) {
+    _this->_internal_mutable_serverinfo()->::QXSCMsg::ServerInfo::MergeFrom(
+        from._internal_serverinfo());
   }
   if (from._internal_has_msgbase()) {
     _this->_internal_mutable_msgbase()->::QXSCMsg::MsgBase::MergeFrom(
         from._internal_msgbase());
   }
+  if (from._internal_timestamp() != 0) {
+    _this->_internal_set_timestamp(from._internal_timestamp());
+  }
   if (from._internal_transid() != 0) {
     _this->_internal_set_transid(from._internal_transid());
-  }
-  if (from._internal_msgtype() != 0) {
-    _this->_internal_set_msgtype(from._internal_msgtype());
   }
   if (from._internal_errcode() != 0) {
     _this->_internal_set_errcode(from._internal_errcode());
@@ -1078,6 +1080,7 @@ MsgBase::MsgBase(const MsgBase& from)
   new (&_impl_) Impl_{
       decltype(_impl_.clientregister_){nullptr}
     , decltype(_impl_.clientregisterreply_){nullptr}
+    , decltype(_impl_.msgtype_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -1087,6 +1090,7 @@ MsgBase::MsgBase(const MsgBase& from)
   if (from._internal_has_clientregisterreply()) {
     _this->_impl_.clientregisterreply_ = new ::QXSCMsg::ClientRegisterReply(*from._impl_.clientregisterreply_);
   }
+  _this->_impl_.msgtype_ = from._impl_.msgtype_;
   // @@protoc_insertion_point(copy_constructor:QXSCMsg.MsgBase)
 }
 
@@ -1097,6 +1101,7 @@ inline void MsgBase::SharedCtor(
   new (&_impl_) Impl_{
       decltype(_impl_.clientregister_){nullptr}
     , decltype(_impl_.clientregisterreply_){nullptr}
+    , decltype(_impl_.msgtype_){0u}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -1134,6 +1139,7 @@ void MsgBase::Clear() {
     delete _impl_.clientregisterreply_;
   }
   _impl_.clientregisterreply_ = nullptr;
+  _impl_.msgtype_ = 0u;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1143,17 +1149,25 @@ const char* MsgBase::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // .QXSCMsg.ClientRegister clientRegister = 1;
+      // uint32 msgType = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          _impl_.msgtype_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .QXSCMsg.ClientRegister clientRegister = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
           ptr = ctx->ParseMessage(_internal_mutable_clientregister(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // .QXSCMsg.ClientRegisterReply clientRegisterReply = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+      // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
           ptr = ctx->ParseMessage(_internal_mutable_clientregisterreply(), ptr);
           CHK_(ptr);
         } else
@@ -1188,17 +1202,23 @@ uint8_t* MsgBase::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .QXSCMsg.ClientRegister clientRegister = 1;
+  // uint32 msgType = 1;
+  if (this->_internal_msgtype() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_msgtype(), target);
+  }
+
+  // .QXSCMsg.ClientRegister clientRegister = 2;
   if (this->_internal_has_clientregister()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(1, _Internal::clientregister(this),
+      InternalWriteMessage(2, _Internal::clientregister(this),
         _Internal::clientregister(this).GetCachedSize(), target, stream);
   }
 
-  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 2;
+  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
   if (this->_internal_has_clientregisterreply()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(2, _Internal::clientregisterreply(this),
+      InternalWriteMessage(3, _Internal::clientregisterreply(this),
         _Internal::clientregisterreply(this).GetCachedSize(), target, stream);
   }
 
@@ -1218,18 +1238,23 @@ size_t MsgBase::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // .QXSCMsg.ClientRegister clientRegister = 1;
+  // .QXSCMsg.ClientRegister clientRegister = 2;
   if (this->_internal_has_clientregister()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *_impl_.clientregister_);
   }
 
-  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 2;
+  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
   if (this->_internal_has_clientregisterreply()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
         *_impl_.clientregisterreply_);
+  }
+
+  // uint32 msgType = 1;
+  if (this->_internal_msgtype() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_msgtype());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -1258,6 +1283,9 @@ void MsgBase::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOB
     _this->_internal_mutable_clientregisterreply()->::QXSCMsg::ClientRegisterReply::MergeFrom(
         from._internal_clientregisterreply());
   }
+  if (from._internal_msgtype() != 0) {
+    _this->_internal_set_msgtype(from._internal_msgtype());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -1276,8 +1304,8 @@ void MsgBase::InternalSwap(MsgBase* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MsgBase, _impl_.clientregisterreply_)
-      + sizeof(MsgBase::_impl_.clientregisterreply_)
+      PROTOBUF_FIELD_OFFSET(MsgBase, _impl_.msgtype_)
+      + sizeof(MsgBase::_impl_.msgtype_)
       - PROTOBUF_FIELD_OFFSET(MsgBase, _impl_.clientregister_)>(
           reinterpret_cast<char*>(&_impl_.clientregister_),
           reinterpret_cast<char*>(&other->_impl_.clientregister_));

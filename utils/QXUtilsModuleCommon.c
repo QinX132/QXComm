@@ -69,7 +69,7 @@ QXUtil_ModuleCommonInit(
     }
 
     ret = _QXModuleCommonThirdPartyInit();
-        if (ret)
+    if (ret)
     {
         LogErr("Third party init failed! %d %s", ret, QX_StrErr(ret));
         goto CommonReturn;

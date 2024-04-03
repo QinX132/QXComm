@@ -55,6 +55,24 @@ typedef struct _QX_UTIL_MSG
 }
 QX_UTIL_MSG;
 
+typedef struct _QX_UTIL_Q_MSG_HEAD{
+    uint32_t ContentLen;
+}
+QX_UTIL_Q_MSG_HEAD;
+
+typedef struct _QX_UTIL_Q_MSG_CONT
+{
+    uint8_t *VarLenCont;
+}
+QX_UTIL_Q_MSG_CONT;
+
+typedef struct _QX_UTIL_Q_MSG
+{
+    QX_UTIL_Q_MSG_HEAD Head;
+    QX_UTIL_Q_MSG_CONT Cont;
+}
+QX_UTIL_Q_MSG;
+
 int
 QXUtil_MsgModuleInit(
     void
@@ -107,6 +125,41 @@ QXUtil_ClearMsgCont(
     QX_UTIL_MSG *Msg
     );
 
+int
+QXUtil_RecvQMsg(
+    int Fd,
+    __inout QX_UTIL_Q_MSG *RetMsg
+    );
+
+MUST_CHECK
+QX_UTIL_Q_MSG *
+QXUtil_NewSendQMsg(
+    uint32_t ContLen
+    );
+
+void
+QXUtil_FreeSendQMsg(
+    QX_UTIL_Q_MSG *Msg
+    );
+
+int
+QXUtil_SendQMsg(
+    int Fd,
+    QX_UTIL_Q_MSG *Msg
+    );
+MUST_CHECK
+QX_UTIL_Q_MSG* 
+QXUtil_NewRecvQMsg(
+    void
+    );
+void
+QXUtil_FreeRecvQMsg(
+    QX_UTIL_Q_MSG *Msg
+    );
+    void
+QXUtil_FreeRecvQMsgCont(
+    QX_UTIL_Q_MSG *Msg
+    );
 #ifdef __cplusplus
 }
 #endif

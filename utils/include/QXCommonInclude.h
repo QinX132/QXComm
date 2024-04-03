@@ -17,6 +17,7 @@
 #include <endian.h>
 #include <assert.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #include <pthread.h>
 #include <sys/types.h>
@@ -43,19 +44,46 @@
 extern "C"{
 #endif
 
+#ifndef BOOL
 #define BOOL                                        unsigned char
+#endif
+#ifndef TRUE
 #define TRUE                                        1
+#endif
+#ifndef FALSE
 #define FALSE                                       0
+#endif
+
+#ifndef __in
 #define __in
+#endif
+#ifndef __in_ecout
 #define __in_ecout(size)
+#endif
+#ifndef __out
 #define __out
+#endif
+#ifndef __out_ecout
 #define __out_ecout(size)
+#endif
+#ifndef __inout
 #define __inout
+#endif
+#ifndef __inout_ecout
 #define __inout_ecout(size)
-#define UNUSED(_p_)                                 ((void)(_p_))
-#define MUST_CHECK                                  __attribute__((warn_unused_result))
-#define LIKELY(x)                                   __builtin_expect(!!(x), 1)
-#define UNLIKELY(x)                                 __builtin_expect(!!(x), 0)
+#endif
+#ifndef UNUSED
+#define UNUSED(_p_)                              ((void)(_p_))
+#endif
+#ifndef MUST_CHECK
+#define MUST_CHECK                               __attribute__((warn_unused_result))
+#endif
+#ifndef LIKELY
+#define LIKELY(x)                                __builtin_expect(!!(x), 1)
+#endif
+#ifndef UNLIKELY
+#define UNLIKELY(x)                              __builtin_expect(!!(x), 0)
+#endif
 
 #define QX_BUFF_16                                  16
 #define QX_BUFF_32                                  32

@@ -75,7 +75,7 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     QX_UTIL_MODULES_INIT_PARAM initParam;
     string RoleName(QX_SERVER_ROLE_NAME);
     int32_t loop = 0;
-    QX_SERVER_WORKER_INIT_PARAM workerInitParam;
+    QXS_WORKER_INIT_PARAM workerInitParam;
     json fileJson;
 
     if (!file.is_open()) {
