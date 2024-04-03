@@ -50,7 +50,6 @@ CommRet:
     return ;
 }
 
-
 void QXServerMsgHandler::ProtoInitMsg(
     QXServerWorker* Worker,
     MsgPayload &MsgPayload
@@ -60,7 +59,6 @@ void QXServerMsgHandler::ProtoInitMsg(
     assert(NULL != MsgPayload.mutable_msgbase());
     assert(NULL != MsgPayload.mutable_serverinfo());
     MsgPayload.set_transid(TransId.load());
-    LogDbg("server name:%s", Worker->InitParam.WorkerName.c_str());
     MsgPayload.mutable_serverinfo()->set_servername(Worker->InitParam.WorkerName);
 }
 
@@ -98,6 +96,7 @@ QX_ERR_T QXServerMsgHandler::RegisterClient(
         goto CommRet;
     }
     pthread_spin_unlock(&Worker->Lock);
+    Worker->ClientCurrentNum.fetch_add(1);
     
     tpoolArg = (QXS_TPOOL_ARG*)Worker->Calloc(sizeof(QXS_TPOOL_ARG));
     if (!tpoolArg) {
@@ -110,7 +109,7 @@ QX_ERR_T QXServerMsgHandler::RegisterClient(
     tpoolArg->SendMsg->set_errcode(ret);
     tpoolArg->SendMsg->mutable_msgbase()->mutable_clientregisterreply()->set_errcode(ret);
 //    if (ret == QX_SUCCESS)
-//        tpoolArg->SendMsg->mutable_msgbase()->mutable_clientregisterreply()->clear_errcode(); // 0 has to be clear
+//        tpoolArg->SendMsg->mutable_msgbase()->mutable_clientregisterreply()->clear_errcode(); // 0 has to be cleared
     
     tpoolArg->Fd = Fd;
     tpoolArg->MsgHandler = this;
@@ -136,7 +135,12 @@ QX_ERR_T QXServerMsgHandler::DispatchMsg(
     QX_ERR_T ret = QX_SUCCESS;
     switch (MsgPayload.msgbase().msgtype()) {
         case QX_MSG_TYPE_REGISTER:
-            ret = RegisterClient(Fd, Worker, MsgPayload);
+            if (Worker->ClientCurrentNum.load() < Worker->InitParam.WorkerLoad) {
+                ret = RegisterClient(Fd, Worker, MsgPayload);
+            } else {
+                LogWarn("ClientNum has reached its upper limit %u, ignore connect request!", Worker->ClientCurrentNum.load());
+                ret = -QX_EBUSY;
+            }
             break;
         default:
             LogErr("Invalid type:%d", MsgPayload.msgbase().msgtype());

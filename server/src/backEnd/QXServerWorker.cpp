@@ -78,10 +78,12 @@ void QXServerWorker::EraseClient_NL(int32_t Fd) {
                 Free(clientNode->RecvEvent);
                 clientNode->RecvEvent = NULL;
             }
-            clientNode->Registered = false;
-            if (clientNode->Fd >= 0) {
-                close(clientNode->Fd);
+            if (clientNode->Registered && ClientCurrentNum.load() > 0) {
+                clientNode->Registered = false;
+                ClientCurrentNum.fetch_sub(1);
             }
+            if (clientNode->Fd >= 0) 
+                close(clientNode->Fd);
             Free(clientNode);
         }
         ClientMap.erase(it);
@@ -134,38 +136,44 @@ QXServerWorker::ServerAccept(void) {
     int clientFd = -1;
     QXS_CLIENT_NODE *clientNode = NULL;
     struct timeval tv;
+    QX_ERR_T ret = QX_SUCCESS;
 
     clientFd = accept(WorkerFd, (struct sockaddr*)&clientAddr, &len);
     if (clientFd < 0) {
+        ret = -QX_EIO;
         LogErr("accept failed! %d:%s", errno, QX_StrErr(errno));
         goto CommRet;
     }
     LogInfo("[%s] %s connect.", InitParam.WorkerName.c_str(), inet_ntoa(clientAddr.sin_addr));
     // timeout
-    tv.tv_sec = 5;
+    tv.tv_sec = 3;
     tv.tv_usec = 0;
     if (setsockopt(clientFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+        ret = -QX_EIO;
         LogErr("Set recv timeout failed\n");
         goto CommRet;
     }
-    tv.tv_sec = 5;
+    tv.tv_sec = 3;
     tv.tv_usec = 0;
     if (setsockopt(clientFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0) {
+        ret = -QX_EIO;
         LogErr("Set send timeout failed\n");
         goto CommRet;
     }
     clientNode = (QXS_CLIENT_NODE*)Calloc(sizeof(QXS_CLIENT_NODE));
     if (!clientNode) {
+        ret = -QX_ENOMEM;
         LogErr("new client node failed!");;
         goto CommRet;
     }
     clientNode->RecvEvent = (struct epoll_event*)Calloc(sizeof(struct epoll_event));
     if (!clientNode->RecvEvent) {
+        ret = -QX_ENOMEM;
         LogErr("new event failed!");
         goto CommRet;
     }
     clientNode->Fd = clientFd;
-    clientNode->RecvEvent->events = EPOLLIN | EPOLLET;
+    clientNode->RecvEvent->events = EPOLLIN;        //we do not use EPOLLET here
     clientNode->RecvEvent->data.fd = clientFd;
     epoll_ctl(EpollFd, EPOLL_CTL_ADD, clientFd, clientNode->RecvEvent);
     
@@ -175,6 +183,13 @@ QXServerWorker::ServerAccept(void) {
     pthread_spin_unlock(&Lock);
 
 CommRet:
+    if (ret < QX_SUCCESS) {
+        if (clientFd >= 0)
+            close (clientFd);
+        if (clientNode && !clientNode->RecvEvent) {
+            Free(clientNode);
+        }
+    }
     return ;
 }
 
@@ -252,6 +267,7 @@ QXServerWorker::QXServerWorker() {
     MemId = QX_UTIL_MEM_MODULE_INVALID_ID;
     EpollFd = -1;
     MsgHandler = NULL;
+    ClientCurrentNum.store(0);
 }
 
 QXServerWorker::~QXServerWorker() {
@@ -362,14 +378,18 @@ void QXServerWorker::Exit() {
 
 string QXServerWorker::GetStatus(void) {
     string statsBuff;
+    int cnt = 0;
 
-    statsBuff += "ServerWorker:" + InitParam.WorkerName + '\n';
+    statsBuff += "ServerWorker:" + InitParam.WorkerName + " CurrentClientNum:" + to_string(ClientCurrentNum.load())+ '\n';
     pthread_spin_lock(&Lock);
     for (auto it = ClientMap.begin(); it != ClientMap.end(); it ++) {
         statsBuff += "[Fd:" + to_string(it->second->Fd) + " " + "ClientId:" + to_string(it->second->ClientId) + " ";
         statsBuff += string("Ip:") + inet_ntoa(it->second->ClientAddr.sin_addr) +"] ";
+        if (++cnt % 4 == 0)
+            statsBuff += "\n";
     }
     pthread_spin_unlock(&Lock);
-
+    statsBuff += "\n";
+    
     return statsBuff;
 }

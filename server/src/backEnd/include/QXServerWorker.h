@@ -35,6 +35,7 @@ private:
     int EpollFd;
     struct epoll_event ListenEvent;
     pthread_t ThreadId;
+    std::atomic<uint32_t> ClientCurrentNum;               // size of map is O(log n), so we use num
     std::map<int, QXS_CLIENT_NODE*> ClientMap;
     std::map<int, uint32_t> ClientIdMap;
     pthread_spinlock_t Lock;   // this lock for client map

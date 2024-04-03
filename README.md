@@ -9,7 +9,7 @@ my cpp http server
 
 ###### 1. 克隆代码仓
 
-git clone --recursive  https://github.com/QinX132/QinXHttpServer.git (--recursive 克隆所有子模块的代码仓)
+git clone --recursive  https://github.com/QinX132/QXComm.git (--recursive 克隆所有子模块的代码仓)
 
 ###### 2. 构建第三方库
 
@@ -18,14 +18,22 @@ git clone --recursive  https://github.com/QinX132/QinXHttpServer.git (--recursiv
 三方库依赖以及其版本：
 
 > [submodule "third_party/GmSSL"]
->     path = third_party/GmSSL
->     url = https://github.com/guanzhi/GmSSL.git (commit:6de0e022)
+>
+> ​	path = third_party/GmSSL
+>
+> ​	url = https://github.com/guanzhi/GmSSL.git (commit:6de0e022)
+>
 > [submodule "third_party/json"]
->     path = third_party/json
->     url = https://github.com/nlohmann/json.git (commit:199dea11)
+>
+> ​	path = third_party/json
+>
+> ​	url = https://github.com/nlohmann/json.git (commit:199dea11)
+>
 > [submodule "third_party/libevent"]
->     path = third_party/libevent
->     url = https://github.com/libevent/libevent.git (commit:4fd07f0e)
+>
+> ​	path = third_party/libevent
+>
+> ​	url = https://github.com/libevent/libevent.git (commit:4fd07f0e)
 
 
 ###### 3. 部署protobuf
@@ -40,21 +48,6 @@ git clone --recursive  https://github.com/QinX132/QinXHttpServer.git (--recursiv
    sudo make install
    sudo ldconfig                                      # refresh shared library cache.
    ```
-
-> （开发者注：cmake如何使用protobuf：）
->
-> * 首先找到依赖：
->     `find_package(Protobuf REQUIRED)`
->
-> *  include路径添加：
->
->     `${PROTOBUF_INCLUDE_DIRS}`
->
-> * 源文件添加cc文件；
->
-> * link添加：
->
->     `${PROTOBUF_LIBRARIES}`
 
 ###### 4. 构建utils代码仓：
 
@@ -76,9 +69,9 @@ make && make test
 
 在工程目录执行./build -h ，将会自动进入SCShare，执行 scshare_build.sh脚本，编译.proto文件，并且将此代码仓的文件编译为.a文件
 
-###### 6. 构建 server、client
+###### 6. 构建 server、client cpp服务
 
-在工程目录执行./build -sc ，将会自动进入server、client，执行脚本，编译。生成可执行文件server/src/backEnd/build/QXServer、 client/build/QXClient。
+在工程目录执行./build -sc ，将会自动进入server、client，执行脚本，编译。生成可执行文件server/src/backEnd/build/QXServer、 client/src/build/QXClient。
 
 ### 二、utils 说明
 

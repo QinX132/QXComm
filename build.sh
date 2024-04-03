@@ -72,7 +72,7 @@ BuildClient()
 if [ "$a_flag" == 'true' ]; then
 	BuildThirdParty
 	BuildUtils
-    BuildProto
+    BuildShare
 	BuildServer
     BuildClient
     exit 0;

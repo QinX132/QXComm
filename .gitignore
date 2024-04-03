@@ -37,4 +37,4 @@ utils/build/*
 third_party/*/build/*
 .vscode/*
 SCShare/build/*
-client/build/*
+client/src/build/*
