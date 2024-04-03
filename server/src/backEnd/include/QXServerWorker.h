@@ -7,12 +7,12 @@
 #include "QXUtilsModuleCommon.h"
 #include "QXServerMsgBussiness.h"
 
-typedef struct _QX_SERVER_WORKER_INIT_PARAM {
+typedef struct _QXS_WORKER_INIT_PARAM {
     std::pair<uint16_t, uint16_t> PortRange;
     std::string WorkerName;
     uint32_t WorkerLoad;
 }
-QX_SERVER_WORKER_INIT_PARAM;
+QXS_WORKER_INIT_PARAM;
 
 typedef struct _QXS_CLIENT_NODE {
     int Fd;
@@ -28,8 +28,8 @@ QXS_CLIENT_NODE;
 class QXServerWorker{
     friend class QXServerMsgHandler;
 private:
-    QX_SERVER_WORKER_INIT_PARAM InitParam;
-    int ServerFd;
+    QXS_WORKER_INIT_PARAM InitParam;
+    int WorkerFd;
     bool Inited;
     int MemId;
     int EpollFd;
@@ -39,7 +39,7 @@ private:
     std::map<int, uint32_t> ClientIdMap;
     pthread_spinlock_t Lock;   // this lock for client map
 
-    QX_ERR_T InitServerFd(std::pair<uint16_t, uint16_t>, uint32_t);
+    QX_ERR_T InitWorkerFd(std::pair<uint16_t, uint16_t>, uint32_t);
     QX_ERR_T InitClientMap();
     QX_ERR_T InitEventBaseAndRun();
     static void* _WorkerThreadFn(void*);
@@ -53,7 +53,7 @@ public:
     void Free(void*);
     QXServerWorker();
     ~QXServerWorker();
-    QX_ERR_T Init(QX_SERVER_WORKER_INIT_PARAM);
+    QX_ERR_T Init(QXS_WORKER_INIT_PARAM);
     void Exit();
     std::string GetStatus();
 };

@@ -4,33 +4,33 @@
 using namespace std;
 
 QX_ERR_T
-QXServerWorker::InitServerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) {
+QXServerWorker::InitWorkerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) {
     struct sockaddr_in serverAddr;
     BOOL bindSuccess = FALSE;
     QX_ERR_T ret = QX_SUCCESS;
     uint16_t loop = 0;
     int option = 1, flags = 0;
     // socket
-    ServerFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (ServerFd < 0) {
+    WorkerFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (WorkerFd < 0) {
         LogErr("Socket failed!");
         ret = -QX_EBADFD; 
         goto CreateFdFail;
     }
     // reuse && nonblock
-    if (setsockopt(ServerFd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) == -1) {
+    if (setsockopt(WorkerFd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) == -1) {
         LogErr("setsockopt SO_REUSEADDR failed!");
         ret = -QX_EIO; 
         goto CommErr;
     }
-    flags = fcntl(ServerFd, F_GETFL, 0);
+    flags = fcntl(WorkerFd, F_GETFL, 0);
     if (flags == -1) {
         LogErr("get flags failed!");
         ret = -QX_EIO; 
         goto CommErr;
     }
     flags |= O_NONBLOCK;
-    if (fcntl(ServerFd, F_SETFL, flags) == -1) {
+    if (fcntl(WorkerFd, F_SETFL, flags) == -1) {
         LogErr("set nonblock failed!");
         ret = -QX_EIO; 
         goto CommErr;
@@ -40,7 +40,7 @@ QXServerWorker::InitServerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) 
     serverAddr.sin_addr.s_addr = INADDR_ANY;
     for(loop = PortRange.first; loop <= PortRange.second; loop ++) {
         serverAddr.sin_port = htons(loop);
-        if (bind(ServerFd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == 0) {
+        if (bind(WorkerFd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == 0) {
             bindSuccess = TRUE;
             break;
         }
@@ -50,18 +50,18 @@ QXServerWorker::InitServerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) 
         goto CommErr;
     }
     // listen
-    if (listen(ServerFd, Load) == -1) {
+    if (listen(WorkerFd, Load) == -1) {
         LogErr("listen failed!");
         ret = -QX_EIO; 
         goto CommErr;
     }
 
-    LogInfo("Create server worker, using port %u, fd %d, loading %u.", loop, ServerFd, Load);
+    LogInfo("Create server worker, using port %u, fd %d, loading %u.", loop, WorkerFd, Load);
     goto Success;
     
 CommErr:
-    close(ServerFd);
-    ServerFd = -1;
+    close(WorkerFd);
+    WorkerFd = -1;
 CreateFdFail:
 Success:
     return ret;
@@ -135,7 +135,7 @@ QXServerWorker::ServerAccept(void) {
     QXS_CLIENT_NODE *clientNode = NULL;
     struct timeval tv;
 
-    clientFd = accept(ServerFd, (struct sockaddr*)&clientAddr, &len);
+    clientFd = accept(WorkerFd, (struct sockaddr*)&clientAddr, &len);
     if (clientFd < 0) {
         LogErr("accept failed! %d:%s", errno, QX_StrErr(errno));
         goto CommRet;
@@ -195,7 +195,7 @@ QXServerWorker::_WorkerThreadFn(void *Arg) {
         }
 
         for (int i = 0; i < nfds; ++i) {
-            if (events[i].data.fd == worker->ServerFd) {
+            if (events[i].data.fd == worker->WorkerFd) {
                 worker->ServerAccept();
             } else if (events[i].events & EPOLLIN) {
                 worker->ClientRecv(events[i].data.fd);
@@ -222,8 +222,8 @@ QX_ERR_T QXServerWorker::InitEventBaseAndRun() {
         goto NewEventBaseErr;
     }
     ListenEvent.events = EPOLLIN | EPOLLET;
-    ListenEvent.data.fd = ServerFd;
-    epoll_ctl(EpollFd, EPOLL_CTL_ADD, ServerFd, &ListenEvent);
+    ListenEvent.data.fd = WorkerFd;
+    epoll_ctl(EpollFd, EPOLL_CTL_ADD, WorkerFd, &ListenEvent);
 
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -247,7 +247,7 @@ CommRet:
 }
 
 QXServerWorker::QXServerWorker() {
-    ServerFd = -1;
+    WorkerFd = -1;
     Inited = FALSE;
     MemId = QX_UTIL_MEM_MODULE_INVALID_ID;
     EpollFd = -1;
@@ -255,8 +255,8 @@ QXServerWorker::QXServerWorker() {
 }
 
 QXServerWorker::~QXServerWorker() {
-    if (ServerFd != -1) {
-        close(ServerFd);
+    if (WorkerFd != -1) {
+        close(WorkerFd);
     }
 }
 
@@ -274,7 +274,7 @@ QX_ERR_T QXServerWorker::InitClientMap(void) {
     return QX_SUCCESS;
 }
 
-QX_ERR_T QXServerWorker::Init(QX_SERVER_WORKER_INIT_PARAM InInitParam) {
+QX_ERR_T QXServerWorker::Init(QXS_WORKER_INIT_PARAM InInitParam) {
     QX_ERR_T ret = QX_SUCCESS;
     if (Inited) {
         goto CommonReturn;
@@ -293,7 +293,7 @@ QX_ERR_T QXServerWorker::Init(QX_SERVER_WORKER_INIT_PARAM InInitParam) {
         goto InitErr;
     }
     // base info init
-    ret = InitServerFd(InitParam.PortRange, InitParam.WorkerLoad);
+    ret = InitWorkerFd(InitParam.PortRange, InitParam.WorkerLoad);
     if (ret != QX_SUCCESS) {
         LogErr("Init worker for %s failed!", InitParam.WorkerName.c_str());
         goto InitErr;
@@ -321,9 +321,9 @@ CommonReturn:
 
 void QXServerWorker::Exit() {
     if (Inited) {
-        if (ServerFd != -1) {
-            close(ServerFd);
-            ServerFd = -1;
+        if (WorkerFd != -1) {
+            close(WorkerFd);
+            WorkerFd = -1;
         }
         if (EpollFd >= 0) {
             close(EpollFd);

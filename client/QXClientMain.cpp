@@ -23,14 +23,14 @@ static void _QXC_MainExit(void) {
 
 static QX_ERR_T _QXC_MainGetSpecailConfFromJson(
     json FileJson,
-    QX_CLIENT_WORKER_INIT_PARAM &InitParam
+    QXC_WORKER_INIT_PARAM &InitParam
     ) 
 {
     // init client workers
     if (FileJson.find("ServerConf") != FileJson.end()) {
         json serverArray = FileJson["ServerConf"];
         for (const auto& server : serverArray) {
-            QX_CLIENT_SERVER_CONF serverConf;
+            QXC_WORKER_SERVER_CONF serverConf;
             serverConf.Addr = server["Addr"];
             InitParam.Servers.push_back(serverConf);
         }
@@ -57,7 +57,7 @@ static QX_ERR_T _QXC_MainInit(int Argc, char* Argv[]) {
     ifstream file(confPath);
     QX_UTIL_MODULES_INIT_PARAM initParam;
     json fileJson;
-    QX_CLIENT_WORKER_INIT_PARAM clientWorkerParam;
+    QXC_WORKER_INIT_PARAM clientWorkerParam;
     
     if (!file.is_open()) {
         LogErr("Cannot open config file!");

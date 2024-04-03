@@ -13,9 +13,8 @@ void QXClientMsgHandler::ProtoInitMsg(
     assert(NULL != Worker);
     assert(NULL != MsgPayload.mutable_msgbase());
     assert(NULL != MsgPayload.mutable_clientinfo());
-    uint32_t transIdValue = TransId.load();
-    MsgPayload.set_transid(transIdValue);
-    MsgPayload.mutable_clientinfo()->set_clientid(Worker->ClientId);
+    MsgPayload.set_transid(TransId.load());
+    MsgPayload.mutable_clientinfo()->set_clientid(Worker->InitParam.ClientId);
 }
 
 void QXClientMsgHandler::ProtoPreSend(MsgPayload &MsgPayload) {
@@ -39,16 +38,16 @@ void QXClientMsgHandler::CreateRegisterProtoMsg(
     ) 
 {
     MsgBase.set_msgtype(QX_MSG_TYPE_REGISTER);
-    MsgBase.mutable_clientregister()->set_clientid(Worker->ClientId);
+    MsgBase.mutable_clientregister()->set_clientid(Worker->InitParam.ClientId);
 }
 
 QX_ERR_T QXClientMsgHandler::DispatchMsg(QXClientWorker* Worker, MsgPayload MsgPayload) {
     switch (MsgPayload.msgbase().msgtype()) {
         case QX_MSG_TYPE_REGISTER_REPLY:
             if (MsgPayload.msgbase().clientregisterreply().errcode() == QX_SUCCESS)
-                    Worker->State = QXC_STATS_REGISTERED;
+                    Worker->State = QXC_WORKER_STATS_REGISTERED;
             else 
-                LogErr("Register reply failed! errcode %d", MsgPayload.msgbase().clientregisterreply().errcode());
+                LogErr("Register replies as fail! errcode %d", MsgPayload.msgbase().clientregisterreply().errcode());
             break;
         default:
             break;

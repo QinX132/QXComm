@@ -5,13 +5,13 @@
 
 using namespace std;
 
-static string sg_QXCStatString[QXC_STATS_MAX] = {
-    [QXC_STATS_UNSPEC]          =   "Unknown",
-    [QXC_STATS_INITED]          =   "Inited",
-    [QXC_STATS_CONNECTED]       =   "Connected",
-    [QXC_STATS_REGISTERED]      =   "Active",
-    [QXC_STATS_DISCONNECTED]    =   "Disconnected",
-    [QXC_STATS_EXIT]            =   "Exited",
+static string sg_QXCStatString[QXC_WORKER_STATS_MAX] = {
+    [QXC_WORKER_STATS_UNSPEC]          =   "Unknown",
+    [QXC_WORKER_STATS_INITED]          =   "Inited",
+    [QXC_WORKER_STATS_CONNECTED]       =   "Connected",
+    [QXC_WORKER_STATS_REGISTERED]      =   "Active",
+    [QXC_WORKER_STATS_DISCONNECTED]    =   "Disconnected",
+    [QXC_WORKER_STATS_EXIT]            =   "Exited",
 };
 
 QX_ERR_T QXClientWorker::ConnectServer(void) {
@@ -22,7 +22,7 @@ QX_ERR_T QXClientWorker::ConnectServer(void) {
     uint16_t port = 0;
 
     serverAddr.sin_family = AF_INET;
-    for(auto serverConf:Param.Servers) {
+    for(auto serverConf:InitParam.Servers) {
         ret = QXUtil_ParseStringToIpv4AndPort(serverConf.Addr.c_str(), serverConf.Addr.length(), &ip, &port);
         if (ret < QX_SUCCESS || ip == 0 || port == 0) {
             LogErr("Parse %s failed!", serverConf.Addr.c_str());
@@ -30,7 +30,7 @@ QX_ERR_T QXClientWorker::ConnectServer(void) {
         }
         serverAddr.sin_addr.s_addr = htonl(ip);
         serverAddr.sin_port = htons(port);
-        if (connect(ClientFd, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
+        if (connect(WorkerFd, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0) {
             LogErr("Connect to %s(%u:%u) failed, errno %d, try next one", serverConf.Addr.c_str(), ip, port, errno);
             continue;
         } else {
@@ -46,7 +46,7 @@ QX_ERR_T QXClientWorker::ConnectServer(void) {
         goto CommRet;
     } else {
         LogDbg("Connect success! using %s", CurrentServer.Addr.c_str());
-        State = QXC_STATS_CONNECTED;
+        State = QXC_WORKER_STATS_CONNECTED;
         AddRecvEvent();
     }
 
@@ -54,19 +54,19 @@ CommRet:
     return ret;
 }
 
-QX_ERR_T QXClientWorker::InitClientFd(void) {
+QX_ERR_T QXClientWorker::InitWorkerFd(void) {
     QX_ERR_T ret = QX_SUCCESS;
     struct timeval tv;
     int32_t reuseable = 1; // set port reuseable when fd closed
     // socket
-    ClientFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (ClientFd < 0) {
+    WorkerFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (WorkerFd < 0) {
         LogErr("Socket failed!");
         ret = -QX_EBADFD; 
         goto CommRet;
     }
     // reuse
-    if (setsockopt(ClientFd, SOL_SOCKET, SO_REUSEADDR, &reuseable, sizeof(reuseable)) == -1) {
+    if (setsockopt(WorkerFd, SOL_SOCKET, SO_REUSEADDR, &reuseable, sizeof(reuseable)) == -1) {
         LogErr("setsockopt SO_REUSEADDR failed!");
         ret = -QX_EIO; 
         goto CommErr;
@@ -74,21 +74,21 @@ QX_ERR_T QXClientWorker::InitClientFd(void) {
     // timeout
     tv.tv_sec = 5;
     tv.tv_usec = 0;
-    if (setsockopt(ClientFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
+    if (setsockopt(WorkerFd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0) {
         printf("Set recv timeout failed\n");
         goto CommErr;
     }
     tv.tv_sec = 5;
     tv.tv_usec = 0;
-    if (setsockopt(ClientFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0) {
+    if (setsockopt(WorkerFd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0) {
         printf("Set send timeout failed\n");
         goto CommErr;
     }
     goto CommRet;
     
 CommErr:
-    close(ClientFd);
-    ClientFd = -1;
+    close(WorkerFd);
+    WorkerFd = -1;
 CommRet:
     return ret;
 } 
@@ -113,7 +113,7 @@ QX_ERR_T QXClientWorker::RegisterToServer(void) {
         goto CommRet;
     }
     memcpy(qMsg->Cont.VarLenCont, serializedData.data(), serializedData.size());
-    ret = QXUtil_SendQMsg(ClientFd, qMsg);
+    ret = QXUtil_SendQMsg(WorkerFd, qMsg);
     if (ret < QX_SUCCESS) {
         LogErr("send msg failed! ret %d", ret);
         goto CommRet;
@@ -133,6 +133,7 @@ QXClientWorker::_MsgThreadFn(void *Arg) {
     
     event_base_dispatch(worker->EventBase);
     // break at here
+    LogDbg("event base loop break here!");
     event_base_free(worker->EventBase);
     worker->EventBase = NULL;
 
@@ -140,9 +141,10 @@ QXClientWorker::_MsgThreadFn(void *Arg) {
 }
 
 void QXClientWorker::AddRecvEvent(void) {
-    if (!RecvEvent) {
-        RecvEvent = event_new(EventBase, ClientFd, EV_READ|EV_PERSIST, _RecvMsg, (void*)this);
+    if (!RecvEvent && EventBase) {
+        RecvEvent = event_new(EventBase, WorkerFd, EV_READ|EV_PERSIST, _RecvMsg, (void*)this);
         event_add(RecvEvent, NULL);
+        LogDbg("Adding recv event into base......");
     }
 }
 
@@ -151,7 +153,14 @@ void QXClientWorker::RemoveRecvEvent(void) {
         event_del(RecvEvent);
         event_free(RecvEvent);
         RecvEvent = NULL;
+        LogDbg("Recv event deleted from base.");
     }
+}
+
+void QXClientWorker::RecreateWorkerFd(void) {
+    close(WorkerFd);
+    WorkerFd = -1;
+    (void)InitWorkerFd();
 }
 
 void QXClientWorker::_RecvMsg(evutil_socket_t Fd, short Event, void *Arg) {
@@ -170,6 +179,8 @@ void QXClientWorker::_RecvMsg(evutil_socket_t Fd, short Event, void *Arg) {
     if (ret < 0) {
         LogErr("recv failed!");
         worker->RemoveRecvEvent();
+        worker->RecreateWorkerFd();
+        worker->State = QXC_WORKER_STATS_DISCONNECTED;
         goto CommRet;
     }
     if (!msgPayload.ParseFromArray(recvMsg->Cont.VarLenCont, recvMsg->Head.ContentLen)) {
@@ -196,31 +207,37 @@ QXClientWorker::_StateMachineThreadFn(void *Arg) {
     
     while(QXC_IS_INITED(worker->State)) {
         switch (worker->State) {
-            case QXC_STATS_INITED:
-            case QXC_STATS_DISCONNECTED:
+            case QXC_WORKER_STATS_INITED:
+            case QXC_WORKER_STATS_DISCONNECTED:
                 ret = worker->ConnectServer();
                 if (ret < QX_SUCCESS) {
                     LogErr("Connect failed! ret %d", ret);
                 }
                 break;
-            case QXC_STATS_CONNECTED:
+            case QXC_WORKER_STATS_CONNECTED:
                 ret = worker->RegisterToServer();
                 if (ret < QX_SUCCESS) {
                     LogErr("Send register msg failed! ret %d", ret);
                 }
                 break;
-            case QXC_STATS_REGISTERED:
+            case QXC_WORKER_STATS_REGISTERED:
                 break;
-            case QXC_STATS_EXIT:
+            case QXC_WORKER_STATS_EXIT:
             default:
                 LogErr("In stat %d, exiting stat machine!", worker->State);
                 return NULL;
         }
-        LogErr("Client in stat <%s>.", sg_QXCStatString[worker->State].c_str());
+        LogInfo("Worker in stat <%s>.", sg_QXCStatString[worker->State].c_str());
         sleep(3);
     }
 
     return NULL;
+}
+
+static void _Keepalive(evutil_socket_t Fd, short Event, void *Arg) {
+    UNUSED(Fd);
+    UNUSED(Event);
+    UNUSED(Arg);
 }
 
 QX_ERR_T QXClientWorker::InitEventBaseAndRun(void) {
@@ -228,31 +245,44 @@ QX_ERR_T QXClientWorker::InitEventBaseAndRun(void) {
     pthread_attr_t attr;
     BOOL initPthreadAttr = FALSE;
     int result = 0;
+    struct timeval tv;
+
+    if (EventBase != NULL) {
+        goto CommRet;
+    }
 
     EventBase = event_base_new();
-    if(!EventBase)
-    {
+    if (!EventBase) {
         ret = -QX_ENOMEM;
-        LogErr("New event base failed!\n");
-        goto NewEventBaseErr;
+        LogErr("Create worker event base failed!");
+        goto CommRet;
     }
-    AddRecvEvent();
+    
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    KeepaliveEvent = event_new(EventBase, -1, EV_READ|EV_PERSIST, _Keepalive, NULL);
+    if (!KeepaliveEvent) {
+        ret = -QX_ENOMEM;
+        LogErr("Create keepalive event base failed!");
+        goto CommRet;
+    }
+    event_add(KeepaliveEvent, &tv);
+    event_active(KeepaliveEvent, 0, EV_READ);   // Must be actively activated once, otherwise it will not run
 
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     initPthreadAttr = TRUE;
 
     result = pthread_create(&MsgThreadId, &attr, _MsgThreadFn, (void*)this);
-    if (result != 0) {
-        ret = -QX_EIO;
-        LogErr("create thread failed! ret %d errno %d\n", result, errno);
+    if (0 != result) {
+        LogErr("Create worker thread failed! errno %d", errno);
+        event_free(KeepaliveEvent);
+        KeepaliveEvent = NULL;
+        event_base_free(EventBase);
+        EventBase = NULL;
         goto CommRet;
     }
 
-    goto CommRet;
-
-NewEventBaseErr:
-    EventBase = NULL;
 CommRet:
     if (initPthreadAttr)
         pthread_attr_destroy(&attr);
@@ -280,21 +310,20 @@ QX_ERR_T QXClientWorker::StartStateMachine(void) {
     return ret;
 }
 
-QX_ERR_T QXClientWorker::Init(QX_CLIENT_WORKER_INIT_PARAM InitParam){
+QX_ERR_T QXClientWorker::Init(QXC_WORKER_INIT_PARAM InitParam){
     QX_ERR_T ret = QX_SUCCESS;
 
     if (QXC_IS_INITED(State)) {
         goto CommRet;
     }
     
-    State = QXC_STATS_INITED;
-    Param = InitParam;
+    QXClientWorker::InitParam = InitParam;
     MsgHandler = new QXClientMsgHandler;
     if (MsgHandler == NULL) {
         LogErr("Init MsgHandler failed! ret %d", ret);
         goto InitErr;
     }
-    ret = InitClientFd();
+    ret = InitWorkerFd();
     if (ret < QX_SUCCESS) {
         LogErr("Init fd failed! ret %d", ret);
         goto InitErr;
@@ -304,6 +333,7 @@ QX_ERR_T QXClientWorker::Init(QX_CLIENT_WORKER_INIT_PARAM InitParam){
         LogErr("Enter work fn failed! ret %d", ret);
         goto InitErr;
     }
+    State = QXC_WORKER_STATS_INITED;
     ret = StartStateMachine();
     if (ret < QX_SUCCESS) {
         LogErr("Enter work fn failed! ret %d", ret);
@@ -319,9 +349,9 @@ CommRet:
 
 void QXClientWorker::Exit(void) {
     if (QXC_IS_INITED(State)) {
-        if (ClientFd) {
-            close(ClientFd);
-            ClientFd = -1;
+        if (WorkerFd >= 0) {
+            close(WorkerFd);
+            WorkerFd = -1;
         }
         if (MsgHandler) {
             delete MsgHandler;
@@ -330,16 +360,17 @@ void QXClientWorker::Exit(void) {
         if (EventBase) {
             RemoveRecvEvent();
             event_base_loopbreak(EventBase);
+            if (KeepaliveEvent) {
+                event_del(KeepaliveEvent);
+                event_free(KeepaliveEvent);
+                KeepaliveEvent = NULL;
+            }
         }
-        State = QXC_STATS_EXIT;
+        State = QXC_WORKER_STATS_EXIT;
     }
 }
 
 QXClientWorker::QXClientWorker() :
-    ClientFd(-1), State(QXC_STATS_UNSPEC), EventBase(NULL), RecvEvent(NULL), MsgHandler(NULL){}
+    WorkerFd(-1), State(QXC_WORKER_STATS_UNSPEC), EventBase(NULL), RecvEvent(NULL), MsgHandler(NULL){}
 
-QXClientWorker::~QXClientWorker() {
-    if (ClientFd != -1) {
-        close(ClientFd);
-    }
-}
+QXClientWorker::~QXClientWorker() {}

@@ -59,8 +59,8 @@ void QXServerMsgHandler::ProtoInitMsg(
     assert(NULL != Worker);
     assert(NULL != MsgPayload.mutable_msgbase());
     assert(NULL != MsgPayload.mutable_serverinfo());
-    uint32_t transIdValue = TransId.load();
-    MsgPayload.set_transid(transIdValue);
+    MsgPayload.set_transid(TransId.load());
+    LogDbg("server name:%s", Worker->InitParam.WorkerName.c_str());
     MsgPayload.mutable_serverinfo()->set_servername(Worker->InitParam.WorkerName);
 }
 
@@ -106,8 +106,11 @@ QX_ERR_T QXServerMsgHandler::RegisterClient(
     }
     tpoolArg->SendMsg = new QXSCMsg::MsgPayload;
     ProtoInitMsg(Worker, *tpoolArg->SendMsg);
+    tpoolArg->SendMsg->mutable_msgbase()->set_msgtype(QX_MSG_TYPE_REGISTER_REPLY);
     tpoolArg->SendMsg->set_errcode(ret);
     tpoolArg->SendMsg->mutable_msgbase()->mutable_clientregisterreply()->set_errcode(ret);
+//    if (ret == QX_SUCCESS)
+//        tpoolArg->SendMsg->mutable_msgbase()->mutable_clientregisterreply()->clear_errcode(); // 0 has to be clear
     
     tpoolArg->Fd = Fd;
     tpoolArg->MsgHandler = this;
