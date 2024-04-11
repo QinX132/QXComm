@@ -27,8 +27,8 @@ while getopts 'asctuh' flag; do
 done
 
 echo "set build all as "$a_flag
-echo "set build server as "$s_flag
-echo "set build client as "$c_flag
+echo "set build QXServer as "$s_flag
+echo "set build QXClient as "$c_flag
 echo "set build third_party as "$t_flag
 echo "set build utils as "$u_flag
 echo "set build share as "$h_flag
@@ -57,14 +57,14 @@ BuildShare()
 BuildServer()
 {
     echo "Build server"
-    pushd server > /dev/null
+    pushd QXServer > /dev/null
     ./server_build.sh
     popd > /dev/null
 }
 BuildClient()
 {
     echo "Build client"
-    pushd client > /dev/null
+    pushd QXClient > /dev/null
     ./client_build.sh
     popd > /dev/null
 }

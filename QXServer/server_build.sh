@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-pushd src/backEnd > /dev/null 
+pushd src > /dev/null 
 	rm -rf build && mkdir build && pushd build > /dev/null
 	cmake ..
 	make -B

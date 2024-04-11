@@ -6,9 +6,9 @@ project(QXServer VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 14)
 ########################## project directories ##############################
 set(BUILD_ROOT .)
-set(UTILS_ROOT ${BUILD_ROOT}/../../../utils)
-set(THIRD_PARTY_ROOT ${BUILD_ROOT}/../../../third_party)
-set(SC_SHARE_ROOT ${BUILD_ROOT}/../../../SCShare)
+set(UTILS_ROOT ${BUILD_ROOT}/../../utils)
+set(THIRD_PARTY_ROOT ${BUILD_ROOT}/../../third_party)
+set(SC_SHARE_ROOT ${BUILD_ROOT}/../../SCShare)
 ######################### global set ########################################
 ## find static lib first
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
