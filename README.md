@@ -1,17 +1,94 @@
-# QinXHttpServer
-my cpp http server
+# QinXComm
+Secure communication and remote management
 
-### 一、构建流程
+## 项目架构及功能说明
+
+### 架构说明
+
+QXComm分为几大模块： QXCommMngr、QXServer、QXClient和一些可以单独部署的小组件（redis/mongo）
+
+QXCommMngr暴露在公网，提供以下服务：
+
+1. 提供api接口，为QXClient提供当前负载最小的QXServer地址（可使用安全服务，为数据使用对应Client公钥加密传输）
+2. 管理QXServer，包括：查看QXServer当前机器健康状态、查看当前QXServer当前注册在线的所有Client、使能/关闭QXServer对Client提供服务、为QXServer提供身份认证服务
+3. 为QXClient提供注册服务，生成密钥对，作为唯一身份信息（写入mongo）
+4. 为QXClient提供互通域管理服务，只有在互通域之中的QXClient才能相互传递消息（写入mongo）
+
+QXServer暴露在公网，提供以下服务：
+
+1. 可以创建集群，多个QXServer作为负载均衡；或创建私有QXServer只为指定QXClient提供连接
+2. 对外暴露接口，提供给QXClient提供连接，且只接受在QXCommMngr上注册过的QXClient的注册
+3. 为互通域内的QXClient转发消息，拒绝非互通域内的消息转发
+4. 向QXCommMngr提供所在机器的健康情况，以及QXServer的工作情况（写入redis）
+
+QXClient可在公网可在局域网提供以下服务：
+
+1. 注册后，并且添加互通域后，可以向指定QXClient发送消息
+
+数据库出于安全考虑，部署在私网，提供服务：
+
+1. mongo保存QXClient的公钥消息、互通域信息，在QXServer启动时，读取互通域消息
+2. redis保存QXServer的相关健康信息
+
+注：安全服务使用GmSSL算法库
+
+### 功能说明
+
+#### Ⅰ QXCommMngr权限控制
+
+* 角色：manager
+
+  仅manager可以注册互通域、获取QXServer管理信息
+
+* 角色：user
+
+  user（QXClient）可以访问注册界面进行QXClient的注册
+
+#### Ⅱ QXClient注册
+
+QXClient在QXCommMngr上注册，并且获取一个id身份证明（公私钥对），公钥将在QXCommMngr的数据库留存
+
+![注册流程](./PrjArchSrc/Register.png)
+
+#### Ⅲ 互通域管理
+
+manager角色可在前端界面设置互通域，指定某些Client可以相互通信。设置后，互通域保存在mongo数据库中，并且通知所有QXServer同步互通域，通过版本号管理。
+
+![互通域管理](./PrjArchSrc/ManageIntraDomain.png)
+
+#### Ⅳ QXClient消息交互
+
+QXClient先通过QXCommMngr api，通过私钥签名请求，获取公钥加密过的最佳QXServer服务器地址，进行连接。 连接后，同样通过公私钥对，在QXServer上进行注册。 注册完成后即可对互通域内的所有QXClient进行通信。
+
+![消息交互](./PrjArchSrc/Communication.png)
+
+#### Ⅴ QXServer监控以及远程控制、负载均衡
+
+QXServer在启动后，定期向redis中写入监控数据例如cpu、内存使用情况，负载情况，由QXCommMngr进行远程管理。
+
+![Server管理](./PrjArchSrc/ServerManager.png)
+
+## 构建流程
 
 本仓库使用cmake构建，适配类unix系统，若有某些系统不适配请联系作者。
 
-##### linux：（cmake version 3.22.1 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)）
+linux：（cmake version 3.22.1 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)）
 
-###### 1. 克隆代码仓
+### 1. 克隆代码仓
 
 git clone --recursive  https://github.com/QinX132/QXComm.git (--recursive 克隆所有子模块的代码仓)
 
-###### 2. 构建第三方库
+### 2. 构建
+
+```sh
+cd QXComm
+
+./build -a
+```
+
+### 3. （选读）单独模块构建
+
+#### Ⅰ 三方仓构建
 
 在工程目录执行./build -t ，将会自动进入third_party，执行third_party_build_all.sh脚本，构建gmssl()、libevent库（优先构建静态库）
 
@@ -36,7 +113,7 @@ git clone --recursive  https://github.com/QinX132/QXComm.git (--recursive 克隆
 > ​	url = https://github.com/libevent/libevent.git (commit:4fd07f0e)
 
 
-###### 3. 部署protobuf
+#### Ⅱ 部署protobuf
 1. 下载protobuf并部署：
 
    ```sh
@@ -49,7 +126,7 @@ git clone --recursive  https://github.com/QinX132/QXComm.git (--recursive 克隆
    sudo ldconfig                                      # refresh shared library cache.
    ```
 
-###### 4. 构建utils代码仓：
+#### Ⅲ 构建utils代码仓：
 
 在工程目录执行./build -u ，将会自动进入utils，执行 utils_build.sh脚本，编译所有.c文件，并且将此代码仓的文件编译为.a文件。此代码仓包含了一些c语言编写的模块功能，包括安全管理模块、健康检查模块、日志模块、内存管理模块、命令行模块、线程池模块、定时器模块、网络消息模块、作者自己编写的双向循环链表，以及一些常用的api。（相关的模块说明待开发者补充）
 
@@ -65,16 +142,18 @@ cmake -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=ON ..
 make && make test
 ```
 
-###### 5. 构建server 、 client 代码共享仓（主要是protobuf文件）
+#### Ⅳ 构建QXServer 、 QXClient 代码共享仓（主要是protobuf文件）
 
 在工程目录执行./build -h ，将会自动进入SCShare，执行 scshare_build.sh脚本，编译.proto文件，并且将此代码仓的文件编译为.a文件
 
-###### 6. 构建 server、client cpp服务
+#### Ⅴ 构建 QXServer、QXClient 服务
 
-在工程目录执行./build -sc ，将会自动进入server、client，执行脚本，编译。生成可执行文件server/src/backEnd/build/QXServer、 client/src/build/QXClient。
+在工程目录执行./build -sc ，将会自动进入QXServer、QXClient，执行脚本，编译。生成可执行文件QXServer/src/build/QXServer、 QXClient/src/build/QXClient。
 
-### 二、utils 说明
+## 模块说明
 
-### 三、server 说明
+### util说明
 
-### 四、client 说明
+### QXServer 说明
+
+### QXClient 说明
