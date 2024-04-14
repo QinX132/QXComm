@@ -9,16 +9,20 @@ set(BUILD_ROOT .)
 set(UTILS_ROOT ${BUILD_ROOT}/../../utils)
 set(THIRD_PARTY_ROOT ${BUILD_ROOT}/../../third_party)
 set(SC_SHARE_ROOT ${BUILD_ROOT}/../../SCShare)
+set(MS_SHARE_ROOT ${BUILD_ROOT}/../../MSShare)
 ######################### global set ########################################
 ## find static lib first
 set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 find_package(Protobuf REQUIRED)
 find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
 ################################ src files ##################################
 set(SOURCES
 	QXServerMain.cpp
 	QXServerWorker.cpp
 	QXServerMsgBussiness.cpp
+    QXCommMngrClient.cpp
+    ${MS_SHARE_ROOT}/QXMSMsg.pb.cc
 )
 add_executable(${PROJECT_NAME} ${SOURCES})
 ############################# include dir ###################################
@@ -29,6 +33,7 @@ include_directories(
     ${THIRD_PARTY_ROOT}/libevent/build/include
 	${THIRD_PARTY_ROOT}/json/include
     ${SC_SHARE_ROOT}/include
+    ${MS_SHARE_ROOT}/include
 	${PROTOBUF_INCLUDE_DIRS}
 )
 ############################# cc option ###################################
@@ -55,5 +60,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${EVENT_LIBRARY} 
 	${GMSSL_LIBRARY}
 	${PROTOBUF_LIBRARIES}
-	Threads::Threads 
+	Threads::Threads
+    OpenSSL::SSL
+    OpenSSL::Crypto
 )

@@ -3,9 +3,9 @@ syntax = "proto3";
 package QXSCMsg;
 
 enum MsgType {
-    QX_MSG_TYPE_UKNOWN                          = 0;
-    QX_MSG_TYPE_REGISTER                        = 1;
-    QX_MSG_TYPE_REGISTER_REPLY                  = 2;
+    QX_SC_MSG_TYPE_UKNOWN                          = 0;
+    QX_SC_MSG_TYPE_REGISTER                        = 1;
+    QX_SC_MSG_TYPE_REGISTER_REPLY                  = 2;
 }
 
 message MsgPayload {

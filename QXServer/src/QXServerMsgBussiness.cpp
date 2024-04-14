@@ -5,6 +5,15 @@
 
 using namespace QXSCMsg;
 
+#undef LogInfo
+#undef LogDbg
+#undef LogWarn
+#undef LogErr
+#define LogInfo(FMT, ...)       LogClassInfo("QXSMsgHdlr", FMT, ##__VA_ARGS__)
+#define LogDbg(FMT, ...)        LogClassInfo("QXSMsgHdlr", FMT, ##__VA_ARGS__)
+#define LogWarn(FMT, ...)       LogClassInfo("QXSMsgHdlr", FMT, ##__VA_ARGS__)
+#define LogErr(FMT, ...)        LogClassInfo("QXSMsgHdlr", FMT, ##__VA_ARGS__)
+
 typedef struct _QXS_TPOOL_ARGS{
     MsgPayload *SendMsg;
     int32_t Fd;
@@ -105,7 +114,7 @@ QX_ERR_T QXServerMsgHandler::RegisterClient(
     }
     tpoolArg->SendMsg = new QXSCMsg::MsgPayload;
     ProtoInitMsg(Worker, *tpoolArg->SendMsg);
-    tpoolArg->SendMsg->mutable_msgbase()->set_msgtype(QX_MSG_TYPE_REGISTER_REPLY);
+    tpoolArg->SendMsg->mutable_msgbase()->set_msgtype(QX_SC_MSG_TYPE_REGISTER_REPLY);
     tpoolArg->SendMsg->set_errcode(ret);
     tpoolArg->SendMsg->mutable_msgbase()->mutable_clientregisterreply()->set_errcode(ret);
 //    if (ret == QX_SUCCESS)
@@ -134,7 +143,7 @@ QX_ERR_T QXServerMsgHandler::DispatchMsg(
 {
     QX_ERR_T ret = QX_SUCCESS;
     switch (MsgPayload.msgbase().msgtype()) {
-        case QX_MSG_TYPE_REGISTER:
+        case QX_SC_MSG_TYPE_REGISTER:
             if (Worker->ClientCurrentNum.load() < Worker->InitParam.WorkerLoad) {
                 ret = RegisterClient(Fd, Worker, MsgPayload);
             } else {

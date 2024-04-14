@@ -58,7 +58,7 @@ QXUtil_ModuleCommonInit(
             LogErr("Init log failed! %d %s", ret, QX_StrErr(ret));
             goto CommonReturn;
         }
-        LogInfo("Log start...");
+        //LogInfo("Log start...");
     }
     
     ret = QXUtil_MemModuleInit();
@@ -87,9 +87,10 @@ QXUtil_ModuleCommonInit(
             goto CommonReturn;
         }
     }
-    LogInfo("---------------------------------------------------------");
-    LogInfo("|-------------------%12s -----------------------|", ModuleInitParam.LogArg->RoleName);
-    LogInfo("---------------------------------------------------------");
+    LogInfo("");
+    LogInfo("-----------------------------------------------------------");
+    LogInfo("|--------------------%12s ------------------------|", ModuleInitParam.LogArg->RoleName);
+    LogInfo("-----------------------------------------------------------");
     
     if (ModuleInitParam.InitMsgModule)
     {
@@ -99,7 +100,7 @@ QXUtil_ModuleCommonInit(
             LogErr("Msg module init failed! %d %s", ret, QX_StrErr(ret));
             goto CommonReturn;
         }
-        LogInfo("---------------- Msg Module init success ----------------");
+        LogInfo("---------------- Msg Module init success -----------------");
     }
 
     if (ModuleInitParam.TPoolArg)
@@ -132,7 +133,7 @@ QXUtil_ModuleCommonInit(
             LogErr("Init Timer module failed! %d %s", ret, QX_StrErr(ret));
             goto CommonReturn;
         }
-        LogInfo("---------------- Timer Module init success --------------");
+        LogInfo("---------------- Timer Module init success ---------------");
     }
 
 CommonReturn:
@@ -159,7 +160,7 @@ QXUtil_ModuleCommonExit(
     LogInfo("-------------------- Timer Module exit -------------------");
 
     (void)QXUtil_MemModuleExit();
-    LogInfo("-------------------- Mem Module exit -------------------");
+    LogInfo("-------------------- Mem Module exit ---------------------");
     
     LogInfo("----------------------------------------------------------");
     QXUtil_LogModuleExit();

@@ -6,22 +6,22 @@ s_flag='false'
 c_flag='false'
 t_flag='false'
 u_flag='false'
-h_flag='false'
-help_str="supposed: a(all)s(server)c(client)t(thired_party)u(utils)h(share) such as ./build.sh -sc"
+S_flag='false'
+help_str="supposed: a(all)s(server)c(client)t(thired_party)u(utils)S(share) such as ./build.sh -sc"
 
 if [ $# -eq 0 ]; then
 	echo $help_str
 	exit 1
 fi
 
-while getopts 'asctuh' flag; do
+while getopts 'asctuS' flag; do
 	case "${flag}" in
 		a) a_flag='true' ;;
 		s) s_flag='true' ;;
 		c) c_flag='true' ;;
 		t) t_flag='true' ;;
 		u) u_flag='true' ;;
-        h) h_flag='true' ;;
+        S) S_flag='true' ;;
 		*) error="Unexpected option ${flag}, "$help_str ;;
 	esac
 done
@@ -31,7 +31,7 @@ echo "set build QXServer as "$s_flag
 echo "set build QXClient as "$c_flag
 echo "set build third_party as "$t_flag
 echo "set build utils as "$u_flag
-echo "set build share as "$h_flag
+echo "set build share as "$S_flag
 
 BuildThirdParty()
 {
@@ -53,6 +53,10 @@ BuildShare()
     pushd SCShare > /dev/null
     ./scshare_build.sh
     popd > /dev/null
+
+	pushd MSShare > /dev/null
+	./msshare_build.sh
+	popd > /dev/null
 }
 BuildServer()
 {
@@ -86,7 +90,7 @@ if [ "$u_flag" == 'true' ]; then
     BuildUtils
 fi
 
-if [ "$h_flag" == 'true' ]; then
+if [ "$S_flag" == 'true' ]; then
     BuildShare
 fi
 

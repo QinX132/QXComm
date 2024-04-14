@@ -17,7 +17,7 @@ typedef enum _QXC_WORKER_STATS {
     QXC_WORKER_STATS_MAX
 }
 QXC_WORKER_STATS;
-    
+
 #define QXC_IS_INITED(_stat_)                   ((_stat_) >= QXC_WORKER_STATS_INITED && (_stat_) < QXC_WORKER_STATS_EXIT)
 #define QXC_SHOULD_EXIT(_stat_)                 ((_stat_) == QXC_WORKER_STATS_EXIT)
 

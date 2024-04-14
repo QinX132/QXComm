@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <openssl/err.h>
+#include <openssl/ssl.h>
 #include <nlohmann/json.hpp>
 
 #include "QXUtilsModuleCommon.h"
@@ -116,5 +118,77 @@ QX_ERR_T QX_ParseConfFromJson(QX_UTIL_MODULES_INIT_PARAM &InitParam, string Conf
 CommErr:
     file.close();
 FileOpenErr:
+    return ret;
+}
+
+QX_ERR_T
+QX_ThirdPartyInit(
+    void
+    )
+{
+    QX_ERR_T ret = QX_SUCCESS;
+
+    // ssl init
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
+    SSL_load_error_strings();
+
+    return ret;
+}
+
+void
+QX_ThirdPartyExit(
+    void
+    )
+{
+    // ssl exit
+    ERR_free_strings();
+    EVP_cleanup();
+}
+
+QX_ERR_T 
+QX_SSLErrorShow(
+    SSL* SSL,
+    int Res
+    )
+{
+    QX_ERR_T ret = QX_SUCCESS;
+
+    int err = SSL_get_error(SSL, Res);
+    switch (err) {
+        case SSL_ERROR_ZERO_RETURN:
+            ret = -QX_ERR_PEER_CLOSED;
+            break;
+        case SSL_ERROR_WANT_READ:
+        case SSL_ERROR_WANT_WRITE:
+            // try again
+            ret = -QX_EAGAIN;
+            LogInfo("SSL/TLS send/recv neet to try again");
+            break;
+        case SSL_ERROR_NONE:
+            // No error
+            ret = QX_SUCCESS;
+            LogInfo("Not a error.");
+            break;
+        case SSL_ERROR_SSL:
+            // General SSL/TLS error
+            LogErr("SSL/TLS error: %s", ERR_error_string(ERR_get_error(), NULL));
+            ret = -QX_EIO;
+            break;
+        case SSL_ERROR_SYSCALL:
+            // System call error
+            LogErr("System call error: %s", strerror(errno));
+            ret = -QX_EINTR;
+            break;
+        default:
+            ret = -QX_EINVAL;
+            // Handle other error codes as needed
+            unsigned long error;
+            while ((error = ERR_get_error()) != 0) {
+                LogErr("OpenSSL error: %s", ERR_error_string(error, NULL));
+            }
+            break;
+    }
+
     return ret;
 }

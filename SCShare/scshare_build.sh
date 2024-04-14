@@ -2,7 +2,7 @@
 set -e
 
 protoc -I=. --cpp_out=. ./QXSCMsg.proto
-echo "Build proto success!"
+echo "Build scproto success!"
 mv QXSCMsg.pb.h include/
 
 rm -rf build && mkdir build && pushd build > /dev/null
