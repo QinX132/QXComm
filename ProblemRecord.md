@@ -73,9 +73,13 @@ npm run build
 
 （使用模板：https://lolicode.gitee.io/scui-doc/guide/）
 
+#### 3. 后端mvn （java）工程部署，远程smb idea工程部署此处略
 
+* 下载maven
+  sudo apt-get install maven
+* 
 
-#### 3. 部署时遇见问题
+#### 4. 部署时遇见问题
 
 * “密钥存储在过时的 trusted.gpg 密钥环中”：
 
