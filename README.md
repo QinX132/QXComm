@@ -133,6 +133,8 @@ cd QXComm
 该目录内置unittest，如果要执行单元测试，执行如下操作：
 
 ```sh
+sudo apt-get install libcurl4-openssl-dev // 下载curl 4 openssl
+
 cd utils
 
 rm build -rf && mkdir build && pushd build
