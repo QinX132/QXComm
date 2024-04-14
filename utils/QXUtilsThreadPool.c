@@ -320,7 +320,6 @@ QXUtil_TPoolAddTask(
         sg_ThreadPool->TaskListLength ++;
         pthread_cond_signal(&sg_ThreadPool->Cond);
         QX_UATOMIC_INC(&sg_ThreadPoolStats.TaskAdded);
-        LogInfo("Add task into tail success.");
     }
     pthread_mutex_unlock(&sg_ThreadPool->Lock);
     

@@ -32,9 +32,9 @@
 *.app
 
 # specialized
-server/src/backEnd/build/*
+QXServer/src/build/*
 utils/build/*
 third_party/*/build/*
 .vscode/*
 SCShare/build/*
-client/build/*
+QXClient/src/build/*
