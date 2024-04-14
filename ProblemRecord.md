@@ -57,7 +57,8 @@ vue create qxcomm
 进入工程并启动工程
 
 ```
-cd qxcomm 
+cd qxcomm
+npm install // 下载组件
 npm run serve
 ```
 
