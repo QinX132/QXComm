@@ -138,6 +138,60 @@ _LogRotate(
 }
 
 void
+QXUtil_LogPrintWithClass(
+    int Level,
+    const char* Function,
+    int Line,
+    const char* Class,
+    const char* Fmt,
+    ...
+    )
+{
+    va_list args;
+
+    if (Level < (int)sg_LogWorker.LogLevel)
+    {
+        return;
+    }
+
+    if (!sg_LogWorker.Inited)
+    {
+        va_start(args, Fmt);
+        printf("[%s-%d]:", Function, Line);
+        vprintf(Fmt, args);
+        va_end(args);
+        printf("\n");
+        return;
+    }
+    
+    pthread_spin_lock(&sg_LogWorker.Lock);
+
+    va_start(args, Fmt);
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    time_t now = tv.tv_sec;
+    struct tm* tm_info = localtime(&now);
+    char timestamp[24] = {0};
+    strftime(timestamp, sizeof(timestamp), "%Y/%m/%d_%H:%M:%S", tm_info);
+    int milliseconds = tv.tv_usec / 1000;
+    fprintf(sg_LogWorker.Fp, "[%s.%03d]<%s:%s>[%s-%d]:", timestamp, milliseconds, Class, sg_LogLevelStr[Level], Function, Line);
+    vfprintf(sg_LogWorker.Fp, Fmt, args);
+    va_end(args);
+    fprintf(sg_LogWorker.Fp, "\n");
+    fflush(sg_LogWorker.Fp);
+
+    sg_LogWorker.Stats.LogPrinted ++;
+    sg_LogWorker.Stats.LogSize = ftell(sg_LogWorker.Fp);
+    
+    pthread_spin_unlock(&sg_LogWorker.Lock);
+    
+    if (sg_LogWorker.Stats.LogSize >= sg_LogWorker.LogMaxSize)
+    {
+        _LogRotate();
+    }
+}
+
+void
 QXUtil_LogPrint(
     int Level,
     const char* Function,

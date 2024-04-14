@@ -3,6 +3,15 @@
 
 using namespace std;
 
+#undef LogInfo
+#undef LogDbg
+#undef LogWarn
+#undef LogErr
+#define LogInfo(FMT, ...)       LogClassInfo("QXSvrWrkr", FMT, ##__VA_ARGS__)
+#define LogDbg(FMT, ...)        LogClassInfo("QXSvrWrkr", FMT, ##__VA_ARGS__)
+#define LogWarn(FMT, ...)       LogClassInfo("QXSvrWrkr", FMT, ##__VA_ARGS__)
+#define LogErr(FMT, ...)        LogClassInfo("QXSvrWrkr", FMT, ##__VA_ARGS__)
+
 QX_ERR_T
 QXServerWorker::InitWorkerFd(pair<uint16_t, uint16_t> PortRange, uint32_t Load) {
     struct sockaddr_in serverAddr;

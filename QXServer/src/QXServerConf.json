@@ -4,6 +4,10 @@
         "LoadPerWorker": 1024,
         "WorkerPortStart": 13231
     },
+    "MngrClientConf": {
+        "ServerAddr": "192.168.137.101:14001",
+        "TrustCert" : "/tmp/QXCommMngr.crt"
+    },
     "UtilConf" : {
         "CmdLineInit": true,
         "LogConf": {

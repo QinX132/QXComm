@@ -24,6 +24,11 @@ extern "C"{
 #define LogWarn(Fmt, ...)               QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_WARNING, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
 #define LogErr(Fmt, ...)                QXUtil_LogPrint(QX_UTIL_LOG_LEVEL_ERROR, QX_UTIL_FUNC_NAME, __LINE__, Fmt, ##__VA_ARGS__)
 
+#define LogClassInfo(CLASS, Fmt, ...)   QXUtil_LogPrintWithClass(QX_UTIL_LOG_LEVEL_INFO, QX_UTIL_FUNC_NAME, __LINE__, CLASS, Fmt, ##__VA_ARGS__)
+#define LogClassDbg(CLASS, Fmt, ...)    QXUtil_LogPrintWithClass(QX_UTIL_LOG_LEVEL_DEBUG, QX_UTIL_FUNC_NAME, __LINE__, CLASS, Fmt, ##__VA_ARGS__)
+#define LogClassWarn(CLASS, Fmt, ...)   QXUtil_LogPrintWithClass(QX_UTIL_LOG_LEVEL_WARNING, QX_UTIL_FUNC_NAME, __LINE__, CLASS, Fmt, ##__VA_ARGS__)
+#define LogClassErr(CLASS, Fmt, ...)    QXUtil_LogPrintWithClass(QX_UTIL_LOG_LEVEL_ERROR, QX_UTIL_FUNC_NAME, __LINE__, CLASS, Fmt, ##__VA_ARGS__)
+
 typedef enum _QX_UTIL_LOG_LEVEL
 {
     QX_UTIL_LOG_LEVEL_INFO,
@@ -58,7 +63,15 @@ QXUtil_LogPrint(
     const char* Fmt,
     ...
     );
-
+void
+QXUtil_LogPrintWithClass(
+    int Level,
+    const char* Function,
+    int Line,
+    const char* Class,
+    const char* Fmt,
+    ...
+    );
 void
 QXUtil_LogModuleExit(
     void

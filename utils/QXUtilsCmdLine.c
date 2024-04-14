@@ -156,7 +156,7 @@ _CmdServerInit(
     /* init server fd */
     // set reuseable
     serverFd = socket(AF_UNIX, SOCK_STREAM, 0);
-    LogInfo("Open serverFd %d", serverFd);
+    //LogInfo("Open serverFd %d", serverFd);
     (void)setsockopt(serverFd, SOL_SOCKET, SO_REUSEADDR, &reuseable, sizeof(reuseable));
     // set fd nonBlock
     nonBlock = fcntl(serverFd, F_GETFL, 0);

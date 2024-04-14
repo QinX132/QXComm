@@ -294,6 +294,7 @@ QX_ERR_T QXClientWorker::InitEventBaseAndRun(void) {
 
     result = pthread_create(&MsgThreadId, &attr, _MsgThreadFn, (void*)this);
     if (0 != result) {
+        ret = -QX_EIO;
         LogErr("Create worker thread failed! errno %d", errno);
         event_free(KeepaliveEvent);
         KeepaliveEvent = NULL;

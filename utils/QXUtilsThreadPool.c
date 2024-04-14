@@ -82,7 +82,7 @@ _TPoolProcFn(
     QX_TPOOL_TASK* loop = NULL, *tmp = NULL;
     QX_LIST_NODE listHeadTmp;
     BOOL hasTask = FALSE;
-    LogInfo("Thread worker %lu entering...", syscall(SYS_gettid));
+    //LogInfo("Thread worker %lu entering...", syscall(SYS_gettid));
     
     while (!threadPool->Exit) 
     {
@@ -154,7 +154,7 @@ _TPoolProcFn(
 
 CommonReturn:
     QX_UATOMIC_DEC(&threadPool->CurrentThreadNum);
-    LogInfo("Thread worker %lu exit.", syscall(SYS_gettid));
+    //LogInfo("Thread worker %lu exit.", syscall(SYS_gettid));
     pthread_exit(NULL);
 }
 

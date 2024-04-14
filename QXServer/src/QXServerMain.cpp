@@ -14,6 +14,7 @@ using json = nlohmann::json;
 #define QX_SERVER_ROLE_NAME                             "QXServer"
 
 static QXServerWorker *sg_ServerWorkers = NULL;
+static QXCommMngrClient *sg_MngrClient = NULL;
 static int sg_ServerWorkerTotalNum = 0;
 
 int 
@@ -45,7 +46,11 @@ QXS_MainExit(
             sg_ServerWorkers[sg_ServerWorkerTotalNum].Exit();
         }
     }
+    if (sg_MngrClient) {
+        sg_MngrClient->Exit();
+    }
     QXUtil_ModuleCommonExit();
+    QX_ThirdPartyExit();
     cmd += string("killall ") + string(QX_SERVER_ROLE_NAME);
     system(cmd.c_str());
 }
@@ -76,12 +81,19 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     string RoleName(QX_SERVER_ROLE_NAME);
     int32_t loop = 0;
     QXS_WORKER_INIT_PARAM workerInitParam;
+    QX_COMM_MNGR_CLIENT_INIT_PARAM mngrClientConf;
     json fileJson;
+
+    ret = QX_ThirdPartyInit();
+    if (ret < QX_SUCCESS) {
+        LogErr("Init third party conf failed! ret %d", ret);
+        goto CommErr;
+    }
 
     if (!file.is_open()) {
         LogErr("Cannot open config file!");
         ret = -QX_ENOENT;
-        goto FileOpenErr;
+        goto CommErr;
     }
     try {
         file >> fileJson;
@@ -94,7 +106,7 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     ret = QX_ParseConfFromJson(initParam, confFilePath, RoleName, Argc, Argv, QXS_MainExit);
     if (ret < QX_SUCCESS) {
         LogErr("Init param from conf failed! ret %d", ret);
-        return ret;
+        goto CommErr;
     }
     // pre register in utils
     ret = _QXS_MainPreRegisterUtil();
@@ -105,8 +117,31 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     // init utils modules
     ret = QXUtil_ModuleCommonInit(initParam);
     if (ret != QX_SUCCESS) {
-        if (ret != -QX_ERR_EXIT_WITH_SUCCESS)
+        if (ret != -QX_ERR_EXIT_WITH_SUCCESS) {
             LogErr("Init utils modules failed! ret %d", ret);
+            goto CommErr;
+        }else {
+            goto Success;
+        }
+    }
+    // init mngr client
+    try {
+        sg_MngrClient = new QXCommMngrClient;
+        mngrClientConf.ServerAddr = fileJson["MngrClientConf"]["ServerAddr"];
+        if (fileJson["MngrClientConf"].contains("TrustCert") && 
+            fileJson["MngrClientConf"]["TrustCert"].is_string() &&
+            !fileJson["MngrClientConf"]["TrustCert"].get<std::string>().empty()) {
+            mngrClientConf.TrustedCert = fileJson["MngrClientConf"]["TrustCert"];
+        }
+            
+        ret = sg_MngrClient->Init(mngrClientConf);
+        if (ret < QX_SUCCESS) {
+            LogErr("Init mngr client failed! ret %d", ret);
+            goto CommErr;
+        }
+    } catch (...){
+        ret = -QX_EIO;
+        LogErr("Init mngr client failed!");
         goto CommErr;
     }
     // init server workers
@@ -131,11 +166,16 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     }
     if (sg_ServerWorkerTotalNum <= 0){
         ret = -QX_ENOENT;
+        goto CommErr;
     }
 
+    goto Success;
+
 CommErr:
-    file.close();
-FileOpenErr:
+    QXS_MainExit();
+Success:
+    if (file.is_open())
+        file.close();
     return ret;
 }
 static void

@@ -37,13 +37,13 @@ void QXClientMsgHandler::CreateRegisterProtoMsg(
     MsgBase &MsgBase
     ) 
 {
-    MsgBase.set_msgtype(QX_MSG_TYPE_REGISTER);
+    MsgBase.set_msgtype(QX_SC_MSG_TYPE_REGISTER);
     MsgBase.mutable_clientregister()->set_clientid(Worker->InitParam.ClientId);
 }
 
 QX_ERR_T QXClientMsgHandler::DispatchMsg(QXClientWorker* Worker, MsgPayload MsgPayload) {
     switch (MsgPayload.msgbase().msgtype()) {
-        case QX_MSG_TYPE_REGISTER_REPLY:
+        case QX_SC_MSG_TYPE_REGISTER_REPLY:
             if (MsgPayload.msgbase().clientregisterreply().errcode() == QX_SUCCESS) {
                 Worker->State = QXC_WORKER_STATS_REGISTERED;
                 Worker->RegisterRetried = 0;

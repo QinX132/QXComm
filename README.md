@@ -24,13 +24,14 @@ QXServer暴露在公网，提供以下服务：
 QXClient可在公网可在局域网提供以下服务：
 
 1. 注册后，并且添加互通域后，可以向指定QXClient发送消息
+2. 对QXServer集群可以自动切换，在当前的QXServer连接出问题时，自动切换至备机
 
 数据库出于安全考虑，部署在私网，提供服务：
 
 1. mongo保存QXClient的公钥消息、互通域信息，在QXServer启动时，读取互通域消息
 2. redis保存QXServer的相关健康信息
 
-注：安全服务使用GmSSL算法库
+注：考虑到现在国家正在大力推进GmSSL，所以本项目除了TLS/SSL的安全服务都使用GmSSL算法库而非OpenSSL
 
 ### 功能说明
 
@@ -40,9 +41,17 @@ QXClient可在公网可在局域网提供以下服务：
 
   仅manager可以注册互通域、获取QXServer管理信息
 
+* 角色：partner
+
+  partner（QXServer）可以在注册界面进行QXServer的注册
+
 * 角色：user
 
   user（QXClient）可以访问注册界面进行QXClient的注册
+
+#### Ⅱ QXServer注册
+
+partner在QXCommMngr上登录后，可以注册QXServer，注册后会得到一个QXCommMngr签名的证书，作为身份证明
 
 #### Ⅱ QXClient注册
 
@@ -58,7 +67,7 @@ manager角色可在前端界面设置互通域，指定某些Client可以相互�
 
 #### Ⅳ QXClient消息交互
 
-QXClient先通过QXCommMngr api，通过私钥签名请求，获取公钥加密过的最佳QXServer服务器地址，进行连接。 连接后，同样通过公私钥对，在QXServer上进行注册。 注册完成后即可对互通域内的所有QXClient进行通信。
+QXClient先通过QXCommMngr api，获取当前最佳的QXServer地址进行连接，并通过ssl/tls协议进行身份验证和信息加密。 连接后，同样通过公私钥对，在QXServer上进行注册。 注册完成后即可对互通域内的所有QXClient进行通信。
 
 ![消息交互](./PrjArchSrc/Communication.png)
 
@@ -72,7 +81,17 @@ QXServer在启动后，定期向redis中写入监控数据例如cpu、内存使�
 
 本仓库使用cmake构建，适配类unix系统，若有某些系统不适配请联系作者。
 
-linux：（cmake version 3.22.1 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04)）
+版本信息：
+
+cmake version 3.22.1 
+
+gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04) 
+
+java version "17.0.6" 2023-01-17 LTS
+
+Apache Maven 3.6.3
+
+@vue/cli 5.0.8
 
 ### 1. 克隆代码仓
 
@@ -159,3 +178,7 @@ make && make test
 ### QXServer 说明
 
 ### QXClient 说明
+
+### 证书签发
+
+使用：https://www.gmcert.org/subForm#

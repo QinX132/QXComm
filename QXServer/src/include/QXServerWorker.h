@@ -6,6 +6,7 @@
 #include "QXSCMsg.pb.h"
 #include "QXUtilsModuleCommon.h"
 #include "QXServerMsgBussiness.h"
+#include "QXCommMngrClient.h"
 
 typedef struct _QXS_WORKER_INIT_PARAM {
     std::pair<uint16_t, uint16_t> PortRange;
