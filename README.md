@@ -219,10 +219,82 @@ make && make test
 
 在工程目录执行./build -sc ，将会自动进入QXServer、QXClient，执行脚本，编译。生成可执行文件QXServer/src/build/QXServer、 QXClient/src/build/QXClient。
 
-## 模块说明
+## RoadMap
 
-### util说明
+### QXCommMngr 前端
 
-### QXServer 说明
+* 提供不同权限账号注册界面 ×
+* 提供对应权限账号注册不同角色的界面×
+* 为partner提供证书导出界面按钮×
+* 为partner、user提供密钥生成界面按钮×
+* 为manager提供QXServer监控界面×
+* 为parnter提供QXServer互通域管理增删改查界面×
+* 提供SM2生界面按钮×
+* 提供SM2公钥导入界面按钮×
 
-### QXClient 说明
+### QXCommMngr 后端
+
+* 为QXServer提供SSL QXCommMngr Server服务 √
+* api接口框架搭建√
+* 为api提供权限控制×
+* 为QXClient提供QXServer信息请求接口（openapi）×
+* 添加互通域增删改查api×
+* 提供SM2生成api×
+* 提供SM2公钥导入api×
+
+### util 组件
+
+util组件是作者用c语言开发的使用工具仓，旨在为上层应用提供便捷的接口。目前仅适配类unix系统
+
+* msg模块，提供tcp server/client消息交互接口
+  * 提供带前后缀的消息接口，包含较为详细的信息包括sessionid、type、vermagic、clientid等，支持在消息末尾添加签名 √
+  * 提供快速传输的消息接口，消息头仅包含ContentLen，其他服务由上层调用在Content中自行实现√
+  * 提供消息分片功能 ×
+  * 对health模块提供健康管理接口 √
+* mem模块，提供内存管理接口 √
+  * 对外提供默认内存申请/释放接口√
+  * 对外提供注册接口，对单独的申请者提供内存管理服务√
+  * 提供内存泄漏检查接口√
+  * 对health模块提供健康管理接口 √
+* cmdline模块，提供守护进程前台管理接口 √
+  * 为上层提供注册自定义管理类型的接口(QXUtil_CmdExternalRegister) √
+  * 对health模块提供健康管理接口 √
+* log模块，提供日志接口 √
+  * 为上层提供适配cpp的打印类名的接口√
+  * 提供日志文件自动切割功能√
+  * 解决运行过程中日志文件被删除的问题√
+  * 对health模块提供健康管理接口 √
+* health模块，提供健康管理接口
+  * 对外提供自定义的健康管理接口 √
+* timer模块，提供定时任务接口
+  * 将timer handle所有权转交外部√
+  * 支持添加一次性和循环任务√
+* threadpool模块，提供线程池接口
+  * 对外提供定制化参数配置接口√
+  * 对外提供实时修改参数配置接口√
+  * 将threadpool实例所有权转交外部×
+  * 对health模块提供健康管理接口 √
+* safetymanagr模块，提供安全服务接口 ×
+* 对外提供个性化初始化接口，包括自定义参数以及自定义模块√
+* 为java提供util服务 ×
+
+### QXServer
+
+* 提供QXClient连接接口√
+* 完善QXClient注册机制×
+* 与QXCommMngr Server进行SSL通讯√
+* 提供QXCommMngrServer自动重连逻辑√
+* 定期向QXCommMngr上报监控数据√
+* 完善QXCommMngr注册机制（50%）×
+* 与QXClient之间引入SM4加解密×
+
+### QXClient
+
+* 提供QXServer自动重连逻辑√
+* 完善QXServer注册逻辑（50%）×
+* 引入SM4加解密×
+* 为主流客户端提供图形化界面×
+
+### Mongo
+
+### Redis
