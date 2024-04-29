@@ -60,7 +60,7 @@ QX_ERR_T QXCommMngrClient::InitClientFd(void) {
         goto CommErr;
     }
     SSL_CTX_set_verify(ClientCtx, SSL_VERIFY_PEER, NULL);
-    SSL_CTX_set_default_verify_paths(ClientCtx);
+    //SSL_CTX_set_default_verify_paths(ClientCtx);
     if (InitParam.TrustedCert.length() != 0) {
         if (!SSL_CTX_load_verify_locations(ClientCtx, InitParam.TrustedCert.c_str(), NULL)) {
             LogErr("Unable to load trust certificate");
