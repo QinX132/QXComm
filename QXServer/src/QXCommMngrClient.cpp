@@ -154,7 +154,7 @@ void QXCommMngrClient::_RecvMsg(evutil_socket_t Fd, short Event, void *Arg) {
     UNUSED(Event);
 
     ret = SSL_read(worker->ClientSSL, buffer, buffLen);
-    if (ret <= 0 && (ret = QX_SSLErrorShow(worker->ClientSSL, ret)) != QX_SUCCESS)
+    if (ret <= 0)
     {
         ret = QX_SSLErrorShow(worker->ClientSSL, ret);
         if (ret != -QX_EAGAIN) {
@@ -214,6 +214,7 @@ void QXCommMngrClient::_HealthMonitor(evutil_socket_t Fd, short Event, void *Arg
     std::string serializedData;
     QX_ERR_T ret = QX_SUCCESS;
     std::string httpRequest;
+    float memUsage = 0;
 
     UNUSED(Fd);
     UNUSED(Event);
@@ -227,34 +228,39 @@ void QXCommMngrClient::_HealthMonitor(evutil_socket_t Fd, short Event, void *Arg
     if (ret < QX_SUCCESS) {
         return ;
     }
-    if (oldTotalTime == 0 && oldIdleTime == 0) {
-        oldTotalTime = newTotalTime;
-        oldIdleTime = newIdleTime;
+    ret = QXUtil_GetMemUsage(&memUsage);
+    if (ret < QX_SUCCESS) {
         return ;
-    } else {
-        float usage = 0;
+    }
+    msgPayload.mutable_msgbase()->mutable_svrhealthreport()->set_memusage(memUsage);
+
+    if (oldTotalTime != 0 || oldIdleTime != 0) {
+        float cpuUsage = 0;
         if (newTotalTime > oldTotalTime) {
-            usage = 1.0 - (float)(newIdleTime - oldIdleTime)/(float)(newTotalTime - oldTotalTime);
-            usage *= 100;
-            msgPayload.mutable_msgbase()->mutable_svrhealthreport()->set_cpuusage(usage);
+            cpuUsage = 1.0 - (float)(newIdleTime - oldIdleTime)/(float)(newTotalTime - oldTotalTime);
+            cpuUsage *= 100;
+            msgPayload.mutable_msgbase()->mutable_svrhealthreport()->set_cpuusage(cpuUsage);
         } else {
-            usage = 0;
-            msgPayload.mutable_msgbase()->mutable_svrhealthreport()->set_cpuusage(usage); // if 0, must be cleared
+            cpuUsage = 0;
+            msgPayload.mutable_msgbase()->mutable_svrhealthreport()->set_cpuusage(cpuUsage); // if 0, must be cleared
             msgPayload.mutable_msgbase()->mutable_svrhealthreport()->clear_cpuusage();
         }
-        oldTotalTime = newTotalTime;
-        oldIdleTime = newIdleTime;
     }
+    oldTotalTime = newTotalTime;
+    oldIdleTime = newIdleTime;
 
     serializedData = msgPayload.SerializeAsString();
     ret = SSL_write(worker->ClientSSL, serializedData.data(), serializedData.size());
-    if (ret <= 0 && (ret = QX_SSLErrorShow(worker->ClientSSL, ret)) != QX_SUCCESS)
+    if (ret <= 0)
     {
-        LogErr("Send Msg failed, ret %d:%s", ret, QX_StrErr(-ret));
-        worker->RemoveRecvEvent();
+        ret = QX_SSLErrorShow(worker->ClientSSL, ret);
+        if (ret != -QX_EAGAIN) {
+            LogErr("Send Msg failed, ret %d:%s", ret, QX_StrErr(-ret));
+            worker->RemoveRecvEvent();
+        }
         goto CommRet;
     }
-    LogInfo("Send Msg(len %d): %s", serializedData.size(), msgPayload.ShortDebugString().c_str());
+    LogInfo("Send Msg: %s", msgPayload.ShortDebugString().c_str());
     
 CommRet:
     assert(NULL != msgPayload.release_msgbase());
@@ -394,6 +400,17 @@ void QXCommMngrClient::Exit(void) {
             }
         }
     }
+}
+
+QX_ERR_T QXCommMngrClient::GetPubKeyAfterGotClientId(uint32_t ClientId, SM2_KEY &PubKey){
+    // todo
+    std::string title = "Client-" + std::to_string(ClientId) + "-SM2PubKey";
+    QX_ERR_T ret = QX_SUCCESS;
+
+    ret =  QXUtil_CryptSm2ImportPubKey("QXCWorkPath/QXC_SM2_Pub.pem", &PubKey);
+    
+    QXUtil_Hexdump(title.c_str(), (uint8_t*)&PubKey.public_key, sizeof(PubKey.public_key));
+    return ret;
 }
 
 QXCommMngrClient::QXCommMngrClient(): 

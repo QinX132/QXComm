@@ -16,7 +16,7 @@ set(SOURCES
     QXUtilsMsg.c
     QXUtilsThreadPool.c
     QXUtilsTimer.c
-    QXUtilsSafetyManager.c
+    QXUtilsCrypto.c
 )
 ############################# include dir ###################################
 include_directories(
@@ -55,6 +55,7 @@ if (BUILD_TESTS)
         UnitTest/UnitTestMem.c
         UnitTest/UnitTestHealth.c
         UnitTest/UnitTestTimer.c
+        UnitTest/UnitTestCrypto.c
         UnitTest/UnitTestCommonUtil.c
     )
 	foreach(UnitTestSrc ${TEST_SOURCES})
@@ -63,11 +64,13 @@ if (BUILD_TESTS)
 		add_test(NAME ${testName} COMMAND ${testName})
 		target_link_directories(${testName} PRIVATE
         	${THIRD_PARTY_ROOT}/libevent/build/lib
+        	${THIRD_PARTY_ROOT}/GmSSL/build/bin
     	)
 		target_link_libraries(${testName} PRIVATE
         	${PROJECT_NAME}
         	event
         	pthread
+            gmssl
     	)
 	endforeach()
 endif ()

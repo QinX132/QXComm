@@ -1,12 +1,21 @@
 ﻿{
-    "ServerWorkerConf": {
-        "WorkerNum": 8,
-        "LoadPerWorker": 1024,
-        "WorkerPortStart": 13231
-    },
+    "ServerWorkerConf": [
+        {
+            "Load": 1024,
+            "Port": 13231,
+            "WorkPath": "./worker1",
+            "Sm2PriPwd": "QXServer"
+        },
+		{   
+            "Load": 2048,
+            "Port": 13232,
+            "WorkPath": "./worker2",
+            "Sm2PriPwd": "QXServer"
+        }
+    ],
     "MngrClientConf": {
         "ServerAddr": "192.168.137.101:14001",
-        "TrustCert" : "/tmp/QXCommMngr.crt"
+        "TrustCert111" : "/home/yuzb/yuzb/tmp/QXCommMngr.crt"
     },
     "UtilConf" : {
         "CmdLineInit": true,
@@ -19,7 +28,7 @@
         },
         "TPoolConf": {
             "Init": true,
-            "TPoolSize": 16,
+            "TPoolSize": 2,
             "TPoolTimeout": 60,
             "TPoolQueueMaxLen": 1024
         },

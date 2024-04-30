@@ -69,8 +69,11 @@ struct ServerInfoDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ServerInfoDefaultTypeInternal _ServerInfo_default_instance_;
 PROTOBUF_CONSTEXPR MsgBase::MsgBase(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.clientregister_)*/nullptr
-  , /*decltype(_impl_.clientregisterreply_)*/nullptr
+    /*decltype(_impl_.registerrequest_)*/nullptr
+  , /*decltype(_impl_.registerchallenge_)*/nullptr
+  , /*decltype(_impl_.registerchallengereply_)*/nullptr
+  , /*decltype(_impl_.registerfinish_)*/nullptr
+  , /*decltype(_impl_.transmsg_)*/nullptr
   , /*decltype(_impl_.msgtype_)*/0u
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct MsgBaseDefaultTypeInternal {
@@ -82,35 +85,93 @@ struct MsgBaseDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MsgBaseDefaultTypeInternal _MsgBase_default_instance_;
-PROTOBUF_CONSTEXPR ClientRegister::ClientRegister(
+PROTOBUF_CONSTEXPR ClientRegisterRequest::ClientRegisterRequest(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.clientid_)*/0u
+  , /*decltype(_impl_.ciphersuite_)*/0u
   , /*decltype(_impl_._cached_size_)*/{}} {}
-struct ClientRegisterDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ClientRegisterDefaultTypeInternal()
+struct ClientRegisterRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ClientRegisterRequestDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ClientRegisterDefaultTypeInternal() {}
+  ~ClientRegisterRequestDefaultTypeInternal() {}
   union {
-    ClientRegister _instance;
+    ClientRegisterRequest _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ClientRegisterDefaultTypeInternal _ClientRegister_default_instance_;
-PROTOBUF_CONSTEXPR ClientRegisterReply::ClientRegisterReply(
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ClientRegisterRequestDefaultTypeInternal _ClientRegisterRequest_default_instance_;
+PROTOBUF_CONSTEXPR ServerRegisterChallenge::ServerRegisterChallenge(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.errcode_)*/0
+    /*decltype(_impl_.cipherrand_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
   , /*decltype(_impl_._cached_size_)*/{}} {}
-struct ClientRegisterReplyDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR ClientRegisterReplyDefaultTypeInternal()
+struct ServerRegisterChallengeDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ServerRegisterChallengeDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
-  ~ClientRegisterReplyDefaultTypeInternal() {}
+  ~ServerRegisterChallengeDefaultTypeInternal() {}
   union {
-    ClientRegisterReply _instance;
+    ServerRegisterChallenge _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ClientRegisterReplyDefaultTypeInternal _ClientRegisterReply_default_instance_;
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ServerRegisterChallengeDefaultTypeInternal _ServerRegisterChallenge_default_instance_;
+PROTOBUF_CONSTEXPR ClientRegisterChallengeReply::ClientRegisterChallengeReply(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.plainrand_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.cipherrand_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct ClientRegisterChallengeReplyDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ClientRegisterChallengeReplyDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ClientRegisterChallengeReplyDefaultTypeInternal() {}
+  union {
+    ClientRegisterChallengeReply _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ClientRegisterChallengeReplyDefaultTypeInternal _ClientRegisterChallengeReply_default_instance_;
+PROTOBUF_CONSTEXPR ServerRegisterFinish::ServerRegisterFinish(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.plainrand_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.ciphercontent_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct ServerRegisterFinishDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR ServerRegisterFinishDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~ServerRegisterFinishDefaultTypeInternal() {}
+  union {
+    ServerRegisterFinish _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 ServerRegisterFinishDefaultTypeInternal _ServerRegisterFinish_default_instance_;
+PROTOBUF_CONSTEXPR CipherContent::CipherContent(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.ciphersm4key_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.ciphersuite_)*/0u
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct CipherContentDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR CipherContentDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~CipherContentDefaultTypeInternal() {}
+  union {
+    CipherContent _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 CipherContentDefaultTypeInternal _CipherContent_default_instance_;
+PROTOBUF_CONSTEXPR TransMsg::TransMsg(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.msg_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.from_)*/nullptr
+  , /*decltype(_impl_.to_)*/nullptr
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct TransMsgDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR TransMsgDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~TransMsgDefaultTypeInternal() {}
+  union {
+    TransMsg _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TransMsgDefaultTypeInternal _TransMsg_default_instance_;
 }  // namespace QXSCMsg
-static ::_pb::Metadata file_level_metadata_QXSCMsg_2eproto[6];
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_QXSCMsg_2eproto[1];
+static ::_pb::Metadata file_level_metadata_QXSCMsg_2eproto[10];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_QXSCMsg_2eproto[2];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_QXSCMsg_2eproto = nullptr;
 
 const uint32_t TableStruct_QXSCMsg_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -149,30 +210,71 @@ const uint32_t TableStruct_QXSCMsg_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.msgtype_),
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.clientregister_),
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.clientregisterreply_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.registerrequest_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.registerchallenge_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.registerchallengereply_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.registerfinish_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::MsgBase, _impl_.transmsg_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegister, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegister, _impl_.clientid_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterRequest, _impl_.clientid_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterRequest, _impl_.ciphersuite_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterReply, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ServerRegisterChallenge, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterReply, _impl_.errcode_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ServerRegisterChallenge, _impl_.cipherrand_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterChallengeReply, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterChallengeReply, _impl_.plainrand_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ClientRegisterChallengeReply, _impl_.cipherrand_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ServerRegisterFinish, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ServerRegisterFinish, _impl_.plainrand_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::ServerRegisterFinish, _impl_.ciphercontent_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::CipherContent, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::CipherContent, _impl_.ciphersuite_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::CipherContent, _impl_.ciphersm4key_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::TransMsg, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::TransMsg, _impl_.from_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::TransMsg, _impl_.to_),
+  PROTOBUF_FIELD_OFFSET(::QXSCMsg::TransMsg, _impl_.msg_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::QXSCMsg::MsgPayload)},
   { 13, -1, -1, sizeof(::QXSCMsg::ClientInfo)},
   { 20, -1, -1, sizeof(::QXSCMsg::ServerInfo)},
   { 28, -1, -1, sizeof(::QXSCMsg::MsgBase)},
-  { 37, -1, -1, sizeof(::QXSCMsg::ClientRegister)},
-  { 44, -1, -1, sizeof(::QXSCMsg::ClientRegisterReply)},
+  { 40, -1, -1, sizeof(::QXSCMsg::ClientRegisterRequest)},
+  { 48, -1, -1, sizeof(::QXSCMsg::ServerRegisterChallenge)},
+  { 55, -1, -1, sizeof(::QXSCMsg::ClientRegisterChallengeReply)},
+  { 63, -1, -1, sizeof(::QXSCMsg::ServerRegisterFinish)},
+  { 71, -1, -1, sizeof(::QXSCMsg::CipherContent)},
+  { 79, -1, -1, sizeof(::QXSCMsg::TransMsg)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -180,8 +282,12 @@ static const ::_pb::Message* const file_default_instances[] = {
   &::QXSCMsg::_ClientInfo_default_instance_._instance,
   &::QXSCMsg::_ServerInfo_default_instance_._instance,
   &::QXSCMsg::_MsgBase_default_instance_._instance,
-  &::QXSCMsg::_ClientRegister_default_instance_._instance,
-  &::QXSCMsg::_ClientRegisterReply_default_instance_._instance,
+  &::QXSCMsg::_ClientRegisterRequest_default_instance_._instance,
+  &::QXSCMsg::_ServerRegisterChallenge_default_instance_._instance,
+  &::QXSCMsg::_ClientRegisterChallengeReply_default_instance_._instance,
+  &::QXSCMsg::_ServerRegisterFinish_default_instance_._instance,
+  &::QXSCMsg::_CipherContent_default_instance_._instance,
+  &::QXSCMsg::_TransMsg_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_QXSCMsg_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -192,21 +298,40 @@ const char descriptor_table_protodef_QXSCMsg_2eproto[] PROTOBUF_SECTION_VARIABLE
   ".QXSCMsg.ServerInfo\022\017\n\007errCode\030\006 \001(\005\022!\n\007"
   "msgBase\030\007 \001(\0132\020.QXSCMsg.MsgBase\"\036\n\nClien"
   "tInfo\022\020\n\010clientId\030\001 \001(\r\"2\n\nServerInfo\022\020\n"
-  "\010serverId\030\001 \001(\r\022\022\n\nserverName\030\002 \001(\t\"\206\001\n\007"
-  "MsgBase\022\017\n\007msgType\030\001 \001(\r\022/\n\016clientRegist"
-  "er\030\002 \001(\0132\027.QXSCMsg.ClientRegister\0229\n\023cli"
-  "entRegisterReply\030\003 \001(\0132\034.QXSCMsg.ClientR"
-  "egisterReply\"\"\n\016ClientRegister\022\020\n\010client"
-  "Id\030\001 \001(\r\"&\n\023ClientRegisterReply\022\017\n\007errCo"
-  "de\030\001 \001(\005*d\n\007MsgType\022\031\n\025QX_SC_MSG_TYPE_UK"
-  "NOWN\020\000\022\033\n\027QX_SC_MSG_TYPE_REGISTER\020\001\022!\n\035Q"
-  "X_SC_MSG_TYPE_REGISTER_REPLY\020\002b\006proto3"
+  "\010serverId\030\001 \001(\r\022\022\n\nserverName\030\002 \001(\t\"\263\002\n\007"
+  "MsgBase\022\017\n\007msgType\030\001 \001(\r\0227\n\017registerRequ"
+  "est\030\002 \001(\0132\036.QXSCMsg.ClientRegisterReques"
+  "t\022;\n\021registerChallenge\030\003 \001(\0132 .QXSCMsg.S"
+  "erverRegisterChallenge\022E\n\026registerChalle"
+  "ngeReply\030\004 \001(\0132%.QXSCMsg.ClientRegisterC"
+  "hallengeReply\0225\n\016registerFinish\030\005 \001(\0132\035."
+  "QXSCMsg.ServerRegisterFinish\022#\n\010transMsg"
+  "\030\006 \001(\0132\021.QXSCMsg.TransMsg\">\n\025ClientRegis"
+  "terRequest\022\020\n\010clientId\030\001 \001(\r\022\023\n\013cipherSu"
+  "ite\030\002 \001(\r\"-\n\027ServerRegisterChallenge\022\022\n\n"
+  "cipherRand\030\001 \001(\014\"E\n\034ClientRegisterChalle"
+  "ngeReply\022\021\n\tplainRand\030\001 \001(\014\022\022\n\ncipherRan"
+  "d\030\002 \001(\014\"X\n\024ServerRegisterFinish\022\021\n\tplain"
+  "Rand\030\001 \001(\014\022-\n\rcipherContent\030\002 \001(\0132\026.QXSC"
+  "Msg.CipherContent\":\n\rCipherContent\022\023\n\013ci"
+  "pherSuite\030\001 \001(\r\022\024\n\014cipherSM4Key\030\002 \001(\014\"[\n"
+  "\010TransMsg\022!\n\004from\030\001 \001(\0132\023.QXSCMsg.Client"
+  "Info\022\037\n\002to\030\002 \001(\0132\023.QXSCMsg.ClientInfo\022\013\n"
+  "\003msg\030\003 \001(\t*\211\002\n\007MsgType\022\031\n\025QX_SC_MSG_TYPE"
+  "_UKNOWN\020\000\022#\n\037QX_SC_MSG_TYPE_REGISTER_REQ"
+  "UEST\020\001\022%\n!QX_SC_MSG_TYPE_REGISTER_CHALLE"
+  "NGE\020\002\022+\n\'QX_SC_MSG_TYPE_REGISTER_CHALLEN"
+  "GE_REPLY\020\003\022\"\n\036QX_SC_MSG_TYPE_REGISTER_FI"
+  "NISH\020\004\022\"\n\036QX_SC_MSG_TYPE_MSG_TRANS_C_2_S"
+  "\020d\022\"\n\036QX_SC_MSG_TYPE_MSG_TRANS_S_2_C\020e*F"
+  "\n\013CipherSuite\022\033\n\027QX_SC_CIPHER_SUITE_NONE"
+  "\020\000\022\032\n\026QX_SC_CIPHER_SUITE_SM4\020\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_QXSCMsg_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_QXSCMsg_2eproto = {
-    false, false, 638, descriptor_table_protodef_QXSCMsg_2eproto,
+    false, false, 1398, descriptor_table_protodef_QXSCMsg_2eproto,
     "QXSCMsg.proto",
-    &descriptor_table_QXSCMsg_2eproto_once, nullptr, 0, 6,
+    &descriptor_table_QXSCMsg_2eproto_once, nullptr, 0, 10,
     schemas, file_default_instances, TableStruct_QXSCMsg_2eproto::offsets,
     file_level_metadata_QXSCMsg_2eproto, file_level_enum_descriptors_QXSCMsg_2eproto,
     file_level_service_descriptors_QXSCMsg_2eproto,
@@ -227,6 +352,24 @@ bool MsgType_IsValid(int value) {
     case 0:
     case 1:
     case 2:
+    case 3:
+    case 4:
+    case 100:
+    case 101:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CipherSuite_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_QXSCMsg_2eproto);
+  return file_level_enum_descriptors_QXSCMsg_2eproto[1];
+}
+bool CipherSuite_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
       return true;
     default:
       return false;
@@ -1056,17 +1199,32 @@ void ServerInfo::InternalSwap(ServerInfo* other) {
 
 class MsgBase::_Internal {
  public:
-  static const ::QXSCMsg::ClientRegister& clientregister(const MsgBase* msg);
-  static const ::QXSCMsg::ClientRegisterReply& clientregisterreply(const MsgBase* msg);
+  static const ::QXSCMsg::ClientRegisterRequest& registerrequest(const MsgBase* msg);
+  static const ::QXSCMsg::ServerRegisterChallenge& registerchallenge(const MsgBase* msg);
+  static const ::QXSCMsg::ClientRegisterChallengeReply& registerchallengereply(const MsgBase* msg);
+  static const ::QXSCMsg::ServerRegisterFinish& registerfinish(const MsgBase* msg);
+  static const ::QXSCMsg::TransMsg& transmsg(const MsgBase* msg);
 };
 
-const ::QXSCMsg::ClientRegister&
-MsgBase::_Internal::clientregister(const MsgBase* msg) {
-  return *msg->_impl_.clientregister_;
+const ::QXSCMsg::ClientRegisterRequest&
+MsgBase::_Internal::registerrequest(const MsgBase* msg) {
+  return *msg->_impl_.registerrequest_;
 }
-const ::QXSCMsg::ClientRegisterReply&
-MsgBase::_Internal::clientregisterreply(const MsgBase* msg) {
-  return *msg->_impl_.clientregisterreply_;
+const ::QXSCMsg::ServerRegisterChallenge&
+MsgBase::_Internal::registerchallenge(const MsgBase* msg) {
+  return *msg->_impl_.registerchallenge_;
+}
+const ::QXSCMsg::ClientRegisterChallengeReply&
+MsgBase::_Internal::registerchallengereply(const MsgBase* msg) {
+  return *msg->_impl_.registerchallengereply_;
+}
+const ::QXSCMsg::ServerRegisterFinish&
+MsgBase::_Internal::registerfinish(const MsgBase* msg) {
+  return *msg->_impl_.registerfinish_;
+}
+const ::QXSCMsg::TransMsg&
+MsgBase::_Internal::transmsg(const MsgBase* msg) {
+  return *msg->_impl_.transmsg_;
 }
 MsgBase::MsgBase(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
@@ -1078,17 +1236,29 @@ MsgBase::MsgBase(const MsgBase& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   MsgBase* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.clientregister_){nullptr}
-    , decltype(_impl_.clientregisterreply_){nullptr}
+      decltype(_impl_.registerrequest_){nullptr}
+    , decltype(_impl_.registerchallenge_){nullptr}
+    , decltype(_impl_.registerchallengereply_){nullptr}
+    , decltype(_impl_.registerfinish_){nullptr}
+    , decltype(_impl_.transmsg_){nullptr}
     , decltype(_impl_.msgtype_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  if (from._internal_has_clientregister()) {
-    _this->_impl_.clientregister_ = new ::QXSCMsg::ClientRegister(*from._impl_.clientregister_);
+  if (from._internal_has_registerrequest()) {
+    _this->_impl_.registerrequest_ = new ::QXSCMsg::ClientRegisterRequest(*from._impl_.registerrequest_);
   }
-  if (from._internal_has_clientregisterreply()) {
-    _this->_impl_.clientregisterreply_ = new ::QXSCMsg::ClientRegisterReply(*from._impl_.clientregisterreply_);
+  if (from._internal_has_registerchallenge()) {
+    _this->_impl_.registerchallenge_ = new ::QXSCMsg::ServerRegisterChallenge(*from._impl_.registerchallenge_);
+  }
+  if (from._internal_has_registerchallengereply()) {
+    _this->_impl_.registerchallengereply_ = new ::QXSCMsg::ClientRegisterChallengeReply(*from._impl_.registerchallengereply_);
+  }
+  if (from._internal_has_registerfinish()) {
+    _this->_impl_.registerfinish_ = new ::QXSCMsg::ServerRegisterFinish(*from._impl_.registerfinish_);
+  }
+  if (from._internal_has_transmsg()) {
+    _this->_impl_.transmsg_ = new ::QXSCMsg::TransMsg(*from._impl_.transmsg_);
   }
   _this->_impl_.msgtype_ = from._impl_.msgtype_;
   // @@protoc_insertion_point(copy_constructor:QXSCMsg.MsgBase)
@@ -1099,8 +1269,11 @@ inline void MsgBase::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.clientregister_){nullptr}
-    , decltype(_impl_.clientregisterreply_){nullptr}
+      decltype(_impl_.registerrequest_){nullptr}
+    , decltype(_impl_.registerchallenge_){nullptr}
+    , decltype(_impl_.registerchallengereply_){nullptr}
+    , decltype(_impl_.registerfinish_){nullptr}
+    , decltype(_impl_.transmsg_){nullptr}
     , decltype(_impl_.msgtype_){0u}
     , /*decltype(_impl_._cached_size_)*/{}
   };
@@ -1117,8 +1290,11 @@ MsgBase::~MsgBase() {
 
 inline void MsgBase::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  if (this != internal_default_instance()) delete _impl_.clientregister_;
-  if (this != internal_default_instance()) delete _impl_.clientregisterreply_;
+  if (this != internal_default_instance()) delete _impl_.registerrequest_;
+  if (this != internal_default_instance()) delete _impl_.registerchallenge_;
+  if (this != internal_default_instance()) delete _impl_.registerchallengereply_;
+  if (this != internal_default_instance()) delete _impl_.registerfinish_;
+  if (this != internal_default_instance()) delete _impl_.transmsg_;
 }
 
 void MsgBase::SetCachedSize(int size) const {
@@ -1131,14 +1307,26 @@ void MsgBase::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  if (GetArenaForAllocation() == nullptr && _impl_.clientregister_ != nullptr) {
-    delete _impl_.clientregister_;
+  if (GetArenaForAllocation() == nullptr && _impl_.registerrequest_ != nullptr) {
+    delete _impl_.registerrequest_;
   }
-  _impl_.clientregister_ = nullptr;
-  if (GetArenaForAllocation() == nullptr && _impl_.clientregisterreply_ != nullptr) {
-    delete _impl_.clientregisterreply_;
+  _impl_.registerrequest_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.registerchallenge_ != nullptr) {
+    delete _impl_.registerchallenge_;
   }
-  _impl_.clientregisterreply_ = nullptr;
+  _impl_.registerchallenge_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.registerchallengereply_ != nullptr) {
+    delete _impl_.registerchallengereply_;
+  }
+  _impl_.registerchallengereply_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.registerfinish_ != nullptr) {
+    delete _impl_.registerfinish_;
+  }
+  _impl_.registerfinish_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.transmsg_ != nullptr) {
+    delete _impl_.transmsg_;
+  }
+  _impl_.transmsg_ = nullptr;
   _impl_.msgtype_ = 0u;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -1157,18 +1345,42 @@ const char* MsgBase::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
         } else
           goto handle_unusual;
         continue;
-      // .QXSCMsg.ClientRegister clientRegister = 2;
+      // .QXSCMsg.ClientRegisterRequest registerRequest = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          ptr = ctx->ParseMessage(_internal_mutable_clientregister(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_registerrequest(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
+      // .QXSCMsg.ServerRegisterChallenge registerChallenge = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
-          ptr = ctx->ParseMessage(_internal_mutable_clientregisterreply(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_registerchallenge(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .QXSCMsg.ClientRegisterChallengeReply registerChallengeReply = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          ptr = ctx->ParseMessage(_internal_mutable_registerchallengereply(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .QXSCMsg.ServerRegisterFinish registerFinish = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_registerfinish(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .QXSCMsg.TransMsg transMsg = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_transmsg(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1208,18 +1420,39 @@ uint8_t* MsgBase::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_msgtype(), target);
   }
 
-  // .QXSCMsg.ClientRegister clientRegister = 2;
-  if (this->_internal_has_clientregister()) {
+  // .QXSCMsg.ClientRegisterRequest registerRequest = 2;
+  if (this->_internal_has_registerrequest()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(2, _Internal::clientregister(this),
-        _Internal::clientregister(this).GetCachedSize(), target, stream);
+      InternalWriteMessage(2, _Internal::registerrequest(this),
+        _Internal::registerrequest(this).GetCachedSize(), target, stream);
   }
 
-  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
-  if (this->_internal_has_clientregisterreply()) {
+  // .QXSCMsg.ServerRegisterChallenge registerChallenge = 3;
+  if (this->_internal_has_registerchallenge()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(3, _Internal::clientregisterreply(this),
-        _Internal::clientregisterreply(this).GetCachedSize(), target, stream);
+      InternalWriteMessage(3, _Internal::registerchallenge(this),
+        _Internal::registerchallenge(this).GetCachedSize(), target, stream);
+  }
+
+  // .QXSCMsg.ClientRegisterChallengeReply registerChallengeReply = 4;
+  if (this->_internal_has_registerchallengereply()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(4, _Internal::registerchallengereply(this),
+        _Internal::registerchallengereply(this).GetCachedSize(), target, stream);
+  }
+
+  // .QXSCMsg.ServerRegisterFinish registerFinish = 5;
+  if (this->_internal_has_registerfinish()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(5, _Internal::registerfinish(this),
+        _Internal::registerfinish(this).GetCachedSize(), target, stream);
+  }
+
+  // .QXSCMsg.TransMsg transMsg = 6;
+  if (this->_internal_has_transmsg()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(6, _Internal::transmsg(this),
+        _Internal::transmsg(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1238,18 +1471,39 @@ size_t MsgBase::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // .QXSCMsg.ClientRegister clientRegister = 2;
-  if (this->_internal_has_clientregister()) {
+  // .QXSCMsg.ClientRegisterRequest registerRequest = 2;
+  if (this->_internal_has_registerrequest()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.clientregister_);
+        *_impl_.registerrequest_);
   }
 
-  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
-  if (this->_internal_has_clientregisterreply()) {
+  // .QXSCMsg.ServerRegisterChallenge registerChallenge = 3;
+  if (this->_internal_has_registerchallenge()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.clientregisterreply_);
+        *_impl_.registerchallenge_);
+  }
+
+  // .QXSCMsg.ClientRegisterChallengeReply registerChallengeReply = 4;
+  if (this->_internal_has_registerchallengereply()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.registerchallengereply_);
+  }
+
+  // .QXSCMsg.ServerRegisterFinish registerFinish = 5;
+  if (this->_internal_has_registerfinish()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.registerfinish_);
+  }
+
+  // .QXSCMsg.TransMsg transMsg = 6;
+  if (this->_internal_has_transmsg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.transmsg_);
   }
 
   // uint32 msgType = 1;
@@ -1275,13 +1529,25 @@ void MsgBase::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOB
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_has_clientregister()) {
-    _this->_internal_mutable_clientregister()->::QXSCMsg::ClientRegister::MergeFrom(
-        from._internal_clientregister());
+  if (from._internal_has_registerrequest()) {
+    _this->_internal_mutable_registerrequest()->::QXSCMsg::ClientRegisterRequest::MergeFrom(
+        from._internal_registerrequest());
   }
-  if (from._internal_has_clientregisterreply()) {
-    _this->_internal_mutable_clientregisterreply()->::QXSCMsg::ClientRegisterReply::MergeFrom(
-        from._internal_clientregisterreply());
+  if (from._internal_has_registerchallenge()) {
+    _this->_internal_mutable_registerchallenge()->::QXSCMsg::ServerRegisterChallenge::MergeFrom(
+        from._internal_registerchallenge());
+  }
+  if (from._internal_has_registerchallengereply()) {
+    _this->_internal_mutable_registerchallengereply()->::QXSCMsg::ClientRegisterChallengeReply::MergeFrom(
+        from._internal_registerchallengereply());
+  }
+  if (from._internal_has_registerfinish()) {
+    _this->_internal_mutable_registerfinish()->::QXSCMsg::ServerRegisterFinish::MergeFrom(
+        from._internal_registerfinish());
+  }
+  if (from._internal_has_transmsg()) {
+    _this->_internal_mutable_transmsg()->::QXSCMsg::TransMsg::MergeFrom(
+        from._internal_transmsg());
   }
   if (from._internal_msgtype() != 0) {
     _this->_internal_set_msgtype(from._internal_msgtype());
@@ -1306,9 +1572,9 @@ void MsgBase::InternalSwap(MsgBase* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(MsgBase, _impl_.msgtype_)
       + sizeof(MsgBase::_impl_.msgtype_)
-      - PROTOBUF_FIELD_OFFSET(MsgBase, _impl_.clientregister_)>(
-          reinterpret_cast<char*>(&_impl_.clientregister_),
-          reinterpret_cast<char*>(&other->_impl_.clientregister_));
+      - PROTOBUF_FIELD_OFFSET(MsgBase, _impl_.registerrequest_)>(
+          reinterpret_cast<char*>(&_impl_.registerrequest_),
+          reinterpret_cast<char*>(&other->_impl_.registerrequest_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata MsgBase::GetMetadata() const {
@@ -1319,40 +1585,44 @@ void MsgBase::InternalSwap(MsgBase* other) {
 
 // ===================================================================
 
-class ClientRegister::_Internal {
+class ClientRegisterRequest::_Internal {
  public:
 };
 
-ClientRegister::ClientRegister(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+ClientRegisterRequest::ClientRegisterRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor(arena, is_message_owned);
-  // @@protoc_insertion_point(arena_constructor:QXSCMsg.ClientRegister)
+  // @@protoc_insertion_point(arena_constructor:QXSCMsg.ClientRegisterRequest)
 }
-ClientRegister::ClientRegister(const ClientRegister& from)
+ClientRegisterRequest::ClientRegisterRequest(const ClientRegisterRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
-  ClientRegister* const _this = this; (void)_this;
+  ClientRegisterRequest* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.clientid_){}
+    , decltype(_impl_.ciphersuite_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _this->_impl_.clientid_ = from._impl_.clientid_;
-  // @@protoc_insertion_point(copy_constructor:QXSCMsg.ClientRegister)
+  ::memcpy(&_impl_.clientid_, &from._impl_.clientid_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.ciphersuite_) -
+    reinterpret_cast<char*>(&_impl_.clientid_)) + sizeof(_impl_.ciphersuite_));
+  // @@protoc_insertion_point(copy_constructor:QXSCMsg.ClientRegisterRequest)
 }
 
-inline void ClientRegister::SharedCtor(
+inline void ClientRegisterRequest::SharedCtor(
     ::_pb::Arena* arena, bool is_message_owned) {
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.clientid_){0u}
+    , decltype(_impl_.ciphersuite_){0u}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
 
-ClientRegister::~ClientRegister() {
-  // @@protoc_insertion_point(destructor:QXSCMsg.ClientRegister)
+ClientRegisterRequest::~ClientRegisterRequest() {
+  // @@protoc_insertion_point(destructor:QXSCMsg.ClientRegisterRequest)
   if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
@@ -1360,25 +1630,27 @@ ClientRegister::~ClientRegister() {
   SharedDtor();
 }
 
-inline void ClientRegister::SharedDtor() {
+inline void ClientRegisterRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
 }
 
-void ClientRegister::SetCachedSize(int size) const {
+void ClientRegisterRequest::SetCachedSize(int size) const {
   _impl_._cached_size_.Set(size);
 }
 
-void ClientRegister::Clear() {
-// @@protoc_insertion_point(message_clear_start:QXSCMsg.ClientRegister)
+void ClientRegisterRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:QXSCMsg.ClientRegisterRequest)
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.clientid_ = 0u;
+  ::memset(&_impl_.clientid_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.ciphersuite_) -
+      reinterpret_cast<char*>(&_impl_.clientid_)) + sizeof(_impl_.ciphersuite_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* ClientRegister::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+const char* ClientRegisterRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
@@ -1392,180 +1664,10 @@ const char* ClientRegister::_InternalParse(const char* ptr, ::_pbi::ParseContext
         } else
           goto handle_unusual;
         continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
-}
-
-uint8_t* ClientRegister::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.ClientRegister)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 clientId = 1;
-  if (this->_internal_clientid() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_clientid(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.ClientRegister)
-  return target;
-}
-
-size_t ClientRegister::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.ClientRegister)
-  size_t total_size = 0;
-
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // uint32 clientId = 1;
-  if (this->_internal_clientid() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_clientid());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ClientRegister::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    ClientRegister::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ClientRegister::GetClassData() const { return &_class_data_; }
-
-
-void ClientRegister::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<ClientRegister*>(&to_msg);
-  auto& from = static_cast<const ClientRegister&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.ClientRegister)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_clientid() != 0) {
-    _this->_internal_set_clientid(from._internal_clientid());
-  }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void ClientRegister::CopyFrom(const ClientRegister& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.ClientRegister)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool ClientRegister::IsInitialized() const {
-  return true;
-}
-
-void ClientRegister::InternalSwap(ClientRegister* other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.clientid_, other->_impl_.clientid_);
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata ClientRegister::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
-      file_level_metadata_QXSCMsg_2eproto[4]);
-}
-
-// ===================================================================
-
-class ClientRegisterReply::_Internal {
- public:
-};
-
-ClientRegisterReply::ClientRegisterReply(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
-  // @@protoc_insertion_point(arena_constructor:QXSCMsg.ClientRegisterReply)
-}
-ClientRegisterReply::ClientRegisterReply(const ClientRegisterReply& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  ClientRegisterReply* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.errcode_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _this->_impl_.errcode_ = from._impl_.errcode_;
-  // @@protoc_insertion_point(copy_constructor:QXSCMsg.ClientRegisterReply)
-}
-
-inline void ClientRegisterReply::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.errcode_){0}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-}
-
-ClientRegisterReply::~ClientRegisterReply() {
-  // @@protoc_insertion_point(destructor:QXSCMsg.ClientRegisterReply)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
-  SharedDtor();
-}
-
-inline void ClientRegisterReply::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-}
-
-void ClientRegisterReply::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void ClientRegisterReply::Clear() {
-// @@protoc_insertion_point(message_clear_start:QXSCMsg.ClientRegisterReply)
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.errcode_ = 0;
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* ClientRegisterReply::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // int32 errCode = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          _impl_.errcode_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+      // uint32 cipherSuite = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          _impl_.ciphersuite_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1593,84 +1695,1300 @@ failure:
 #undef CHK_
 }
 
-uint8_t* ClientRegisterReply::_InternalSerialize(
+uint8_t* ClientRegisterRequest::_InternalSerialize(
     uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.ClientRegisterReply)
+  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.ClientRegisterRequest)
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 errCode = 1;
-  if (this->_internal_errcode() != 0) {
+  // uint32 clientId = 1;
+  if (this->_internal_clientid() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_errcode(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_clientid(), target);
+  }
+
+  // uint32 cipherSuite = 2;
+  if (this->_internal_ciphersuite() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(2, this->_internal_ciphersuite(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.ClientRegisterReply)
+  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.ClientRegisterRequest)
   return target;
 }
 
-size_t ClientRegisterReply::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.ClientRegisterReply)
+size_t ClientRegisterRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.ClientRegisterRequest)
   size_t total_size = 0;
 
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 errCode = 1;
-  if (this->_internal_errcode() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_errcode());
+  // uint32 clientId = 1;
+  if (this->_internal_clientid() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_clientid());
+  }
+
+  // uint32 cipherSuite = 2;
+  if (this->_internal_ciphersuite() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_ciphersuite());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ClientRegisterReply::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ClientRegisterRequest::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    ClientRegisterReply::MergeImpl
+    ClientRegisterRequest::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ClientRegisterReply::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ClientRegisterRequest::GetClassData() const { return &_class_data_; }
 
 
-void ClientRegisterReply::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<ClientRegisterReply*>(&to_msg);
-  auto& from = static_cast<const ClientRegisterReply&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.ClientRegisterReply)
+void ClientRegisterRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ClientRegisterRequest*>(&to_msg);
+  auto& from = static_cast<const ClientRegisterRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.ClientRegisterRequest)
   GOOGLE_DCHECK_NE(&from, _this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_errcode() != 0) {
-    _this->_internal_set_errcode(from._internal_errcode());
+  if (from._internal_clientid() != 0) {
+    _this->_internal_set_clientid(from._internal_clientid());
+  }
+  if (from._internal_ciphersuite() != 0) {
+    _this->_internal_set_ciphersuite(from._internal_ciphersuite());
   }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void ClientRegisterReply::CopyFrom(const ClientRegisterReply& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.ClientRegisterReply)
+void ClientRegisterRequest::CopyFrom(const ClientRegisterRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.ClientRegisterRequest)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ClientRegisterReply::IsInitialized() const {
+bool ClientRegisterRequest::IsInitialized() const {
   return true;
 }
 
-void ClientRegisterReply::InternalSwap(ClientRegisterReply* other) {
+void ClientRegisterRequest::InternalSwap(ClientRegisterRequest* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.errcode_, other->_impl_.errcode_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ClientRegisterRequest, _impl_.ciphersuite_)
+      + sizeof(ClientRegisterRequest::_impl_.ciphersuite_)
+      - PROTOBUF_FIELD_OFFSET(ClientRegisterRequest, _impl_.clientid_)>(
+          reinterpret_cast<char*>(&_impl_.clientid_),
+          reinterpret_cast<char*>(&other->_impl_.clientid_));
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata ClientRegisterReply::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata ClientRegisterRequest::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
+      file_level_metadata_QXSCMsg_2eproto[4]);
+}
+
+// ===================================================================
+
+class ServerRegisterChallenge::_Internal {
+ public:
+};
+
+ServerRegisterChallenge::ServerRegisterChallenge(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:QXSCMsg.ServerRegisterChallenge)
+}
+ServerRegisterChallenge::ServerRegisterChallenge(const ServerRegisterChallenge& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ServerRegisterChallenge* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.cipherrand_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _impl_.cipherrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.cipherrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_cipherrand().empty()) {
+    _this->_impl_.cipherrand_.Set(from._internal_cipherrand(), 
+      _this->GetArenaForAllocation());
+  }
+  // @@protoc_insertion_point(copy_constructor:QXSCMsg.ServerRegisterChallenge)
+}
+
+inline void ServerRegisterChallenge::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.cipherrand_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.cipherrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.cipherrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+ServerRegisterChallenge::~ServerRegisterChallenge() {
+  // @@protoc_insertion_point(destructor:QXSCMsg.ServerRegisterChallenge)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ServerRegisterChallenge::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.cipherrand_.Destroy();
+}
+
+void ServerRegisterChallenge::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void ServerRegisterChallenge::Clear() {
+// @@protoc_insertion_point(message_clear_start:QXSCMsg.ServerRegisterChallenge)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.cipherrand_.ClearToEmpty();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ServerRegisterChallenge::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // bytes cipherRand = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          auto str = _internal_mutable_cipherrand();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ServerRegisterChallenge::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.ServerRegisterChallenge)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // bytes cipherRand = 1;
+  if (!this->_internal_cipherrand().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_cipherrand(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.ServerRegisterChallenge)
+  return target;
+}
+
+size_t ServerRegisterChallenge::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.ServerRegisterChallenge)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bytes cipherRand = 1;
+  if (!this->_internal_cipherrand().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_cipherrand());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ServerRegisterChallenge::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ServerRegisterChallenge::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ServerRegisterChallenge::GetClassData() const { return &_class_data_; }
+
+
+void ServerRegisterChallenge::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ServerRegisterChallenge*>(&to_msg);
+  auto& from = static_cast<const ServerRegisterChallenge&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.ServerRegisterChallenge)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_cipherrand().empty()) {
+    _this->_internal_set_cipherrand(from._internal_cipherrand());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ServerRegisterChallenge::CopyFrom(const ServerRegisterChallenge& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.ServerRegisterChallenge)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ServerRegisterChallenge::IsInitialized() const {
+  return true;
+}
+
+void ServerRegisterChallenge::InternalSwap(ServerRegisterChallenge* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.cipherrand_, lhs_arena,
+      &other->_impl_.cipherrand_, rhs_arena
+  );
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ServerRegisterChallenge::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
       file_level_metadata_QXSCMsg_2eproto[5]);
+}
+
+// ===================================================================
+
+class ClientRegisterChallengeReply::_Internal {
+ public:
+};
+
+ClientRegisterChallengeReply::ClientRegisterChallengeReply(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:QXSCMsg.ClientRegisterChallengeReply)
+}
+ClientRegisterChallengeReply::ClientRegisterChallengeReply(const ClientRegisterChallengeReply& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ClientRegisterChallengeReply* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.plainrand_){}
+    , decltype(_impl_.cipherrand_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _impl_.plainrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.plainrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_plainrand().empty()) {
+    _this->_impl_.plainrand_.Set(from._internal_plainrand(), 
+      _this->GetArenaForAllocation());
+  }
+  _impl_.cipherrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.cipherrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_cipherrand().empty()) {
+    _this->_impl_.cipherrand_.Set(from._internal_cipherrand(), 
+      _this->GetArenaForAllocation());
+  }
+  // @@protoc_insertion_point(copy_constructor:QXSCMsg.ClientRegisterChallengeReply)
+}
+
+inline void ClientRegisterChallengeReply::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.plainrand_){}
+    , decltype(_impl_.cipherrand_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.plainrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.plainrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  _impl_.cipherrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.cipherrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+ClientRegisterChallengeReply::~ClientRegisterChallengeReply() {
+  // @@protoc_insertion_point(destructor:QXSCMsg.ClientRegisterChallengeReply)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ClientRegisterChallengeReply::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.plainrand_.Destroy();
+  _impl_.cipherrand_.Destroy();
+}
+
+void ClientRegisterChallengeReply::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void ClientRegisterChallengeReply::Clear() {
+// @@protoc_insertion_point(message_clear_start:QXSCMsg.ClientRegisterChallengeReply)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.plainrand_.ClearToEmpty();
+  _impl_.cipherrand_.ClearToEmpty();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ClientRegisterChallengeReply::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // bytes plainRand = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          auto str = _internal_mutable_plainrand();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // bytes cipherRand = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_cipherrand();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ClientRegisterChallengeReply::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.ClientRegisterChallengeReply)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // bytes plainRand = 1;
+  if (!this->_internal_plainrand().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_plainrand(), target);
+  }
+
+  // bytes cipherRand = 2;
+  if (!this->_internal_cipherrand().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        2, this->_internal_cipherrand(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.ClientRegisterChallengeReply)
+  return target;
+}
+
+size_t ClientRegisterChallengeReply::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.ClientRegisterChallengeReply)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bytes plainRand = 1;
+  if (!this->_internal_plainrand().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_plainrand());
+  }
+
+  // bytes cipherRand = 2;
+  if (!this->_internal_cipherrand().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_cipherrand());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ClientRegisterChallengeReply::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ClientRegisterChallengeReply::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ClientRegisterChallengeReply::GetClassData() const { return &_class_data_; }
+
+
+void ClientRegisterChallengeReply::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ClientRegisterChallengeReply*>(&to_msg);
+  auto& from = static_cast<const ClientRegisterChallengeReply&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.ClientRegisterChallengeReply)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_plainrand().empty()) {
+    _this->_internal_set_plainrand(from._internal_plainrand());
+  }
+  if (!from._internal_cipherrand().empty()) {
+    _this->_internal_set_cipherrand(from._internal_cipherrand());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ClientRegisterChallengeReply::CopyFrom(const ClientRegisterChallengeReply& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.ClientRegisterChallengeReply)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ClientRegisterChallengeReply::IsInitialized() const {
+  return true;
+}
+
+void ClientRegisterChallengeReply::InternalSwap(ClientRegisterChallengeReply* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.plainrand_, lhs_arena,
+      &other->_impl_.plainrand_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.cipherrand_, lhs_arena,
+      &other->_impl_.cipherrand_, rhs_arena
+  );
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ClientRegisterChallengeReply::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
+      file_level_metadata_QXSCMsg_2eproto[6]);
+}
+
+// ===================================================================
+
+class ServerRegisterFinish::_Internal {
+ public:
+  static const ::QXSCMsg::CipherContent& ciphercontent(const ServerRegisterFinish* msg);
+};
+
+const ::QXSCMsg::CipherContent&
+ServerRegisterFinish::_Internal::ciphercontent(const ServerRegisterFinish* msg) {
+  return *msg->_impl_.ciphercontent_;
+}
+ServerRegisterFinish::ServerRegisterFinish(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:QXSCMsg.ServerRegisterFinish)
+}
+ServerRegisterFinish::ServerRegisterFinish(const ServerRegisterFinish& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  ServerRegisterFinish* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.plainrand_){}
+    , decltype(_impl_.ciphercontent_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _impl_.plainrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.plainrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_plainrand().empty()) {
+    _this->_impl_.plainrand_.Set(from._internal_plainrand(), 
+      _this->GetArenaForAllocation());
+  }
+  if (from._internal_has_ciphercontent()) {
+    _this->_impl_.ciphercontent_ = new ::QXSCMsg::CipherContent(*from._impl_.ciphercontent_);
+  }
+  // @@protoc_insertion_point(copy_constructor:QXSCMsg.ServerRegisterFinish)
+}
+
+inline void ServerRegisterFinish::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.plainrand_){}
+    , decltype(_impl_.ciphercontent_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.plainrand_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.plainrand_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+ServerRegisterFinish::~ServerRegisterFinish() {
+  // @@protoc_insertion_point(destructor:QXSCMsg.ServerRegisterFinish)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void ServerRegisterFinish::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.plainrand_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.ciphercontent_;
+}
+
+void ServerRegisterFinish::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void ServerRegisterFinish::Clear() {
+// @@protoc_insertion_point(message_clear_start:QXSCMsg.ServerRegisterFinish)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.plainrand_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.ciphercontent_ != nullptr) {
+    delete _impl_.ciphercontent_;
+  }
+  _impl_.ciphercontent_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ServerRegisterFinish::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // bytes plainRand = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          auto str = _internal_mutable_plainrand();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .QXSCMsg.CipherContent cipherContent = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_ciphercontent(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ServerRegisterFinish::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.ServerRegisterFinish)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // bytes plainRand = 1;
+  if (!this->_internal_plainrand().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_plainrand(), target);
+  }
+
+  // .QXSCMsg.CipherContent cipherContent = 2;
+  if (this->_internal_has_ciphercontent()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::ciphercontent(this),
+        _Internal::ciphercontent(this).GetCachedSize(), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.ServerRegisterFinish)
+  return target;
+}
+
+size_t ServerRegisterFinish::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.ServerRegisterFinish)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bytes plainRand = 1;
+  if (!this->_internal_plainrand().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_plainrand());
+  }
+
+  // .QXSCMsg.CipherContent cipherContent = 2;
+  if (this->_internal_has_ciphercontent()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.ciphercontent_);
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ServerRegisterFinish::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    ServerRegisterFinish::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ServerRegisterFinish::GetClassData() const { return &_class_data_; }
+
+
+void ServerRegisterFinish::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<ServerRegisterFinish*>(&to_msg);
+  auto& from = static_cast<const ServerRegisterFinish&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.ServerRegisterFinish)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_plainrand().empty()) {
+    _this->_internal_set_plainrand(from._internal_plainrand());
+  }
+  if (from._internal_has_ciphercontent()) {
+    _this->_internal_mutable_ciphercontent()->::QXSCMsg::CipherContent::MergeFrom(
+        from._internal_ciphercontent());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ServerRegisterFinish::CopyFrom(const ServerRegisterFinish& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.ServerRegisterFinish)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ServerRegisterFinish::IsInitialized() const {
+  return true;
+}
+
+void ServerRegisterFinish::InternalSwap(ServerRegisterFinish* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.plainrand_, lhs_arena,
+      &other->_impl_.plainrand_, rhs_arena
+  );
+  swap(_impl_.ciphercontent_, other->_impl_.ciphercontent_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ServerRegisterFinish::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
+      file_level_metadata_QXSCMsg_2eproto[7]);
+}
+
+// ===================================================================
+
+class CipherContent::_Internal {
+ public:
+};
+
+CipherContent::CipherContent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:QXSCMsg.CipherContent)
+}
+CipherContent::CipherContent(const CipherContent& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  CipherContent* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.ciphersm4key_){}
+    , decltype(_impl_.ciphersuite_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _impl_.ciphersm4key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.ciphersm4key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_ciphersm4key().empty()) {
+    _this->_impl_.ciphersm4key_.Set(from._internal_ciphersm4key(), 
+      _this->GetArenaForAllocation());
+  }
+  _this->_impl_.ciphersuite_ = from._impl_.ciphersuite_;
+  // @@protoc_insertion_point(copy_constructor:QXSCMsg.CipherContent)
+}
+
+inline void CipherContent::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.ciphersm4key_){}
+    , decltype(_impl_.ciphersuite_){0u}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.ciphersm4key_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.ciphersm4key_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+CipherContent::~CipherContent() {
+  // @@protoc_insertion_point(destructor:QXSCMsg.CipherContent)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void CipherContent::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.ciphersm4key_.Destroy();
+}
+
+void CipherContent::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void CipherContent::Clear() {
+// @@protoc_insertion_point(message_clear_start:QXSCMsg.CipherContent)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.ciphersm4key_.ClearToEmpty();
+  _impl_.ciphersuite_ = 0u;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* CipherContent::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // uint32 cipherSuite = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          _impl_.ciphersuite_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // bytes cipherSM4Key = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_ciphersm4key();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* CipherContent::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.CipherContent)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 cipherSuite = 1;
+  if (this->_internal_ciphersuite() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_ciphersuite(), target);
+  }
+
+  // bytes cipherSM4Key = 2;
+  if (!this->_internal_ciphersm4key().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        2, this->_internal_ciphersm4key(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.CipherContent)
+  return target;
+}
+
+size_t CipherContent::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.CipherContent)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bytes cipherSM4Key = 2;
+  if (!this->_internal_ciphersm4key().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_ciphersm4key());
+  }
+
+  // uint32 cipherSuite = 1;
+  if (this->_internal_ciphersuite() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_ciphersuite());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CipherContent::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    CipherContent::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CipherContent::GetClassData() const { return &_class_data_; }
+
+
+void CipherContent::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<CipherContent*>(&to_msg);
+  auto& from = static_cast<const CipherContent&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.CipherContent)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_ciphersm4key().empty()) {
+    _this->_internal_set_ciphersm4key(from._internal_ciphersm4key());
+  }
+  if (from._internal_ciphersuite() != 0) {
+    _this->_internal_set_ciphersuite(from._internal_ciphersuite());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void CipherContent::CopyFrom(const CipherContent& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.CipherContent)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CipherContent::IsInitialized() const {
+  return true;
+}
+
+void CipherContent::InternalSwap(CipherContent* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.ciphersm4key_, lhs_arena,
+      &other->_impl_.ciphersm4key_, rhs_arena
+  );
+  swap(_impl_.ciphersuite_, other->_impl_.ciphersuite_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata CipherContent::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
+      file_level_metadata_QXSCMsg_2eproto[8]);
+}
+
+// ===================================================================
+
+class TransMsg::_Internal {
+ public:
+  static const ::QXSCMsg::ClientInfo& from(const TransMsg* msg);
+  static const ::QXSCMsg::ClientInfo& to(const TransMsg* msg);
+};
+
+const ::QXSCMsg::ClientInfo&
+TransMsg::_Internal::from(const TransMsg* msg) {
+  return *msg->_impl_.from_;
+}
+const ::QXSCMsg::ClientInfo&
+TransMsg::_Internal::to(const TransMsg* msg) {
+  return *msg->_impl_.to_;
+}
+TransMsg::TransMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:QXSCMsg.TransMsg)
+}
+TransMsg::TransMsg(const TransMsg& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  TransMsg* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.msg_){}
+    , decltype(_impl_.from_){nullptr}
+    , decltype(_impl_.to_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _impl_.msg_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.msg_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_msg().empty()) {
+    _this->_impl_.msg_.Set(from._internal_msg(), 
+      _this->GetArenaForAllocation());
+  }
+  if (from._internal_has_from()) {
+    _this->_impl_.from_ = new ::QXSCMsg::ClientInfo(*from._impl_.from_);
+  }
+  if (from._internal_has_to()) {
+    _this->_impl_.to_ = new ::QXSCMsg::ClientInfo(*from._impl_.to_);
+  }
+  // @@protoc_insertion_point(copy_constructor:QXSCMsg.TransMsg)
+}
+
+inline void TransMsg::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.msg_){}
+    , decltype(_impl_.from_){nullptr}
+    , decltype(_impl_.to_){nullptr}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.msg_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.msg_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+}
+
+TransMsg::~TransMsg() {
+  // @@protoc_insertion_point(destructor:QXSCMsg.TransMsg)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void TransMsg::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.msg_.Destroy();
+  if (this != internal_default_instance()) delete _impl_.from_;
+  if (this != internal_default_instance()) delete _impl_.to_;
+}
+
+void TransMsg::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void TransMsg::Clear() {
+// @@protoc_insertion_point(message_clear_start:QXSCMsg.TransMsg)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.msg_.ClearToEmpty();
+  if (GetArenaForAllocation() == nullptr && _impl_.from_ != nullptr) {
+    delete _impl_.from_;
+  }
+  _impl_.from_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && _impl_.to_ != nullptr) {
+    delete _impl_.to_;
+  }
+  _impl_.to_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* TransMsg::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .QXSCMsg.ClientInfo from = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_from(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .QXSCMsg.ClientInfo to = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_to(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string msg = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          auto str = _internal_mutable_msg();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "QXSCMsg.TransMsg.msg"));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* TransMsg::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:QXSCMsg.TransMsg)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .QXSCMsg.ClientInfo from = 1;
+  if (this->_internal_has_from()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(1, _Internal::from(this),
+        _Internal::from(this).GetCachedSize(), target, stream);
+  }
+
+  // .QXSCMsg.ClientInfo to = 2;
+  if (this->_internal_has_to()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(2, _Internal::to(this),
+        _Internal::to(this).GetCachedSize(), target, stream);
+  }
+
+  // string msg = 3;
+  if (!this->_internal_msg().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_msg().data(), static_cast<int>(this->_internal_msg().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "QXSCMsg.TransMsg.msg");
+    target = stream->WriteStringMaybeAliased(
+        3, this->_internal_msg(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:QXSCMsg.TransMsg)
+  return target;
+}
+
+size_t TransMsg::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:QXSCMsg.TransMsg)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // string msg = 3;
+  if (!this->_internal_msg().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_msg());
+  }
+
+  // .QXSCMsg.ClientInfo from = 1;
+  if (this->_internal_has_from()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.from_);
+  }
+
+  // .QXSCMsg.ClientInfo to = 2;
+  if (this->_internal_has_to()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.to_);
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData TransMsg::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    TransMsg::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*TransMsg::GetClassData() const { return &_class_data_; }
+
+
+void TransMsg::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<TransMsg*>(&to_msg);
+  auto& from = static_cast<const TransMsg&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:QXSCMsg.TransMsg)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_msg().empty()) {
+    _this->_internal_set_msg(from._internal_msg());
+  }
+  if (from._internal_has_from()) {
+    _this->_internal_mutable_from()->::QXSCMsg::ClientInfo::MergeFrom(
+        from._internal_from());
+  }
+  if (from._internal_has_to()) {
+    _this->_internal_mutable_to()->::QXSCMsg::ClientInfo::MergeFrom(
+        from._internal_to());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void TransMsg::CopyFrom(const TransMsg& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:QXSCMsg.TransMsg)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool TransMsg::IsInitialized() const {
+  return true;
+}
+
+void TransMsg::InternalSwap(TransMsg* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.msg_, lhs_arena,
+      &other->_impl_.msg_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(TransMsg, _impl_.to_)
+      + sizeof(TransMsg::_impl_.to_)
+      - PROTOBUF_FIELD_OFFSET(TransMsg, _impl_.from_)>(
+          reinterpret_cast<char*>(&_impl_.from_),
+          reinterpret_cast<char*>(&other->_impl_.from_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata TransMsg::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_QXSCMsg_2eproto_getter, &descriptor_table_QXSCMsg_2eproto_once,
+      file_level_metadata_QXSCMsg_2eproto[9]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -1692,13 +3010,29 @@ template<> PROTOBUF_NOINLINE ::QXSCMsg::MsgBase*
 Arena::CreateMaybeMessage< ::QXSCMsg::MsgBase >(Arena* arena) {
   return Arena::CreateMessageInternal< ::QXSCMsg::MsgBase >(arena);
 }
-template<> PROTOBUF_NOINLINE ::QXSCMsg::ClientRegister*
-Arena::CreateMaybeMessage< ::QXSCMsg::ClientRegister >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::QXSCMsg::ClientRegister >(arena);
+template<> PROTOBUF_NOINLINE ::QXSCMsg::ClientRegisterRequest*
+Arena::CreateMaybeMessage< ::QXSCMsg::ClientRegisterRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::QXSCMsg::ClientRegisterRequest >(arena);
 }
-template<> PROTOBUF_NOINLINE ::QXSCMsg::ClientRegisterReply*
-Arena::CreateMaybeMessage< ::QXSCMsg::ClientRegisterReply >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::QXSCMsg::ClientRegisterReply >(arena);
+template<> PROTOBUF_NOINLINE ::QXSCMsg::ServerRegisterChallenge*
+Arena::CreateMaybeMessage< ::QXSCMsg::ServerRegisterChallenge >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::QXSCMsg::ServerRegisterChallenge >(arena);
+}
+template<> PROTOBUF_NOINLINE ::QXSCMsg::ClientRegisterChallengeReply*
+Arena::CreateMaybeMessage< ::QXSCMsg::ClientRegisterChallengeReply >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::QXSCMsg::ClientRegisterChallengeReply >(arena);
+}
+template<> PROTOBUF_NOINLINE ::QXSCMsg::ServerRegisterFinish*
+Arena::CreateMaybeMessage< ::QXSCMsg::ServerRegisterFinish >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::QXSCMsg::ServerRegisterFinish >(arena);
+}
+template<> PROTOBUF_NOINLINE ::QXSCMsg::CipherContent*
+Arena::CreateMaybeMessage< ::QXSCMsg::CipherContent >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::QXSCMsg::CipherContent >(arena);
+}
+template<> PROTOBUF_NOINLINE ::QXSCMsg::TransMsg*
+Arena::CreateMaybeMessage< ::QXSCMsg::TransMsg >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::QXSCMsg::TransMsg >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

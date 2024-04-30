@@ -7,6 +7,7 @@
 #include "QXUtilsThreadPool.h"
 #include "QXUtilsCmdLine.h"
 #include "QXUtilsModuleHealth.h"
+#include "QXUtilsCrypto.h"
 
 #ifdef __cplusplus
 extern "C"{

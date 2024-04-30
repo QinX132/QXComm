@@ -46,15 +46,18 @@ struct TableStruct_QXSCMsg_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_QXSCMsg_2eproto;
 namespace QXSCMsg {
+class CipherContent;
+struct CipherContentDefaultTypeInternal;
+extern CipherContentDefaultTypeInternal _CipherContent_default_instance_;
 class ClientInfo;
 struct ClientInfoDefaultTypeInternal;
 extern ClientInfoDefaultTypeInternal _ClientInfo_default_instance_;
-class ClientRegister;
-struct ClientRegisterDefaultTypeInternal;
-extern ClientRegisterDefaultTypeInternal _ClientRegister_default_instance_;
-class ClientRegisterReply;
-struct ClientRegisterReplyDefaultTypeInternal;
-extern ClientRegisterReplyDefaultTypeInternal _ClientRegisterReply_default_instance_;
+class ClientRegisterChallengeReply;
+struct ClientRegisterChallengeReplyDefaultTypeInternal;
+extern ClientRegisterChallengeReplyDefaultTypeInternal _ClientRegisterChallengeReply_default_instance_;
+class ClientRegisterRequest;
+struct ClientRegisterRequestDefaultTypeInternal;
+extern ClientRegisterRequestDefaultTypeInternal _ClientRegisterRequest_default_instance_;
 class MsgBase;
 struct MsgBaseDefaultTypeInternal;
 extern MsgBaseDefaultTypeInternal _MsgBase_default_instance_;
@@ -64,27 +67,44 @@ extern MsgPayloadDefaultTypeInternal _MsgPayload_default_instance_;
 class ServerInfo;
 struct ServerInfoDefaultTypeInternal;
 extern ServerInfoDefaultTypeInternal _ServerInfo_default_instance_;
+class ServerRegisterChallenge;
+struct ServerRegisterChallengeDefaultTypeInternal;
+extern ServerRegisterChallengeDefaultTypeInternal _ServerRegisterChallenge_default_instance_;
+class ServerRegisterFinish;
+struct ServerRegisterFinishDefaultTypeInternal;
+extern ServerRegisterFinishDefaultTypeInternal _ServerRegisterFinish_default_instance_;
+class TransMsg;
+struct TransMsgDefaultTypeInternal;
+extern TransMsgDefaultTypeInternal _TransMsg_default_instance_;
 }  // namespace QXSCMsg
 PROTOBUF_NAMESPACE_OPEN
+template<> ::QXSCMsg::CipherContent* Arena::CreateMaybeMessage<::QXSCMsg::CipherContent>(Arena*);
 template<> ::QXSCMsg::ClientInfo* Arena::CreateMaybeMessage<::QXSCMsg::ClientInfo>(Arena*);
-template<> ::QXSCMsg::ClientRegister* Arena::CreateMaybeMessage<::QXSCMsg::ClientRegister>(Arena*);
-template<> ::QXSCMsg::ClientRegisterReply* Arena::CreateMaybeMessage<::QXSCMsg::ClientRegisterReply>(Arena*);
+template<> ::QXSCMsg::ClientRegisterChallengeReply* Arena::CreateMaybeMessage<::QXSCMsg::ClientRegisterChallengeReply>(Arena*);
+template<> ::QXSCMsg::ClientRegisterRequest* Arena::CreateMaybeMessage<::QXSCMsg::ClientRegisterRequest>(Arena*);
 template<> ::QXSCMsg::MsgBase* Arena::CreateMaybeMessage<::QXSCMsg::MsgBase>(Arena*);
 template<> ::QXSCMsg::MsgPayload* Arena::CreateMaybeMessage<::QXSCMsg::MsgPayload>(Arena*);
 template<> ::QXSCMsg::ServerInfo* Arena::CreateMaybeMessage<::QXSCMsg::ServerInfo>(Arena*);
+template<> ::QXSCMsg::ServerRegisterChallenge* Arena::CreateMaybeMessage<::QXSCMsg::ServerRegisterChallenge>(Arena*);
+template<> ::QXSCMsg::ServerRegisterFinish* Arena::CreateMaybeMessage<::QXSCMsg::ServerRegisterFinish>(Arena*);
+template<> ::QXSCMsg::TransMsg* Arena::CreateMaybeMessage<::QXSCMsg::TransMsg>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace QXSCMsg {
 
 enum MsgType : int {
   QX_SC_MSG_TYPE_UKNOWN = 0,
-  QX_SC_MSG_TYPE_REGISTER = 1,
-  QX_SC_MSG_TYPE_REGISTER_REPLY = 2,
+  QX_SC_MSG_TYPE_REGISTER_REQUEST = 1,
+  QX_SC_MSG_TYPE_REGISTER_CHALLENGE = 2,
+  QX_SC_MSG_TYPE_REGISTER_CHALLENGE_REPLY = 3,
+  QX_SC_MSG_TYPE_REGISTER_FINISH = 4,
+  QX_SC_MSG_TYPE_MSG_TRANS_C_2_S = 100,
+  QX_SC_MSG_TYPE_MSG_TRANS_S_2_C = 101,
   MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool MsgType_IsValid(int value);
 constexpr MsgType MsgType_MIN = QX_SC_MSG_TYPE_UKNOWN;
-constexpr MsgType MsgType_MAX = QX_SC_MSG_TYPE_REGISTER_REPLY;
+constexpr MsgType MsgType_MAX = QX_SC_MSG_TYPE_MSG_TRANS_S_2_C;
 constexpr int MsgType_ARRAYSIZE = MsgType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MsgType_descriptor();
@@ -100,6 +120,31 @@ inline bool MsgType_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, MsgType* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<MsgType>(
     MsgType_descriptor(), name, value);
+}
+enum CipherSuite : int {
+  QX_SC_CIPHER_SUITE_NONE = 0,
+  QX_SC_CIPHER_SUITE_SM4 = 1,
+  CipherSuite_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  CipherSuite_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+};
+bool CipherSuite_IsValid(int value);
+constexpr CipherSuite CipherSuite_MIN = QX_SC_CIPHER_SUITE_NONE;
+constexpr CipherSuite CipherSuite_MAX = QX_SC_CIPHER_SUITE_SM4;
+constexpr int CipherSuite_ARRAYSIZE = CipherSuite_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CipherSuite_descriptor();
+template<typename T>
+inline const std::string& CipherSuite_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, CipherSuite>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function CipherSuite_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    CipherSuite_descriptor(), enum_t_value);
+}
+inline bool CipherSuite_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, CipherSuite* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<CipherSuite>(
+    CipherSuite_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -782,45 +827,102 @@ class MsgBase final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kClientRegisterFieldNumber = 2,
-    kClientRegisterReplyFieldNumber = 3,
+    kRegisterRequestFieldNumber = 2,
+    kRegisterChallengeFieldNumber = 3,
+    kRegisterChallengeReplyFieldNumber = 4,
+    kRegisterFinishFieldNumber = 5,
+    kTransMsgFieldNumber = 6,
     kMsgTypeFieldNumber = 1,
   };
-  // .QXSCMsg.ClientRegister clientRegister = 2;
-  bool has_clientregister() const;
+  // .QXSCMsg.ClientRegisterRequest registerRequest = 2;
+  bool has_registerrequest() const;
   private:
-  bool _internal_has_clientregister() const;
+  bool _internal_has_registerrequest() const;
   public:
-  void clear_clientregister();
-  const ::QXSCMsg::ClientRegister& clientregister() const;
-  PROTOBUF_NODISCARD ::QXSCMsg::ClientRegister* release_clientregister();
-  ::QXSCMsg::ClientRegister* mutable_clientregister();
-  void set_allocated_clientregister(::QXSCMsg::ClientRegister* clientregister);
+  void clear_registerrequest();
+  const ::QXSCMsg::ClientRegisterRequest& registerrequest() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ClientRegisterRequest* release_registerrequest();
+  ::QXSCMsg::ClientRegisterRequest* mutable_registerrequest();
+  void set_allocated_registerrequest(::QXSCMsg::ClientRegisterRequest* registerrequest);
   private:
-  const ::QXSCMsg::ClientRegister& _internal_clientregister() const;
-  ::QXSCMsg::ClientRegister* _internal_mutable_clientregister();
+  const ::QXSCMsg::ClientRegisterRequest& _internal_registerrequest() const;
+  ::QXSCMsg::ClientRegisterRequest* _internal_mutable_registerrequest();
   public:
-  void unsafe_arena_set_allocated_clientregister(
-      ::QXSCMsg::ClientRegister* clientregister);
-  ::QXSCMsg::ClientRegister* unsafe_arena_release_clientregister();
+  void unsafe_arena_set_allocated_registerrequest(
+      ::QXSCMsg::ClientRegisterRequest* registerrequest);
+  ::QXSCMsg::ClientRegisterRequest* unsafe_arena_release_registerrequest();
 
-  // .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
-  bool has_clientregisterreply() const;
+  // .QXSCMsg.ServerRegisterChallenge registerChallenge = 3;
+  bool has_registerchallenge() const;
   private:
-  bool _internal_has_clientregisterreply() const;
+  bool _internal_has_registerchallenge() const;
   public:
-  void clear_clientregisterreply();
-  const ::QXSCMsg::ClientRegisterReply& clientregisterreply() const;
-  PROTOBUF_NODISCARD ::QXSCMsg::ClientRegisterReply* release_clientregisterreply();
-  ::QXSCMsg::ClientRegisterReply* mutable_clientregisterreply();
-  void set_allocated_clientregisterreply(::QXSCMsg::ClientRegisterReply* clientregisterreply);
+  void clear_registerchallenge();
+  const ::QXSCMsg::ServerRegisterChallenge& registerchallenge() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ServerRegisterChallenge* release_registerchallenge();
+  ::QXSCMsg::ServerRegisterChallenge* mutable_registerchallenge();
+  void set_allocated_registerchallenge(::QXSCMsg::ServerRegisterChallenge* registerchallenge);
   private:
-  const ::QXSCMsg::ClientRegisterReply& _internal_clientregisterreply() const;
-  ::QXSCMsg::ClientRegisterReply* _internal_mutable_clientregisterreply();
+  const ::QXSCMsg::ServerRegisterChallenge& _internal_registerchallenge() const;
+  ::QXSCMsg::ServerRegisterChallenge* _internal_mutable_registerchallenge();
   public:
-  void unsafe_arena_set_allocated_clientregisterreply(
-      ::QXSCMsg::ClientRegisterReply* clientregisterreply);
-  ::QXSCMsg::ClientRegisterReply* unsafe_arena_release_clientregisterreply();
+  void unsafe_arena_set_allocated_registerchallenge(
+      ::QXSCMsg::ServerRegisterChallenge* registerchallenge);
+  ::QXSCMsg::ServerRegisterChallenge* unsafe_arena_release_registerchallenge();
+
+  // .QXSCMsg.ClientRegisterChallengeReply registerChallengeReply = 4;
+  bool has_registerchallengereply() const;
+  private:
+  bool _internal_has_registerchallengereply() const;
+  public:
+  void clear_registerchallengereply();
+  const ::QXSCMsg::ClientRegisterChallengeReply& registerchallengereply() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ClientRegisterChallengeReply* release_registerchallengereply();
+  ::QXSCMsg::ClientRegisterChallengeReply* mutable_registerchallengereply();
+  void set_allocated_registerchallengereply(::QXSCMsg::ClientRegisterChallengeReply* registerchallengereply);
+  private:
+  const ::QXSCMsg::ClientRegisterChallengeReply& _internal_registerchallengereply() const;
+  ::QXSCMsg::ClientRegisterChallengeReply* _internal_mutable_registerchallengereply();
+  public:
+  void unsafe_arena_set_allocated_registerchallengereply(
+      ::QXSCMsg::ClientRegisterChallengeReply* registerchallengereply);
+  ::QXSCMsg::ClientRegisterChallengeReply* unsafe_arena_release_registerchallengereply();
+
+  // .QXSCMsg.ServerRegisterFinish registerFinish = 5;
+  bool has_registerfinish() const;
+  private:
+  bool _internal_has_registerfinish() const;
+  public:
+  void clear_registerfinish();
+  const ::QXSCMsg::ServerRegisterFinish& registerfinish() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ServerRegisterFinish* release_registerfinish();
+  ::QXSCMsg::ServerRegisterFinish* mutable_registerfinish();
+  void set_allocated_registerfinish(::QXSCMsg::ServerRegisterFinish* registerfinish);
+  private:
+  const ::QXSCMsg::ServerRegisterFinish& _internal_registerfinish() const;
+  ::QXSCMsg::ServerRegisterFinish* _internal_mutable_registerfinish();
+  public:
+  void unsafe_arena_set_allocated_registerfinish(
+      ::QXSCMsg::ServerRegisterFinish* registerfinish);
+  ::QXSCMsg::ServerRegisterFinish* unsafe_arena_release_registerfinish();
+
+  // .QXSCMsg.TransMsg transMsg = 6;
+  bool has_transmsg() const;
+  private:
+  bool _internal_has_transmsg() const;
+  public:
+  void clear_transmsg();
+  const ::QXSCMsg::TransMsg& transmsg() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::TransMsg* release_transmsg();
+  ::QXSCMsg::TransMsg* mutable_transmsg();
+  void set_allocated_transmsg(::QXSCMsg::TransMsg* transmsg);
+  private:
+  const ::QXSCMsg::TransMsg& _internal_transmsg() const;
+  ::QXSCMsg::TransMsg* _internal_mutable_transmsg();
+  public:
+  void unsafe_arena_set_allocated_transmsg(
+      ::QXSCMsg::TransMsg* transmsg);
+  ::QXSCMsg::TransMsg* unsafe_arena_release_transmsg();
 
   // uint32 msgType = 1;
   void clear_msgtype();
@@ -839,8 +941,11 @@ class MsgBase final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    ::QXSCMsg::ClientRegister* clientregister_;
-    ::QXSCMsg::ClientRegisterReply* clientregisterreply_;
+    ::QXSCMsg::ClientRegisterRequest* registerrequest_;
+    ::QXSCMsg::ServerRegisterChallenge* registerchallenge_;
+    ::QXSCMsg::ClientRegisterChallengeReply* registerchallengereply_;
+    ::QXSCMsg::ServerRegisterFinish* registerfinish_;
+    ::QXSCMsg::TransMsg* transmsg_;
     uint32_t msgtype_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
@@ -849,24 +954,24 @@ class MsgBase final :
 };
 // -------------------------------------------------------------------
 
-class ClientRegister final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.ClientRegister) */ {
+class ClientRegisterRequest final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.ClientRegisterRequest) */ {
  public:
-  inline ClientRegister() : ClientRegister(nullptr) {}
-  ~ClientRegister() override;
-  explicit PROTOBUF_CONSTEXPR ClientRegister(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline ClientRegisterRequest() : ClientRegisterRequest(nullptr) {}
+  ~ClientRegisterRequest() override;
+  explicit PROTOBUF_CONSTEXPR ClientRegisterRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  ClientRegister(const ClientRegister& from);
-  ClientRegister(ClientRegister&& from) noexcept
-    : ClientRegister() {
+  ClientRegisterRequest(const ClientRegisterRequest& from);
+  ClientRegisterRequest(ClientRegisterRequest&& from) noexcept
+    : ClientRegisterRequest() {
     *this = ::std::move(from);
   }
 
-  inline ClientRegister& operator=(const ClientRegister& from) {
+  inline ClientRegisterRequest& operator=(const ClientRegisterRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ClientRegister& operator=(ClientRegister&& from) noexcept {
+  inline ClientRegisterRequest& operator=(ClientRegisterRequest&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -889,20 +994,20 @@ class ClientRegister final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const ClientRegister& default_instance() {
+  static const ClientRegisterRequest& default_instance() {
     return *internal_default_instance();
   }
-  static inline const ClientRegister* internal_default_instance() {
-    return reinterpret_cast<const ClientRegister*>(
-               &_ClientRegister_default_instance_);
+  static inline const ClientRegisterRequest* internal_default_instance() {
+    return reinterpret_cast<const ClientRegisterRequest*>(
+               &_ClientRegisterRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  friend void swap(ClientRegister& a, ClientRegister& b) {
+  friend void swap(ClientRegisterRequest& a, ClientRegisterRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(ClientRegister* other) {
+  inline void Swap(ClientRegisterRequest* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -915,7 +1020,7 @@ class ClientRegister final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(ClientRegister* other) {
+  void UnsafeArenaSwap(ClientRegisterRequest* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -923,14 +1028,14 @@ class ClientRegister final :
 
   // implements Message ----------------------------------------------
 
-  ClientRegister* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<ClientRegister>(arena);
+  ClientRegisterRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ClientRegisterRequest>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const ClientRegister& from);
+  void CopyFrom(const ClientRegisterRequest& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom( const ClientRegister& from) {
-    ClientRegister::MergeImpl(*this, from);
+  void MergeFrom( const ClientRegisterRequest& from) {
+    ClientRegisterRequest::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
@@ -948,15 +1053,15 @@ class ClientRegister final :
   void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ClientRegister* other);
+  void InternalSwap(ClientRegisterRequest* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "QXSCMsg.ClientRegister";
+    return "QXSCMsg.ClientRegisterRequest";
   }
   protected:
-  explicit ClientRegister(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit ClientRegisterRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   public:
 
@@ -971,6 +1076,7 @@ class ClientRegister final :
 
   enum : int {
     kClientIdFieldNumber = 1,
+    kCipherSuiteFieldNumber = 2,
   };
   // uint32 clientId = 1;
   void clear_clientid();
@@ -981,7 +1087,16 @@ class ClientRegister final :
   void _internal_set_clientid(uint32_t value);
   public:
 
-  // @@protoc_insertion_point(class_scope:QXSCMsg.ClientRegister)
+  // uint32 cipherSuite = 2;
+  void clear_ciphersuite();
+  uint32_t ciphersuite() const;
+  void set_ciphersuite(uint32_t value);
+  private:
+  uint32_t _internal_ciphersuite() const;
+  void _internal_set_ciphersuite(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:QXSCMsg.ClientRegisterRequest)
  private:
   class _Internal;
 
@@ -990,6 +1105,7 @@ class ClientRegister final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     uint32_t clientid_;
+    uint32_t ciphersuite_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -997,24 +1113,24 @@ class ClientRegister final :
 };
 // -------------------------------------------------------------------
 
-class ClientRegisterReply final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.ClientRegisterReply) */ {
+class ServerRegisterChallenge final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.ServerRegisterChallenge) */ {
  public:
-  inline ClientRegisterReply() : ClientRegisterReply(nullptr) {}
-  ~ClientRegisterReply() override;
-  explicit PROTOBUF_CONSTEXPR ClientRegisterReply(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline ServerRegisterChallenge() : ServerRegisterChallenge(nullptr) {}
+  ~ServerRegisterChallenge() override;
+  explicit PROTOBUF_CONSTEXPR ServerRegisterChallenge(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  ClientRegisterReply(const ClientRegisterReply& from);
-  ClientRegisterReply(ClientRegisterReply&& from) noexcept
-    : ClientRegisterReply() {
+  ServerRegisterChallenge(const ServerRegisterChallenge& from);
+  ServerRegisterChallenge(ServerRegisterChallenge&& from) noexcept
+    : ServerRegisterChallenge() {
     *this = ::std::move(from);
   }
 
-  inline ClientRegisterReply& operator=(const ClientRegisterReply& from) {
+  inline ServerRegisterChallenge& operator=(const ServerRegisterChallenge& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ClientRegisterReply& operator=(ClientRegisterReply&& from) noexcept {
+  inline ServerRegisterChallenge& operator=(ServerRegisterChallenge&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -1037,20 +1153,20 @@ class ClientRegisterReply final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const ClientRegisterReply& default_instance() {
+  static const ServerRegisterChallenge& default_instance() {
     return *internal_default_instance();
   }
-  static inline const ClientRegisterReply* internal_default_instance() {
-    return reinterpret_cast<const ClientRegisterReply*>(
-               &_ClientRegisterReply_default_instance_);
+  static inline const ServerRegisterChallenge* internal_default_instance() {
+    return reinterpret_cast<const ServerRegisterChallenge*>(
+               &_ServerRegisterChallenge_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     5;
 
-  friend void swap(ClientRegisterReply& a, ClientRegisterReply& b) {
+  friend void swap(ServerRegisterChallenge& a, ServerRegisterChallenge& b) {
     a.Swap(&b);
   }
-  inline void Swap(ClientRegisterReply* other) {
+  inline void Swap(ServerRegisterChallenge* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -1063,7 +1179,7 @@ class ClientRegisterReply final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(ClientRegisterReply* other) {
+  void UnsafeArenaSwap(ServerRegisterChallenge* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -1071,14 +1187,14 @@ class ClientRegisterReply final :
 
   // implements Message ----------------------------------------------
 
-  ClientRegisterReply* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<ClientRegisterReply>(arena);
+  ServerRegisterChallenge* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ServerRegisterChallenge>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const ClientRegisterReply& from);
+  void CopyFrom(const ServerRegisterChallenge& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom( const ClientRegisterReply& from) {
-    ClientRegisterReply::MergeImpl(*this, from);
+  void MergeFrom( const ServerRegisterChallenge& from) {
+    ServerRegisterChallenge::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
@@ -1096,15 +1212,15 @@ class ClientRegisterReply final :
   void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ClientRegisterReply* other);
+  void InternalSwap(ServerRegisterChallenge* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "QXSCMsg.ClientRegisterReply";
+    return "QXSCMsg.ServerRegisterChallenge";
   }
   protected:
-  explicit ClientRegisterReply(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit ServerRegisterChallenge(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   public:
 
@@ -1118,18 +1234,23 @@ class ClientRegisterReply final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kErrCodeFieldNumber = 1,
+    kCipherRandFieldNumber = 1,
   };
-  // int32 errCode = 1;
-  void clear_errcode();
-  int32_t errcode() const;
-  void set_errcode(int32_t value);
+  // bytes cipherRand = 1;
+  void clear_cipherrand();
+  const std::string& cipherrand() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_cipherrand(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_cipherrand();
+  PROTOBUF_NODISCARD std::string* release_cipherrand();
+  void set_allocated_cipherrand(std::string* cipherrand);
   private:
-  int32_t _internal_errcode() const;
-  void _internal_set_errcode(int32_t value);
+  const std::string& _internal_cipherrand() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_cipherrand(const std::string& value);
+  std::string* _internal_mutable_cipherrand();
   public:
 
-  // @@protoc_insertion_point(class_scope:QXSCMsg.ClientRegisterReply)
+  // @@protoc_insertion_point(class_scope:QXSCMsg.ServerRegisterChallenge)
  private:
   class _Internal;
 
@@ -1137,7 +1258,706 @@ class ClientRegisterReply final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    int32_t errcode_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr cipherrand_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_QXSCMsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ClientRegisterChallengeReply final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.ClientRegisterChallengeReply) */ {
+ public:
+  inline ClientRegisterChallengeReply() : ClientRegisterChallengeReply(nullptr) {}
+  ~ClientRegisterChallengeReply() override;
+  explicit PROTOBUF_CONSTEXPR ClientRegisterChallengeReply(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ClientRegisterChallengeReply(const ClientRegisterChallengeReply& from);
+  ClientRegisterChallengeReply(ClientRegisterChallengeReply&& from) noexcept
+    : ClientRegisterChallengeReply() {
+    *this = ::std::move(from);
+  }
+
+  inline ClientRegisterChallengeReply& operator=(const ClientRegisterChallengeReply& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ClientRegisterChallengeReply& operator=(ClientRegisterChallengeReply&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ClientRegisterChallengeReply& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ClientRegisterChallengeReply* internal_default_instance() {
+    return reinterpret_cast<const ClientRegisterChallengeReply*>(
+               &_ClientRegisterChallengeReply_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(ClientRegisterChallengeReply& a, ClientRegisterChallengeReply& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ClientRegisterChallengeReply* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ClientRegisterChallengeReply* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ClientRegisterChallengeReply* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ClientRegisterChallengeReply>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ClientRegisterChallengeReply& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const ClientRegisterChallengeReply& from) {
+    ClientRegisterChallengeReply::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ClientRegisterChallengeReply* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "QXSCMsg.ClientRegisterChallengeReply";
+  }
+  protected:
+  explicit ClientRegisterChallengeReply(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPlainRandFieldNumber = 1,
+    kCipherRandFieldNumber = 2,
+  };
+  // bytes plainRand = 1;
+  void clear_plainrand();
+  const std::string& plainrand() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_plainrand(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_plainrand();
+  PROTOBUF_NODISCARD std::string* release_plainrand();
+  void set_allocated_plainrand(std::string* plainrand);
+  private:
+  const std::string& _internal_plainrand() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_plainrand(const std::string& value);
+  std::string* _internal_mutable_plainrand();
+  public:
+
+  // bytes cipherRand = 2;
+  void clear_cipherrand();
+  const std::string& cipherrand() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_cipherrand(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_cipherrand();
+  PROTOBUF_NODISCARD std::string* release_cipherrand();
+  void set_allocated_cipherrand(std::string* cipherrand);
+  private:
+  const std::string& _internal_cipherrand() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_cipherrand(const std::string& value);
+  std::string* _internal_mutable_cipherrand();
+  public:
+
+  // @@protoc_insertion_point(class_scope:QXSCMsg.ClientRegisterChallengeReply)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr plainrand_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr cipherrand_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_QXSCMsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ServerRegisterFinish final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.ServerRegisterFinish) */ {
+ public:
+  inline ServerRegisterFinish() : ServerRegisterFinish(nullptr) {}
+  ~ServerRegisterFinish() override;
+  explicit PROTOBUF_CONSTEXPR ServerRegisterFinish(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ServerRegisterFinish(const ServerRegisterFinish& from);
+  ServerRegisterFinish(ServerRegisterFinish&& from) noexcept
+    : ServerRegisterFinish() {
+    *this = ::std::move(from);
+  }
+
+  inline ServerRegisterFinish& operator=(const ServerRegisterFinish& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ServerRegisterFinish& operator=(ServerRegisterFinish&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ServerRegisterFinish& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ServerRegisterFinish* internal_default_instance() {
+    return reinterpret_cast<const ServerRegisterFinish*>(
+               &_ServerRegisterFinish_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  friend void swap(ServerRegisterFinish& a, ServerRegisterFinish& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ServerRegisterFinish* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ServerRegisterFinish* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ServerRegisterFinish* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ServerRegisterFinish>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ServerRegisterFinish& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const ServerRegisterFinish& from) {
+    ServerRegisterFinish::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ServerRegisterFinish* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "QXSCMsg.ServerRegisterFinish";
+  }
+  protected:
+  explicit ServerRegisterFinish(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPlainRandFieldNumber = 1,
+    kCipherContentFieldNumber = 2,
+  };
+  // bytes plainRand = 1;
+  void clear_plainrand();
+  const std::string& plainrand() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_plainrand(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_plainrand();
+  PROTOBUF_NODISCARD std::string* release_plainrand();
+  void set_allocated_plainrand(std::string* plainrand);
+  private:
+  const std::string& _internal_plainrand() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_plainrand(const std::string& value);
+  std::string* _internal_mutable_plainrand();
+  public:
+
+  // .QXSCMsg.CipherContent cipherContent = 2;
+  bool has_ciphercontent() const;
+  private:
+  bool _internal_has_ciphercontent() const;
+  public:
+  void clear_ciphercontent();
+  const ::QXSCMsg::CipherContent& ciphercontent() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::CipherContent* release_ciphercontent();
+  ::QXSCMsg::CipherContent* mutable_ciphercontent();
+  void set_allocated_ciphercontent(::QXSCMsg::CipherContent* ciphercontent);
+  private:
+  const ::QXSCMsg::CipherContent& _internal_ciphercontent() const;
+  ::QXSCMsg::CipherContent* _internal_mutable_ciphercontent();
+  public:
+  void unsafe_arena_set_allocated_ciphercontent(
+      ::QXSCMsg::CipherContent* ciphercontent);
+  ::QXSCMsg::CipherContent* unsafe_arena_release_ciphercontent();
+
+  // @@protoc_insertion_point(class_scope:QXSCMsg.ServerRegisterFinish)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr plainrand_;
+    ::QXSCMsg::CipherContent* ciphercontent_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_QXSCMsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class CipherContent final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.CipherContent) */ {
+ public:
+  inline CipherContent() : CipherContent(nullptr) {}
+  ~CipherContent() override;
+  explicit PROTOBUF_CONSTEXPR CipherContent(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  CipherContent(const CipherContent& from);
+  CipherContent(CipherContent&& from) noexcept
+    : CipherContent() {
+    *this = ::std::move(from);
+  }
+
+  inline CipherContent& operator=(const CipherContent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CipherContent& operator=(CipherContent&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CipherContent& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CipherContent* internal_default_instance() {
+    return reinterpret_cast<const CipherContent*>(
+               &_CipherContent_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  friend void swap(CipherContent& a, CipherContent& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CipherContent* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CipherContent* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  CipherContent* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<CipherContent>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const CipherContent& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const CipherContent& from) {
+    CipherContent::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CipherContent* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "QXSCMsg.CipherContent";
+  }
+  protected:
+  explicit CipherContent(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kCipherSM4KeyFieldNumber = 2,
+    kCipherSuiteFieldNumber = 1,
+  };
+  // bytes cipherSM4Key = 2;
+  void clear_ciphersm4key();
+  const std::string& ciphersm4key() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_ciphersm4key(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_ciphersm4key();
+  PROTOBUF_NODISCARD std::string* release_ciphersm4key();
+  void set_allocated_ciphersm4key(std::string* ciphersm4key);
+  private:
+  const std::string& _internal_ciphersm4key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_ciphersm4key(const std::string& value);
+  std::string* _internal_mutable_ciphersm4key();
+  public:
+
+  // uint32 cipherSuite = 1;
+  void clear_ciphersuite();
+  uint32_t ciphersuite() const;
+  void set_ciphersuite(uint32_t value);
+  private:
+  uint32_t _internal_ciphersuite() const;
+  void _internal_set_ciphersuite(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:QXSCMsg.CipherContent)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr ciphersm4key_;
+    uint32_t ciphersuite_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_QXSCMsg_2eproto;
+};
+// -------------------------------------------------------------------
+
+class TransMsg final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:QXSCMsg.TransMsg) */ {
+ public:
+  inline TransMsg() : TransMsg(nullptr) {}
+  ~TransMsg() override;
+  explicit PROTOBUF_CONSTEXPR TransMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  TransMsg(const TransMsg& from);
+  TransMsg(TransMsg&& from) noexcept
+    : TransMsg() {
+    *this = ::std::move(from);
+  }
+
+  inline TransMsg& operator=(const TransMsg& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TransMsg& operator=(TransMsg&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const TransMsg& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const TransMsg* internal_default_instance() {
+    return reinterpret_cast<const TransMsg*>(
+               &_TransMsg_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  friend void swap(TransMsg& a, TransMsg& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TransMsg* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TransMsg* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  TransMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<TransMsg>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const TransMsg& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const TransMsg& from) {
+    TransMsg::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TransMsg* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "QXSCMsg.TransMsg";
+  }
+  protected:
+  explicit TransMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kMsgFieldNumber = 3,
+    kFromFieldNumber = 1,
+    kToFieldNumber = 2,
+  };
+  // string msg = 3;
+  void clear_msg();
+  const std::string& msg() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_msg(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_msg();
+  PROTOBUF_NODISCARD std::string* release_msg();
+  void set_allocated_msg(std::string* msg);
+  private:
+  const std::string& _internal_msg() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_msg(const std::string& value);
+  std::string* _internal_mutable_msg();
+  public:
+
+  // .QXSCMsg.ClientInfo from = 1;
+  bool has_from() const;
+  private:
+  bool _internal_has_from() const;
+  public:
+  void clear_from();
+  const ::QXSCMsg::ClientInfo& from() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ClientInfo* release_from();
+  ::QXSCMsg::ClientInfo* mutable_from();
+  void set_allocated_from(::QXSCMsg::ClientInfo* from);
+  private:
+  const ::QXSCMsg::ClientInfo& _internal_from() const;
+  ::QXSCMsg::ClientInfo* _internal_mutable_from();
+  public:
+  void unsafe_arena_set_allocated_from(
+      ::QXSCMsg::ClientInfo* from);
+  ::QXSCMsg::ClientInfo* unsafe_arena_release_from();
+
+  // .QXSCMsg.ClientInfo to = 2;
+  bool has_to() const;
+  private:
+  bool _internal_has_to() const;
+  public:
+  void clear_to();
+  const ::QXSCMsg::ClientInfo& to() const;
+  PROTOBUF_NODISCARD ::QXSCMsg::ClientInfo* release_to();
+  ::QXSCMsg::ClientInfo* mutable_to();
+  void set_allocated_to(::QXSCMsg::ClientInfo* to);
+  private:
+  const ::QXSCMsg::ClientInfo& _internal_to() const;
+  ::QXSCMsg::ClientInfo* _internal_mutable_to();
+  public:
+  void unsafe_arena_set_allocated_to(
+      ::QXSCMsg::ClientInfo* to);
+  ::QXSCMsg::ClientInfo* unsafe_arena_release_to();
+
+  // @@protoc_insertion_point(class_scope:QXSCMsg.TransMsg)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+    ::QXSCMsg::ClientInfo* from_;
+    ::QXSCMsg::ClientInfo* to_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1656,45 +2476,45 @@ inline void MsgBase::set_msgtype(uint32_t value) {
   // @@protoc_insertion_point(field_set:QXSCMsg.MsgBase.msgType)
 }
 
-// .QXSCMsg.ClientRegister clientRegister = 2;
-inline bool MsgBase::_internal_has_clientregister() const {
-  return this != internal_default_instance() && _impl_.clientregister_ != nullptr;
+// .QXSCMsg.ClientRegisterRequest registerRequest = 2;
+inline bool MsgBase::_internal_has_registerrequest() const {
+  return this != internal_default_instance() && _impl_.registerrequest_ != nullptr;
 }
-inline bool MsgBase::has_clientregister() const {
-  return _internal_has_clientregister();
+inline bool MsgBase::has_registerrequest() const {
+  return _internal_has_registerrequest();
 }
-inline void MsgBase::clear_clientregister() {
-  if (GetArenaForAllocation() == nullptr && _impl_.clientregister_ != nullptr) {
-    delete _impl_.clientregister_;
+inline void MsgBase::clear_registerrequest() {
+  if (GetArenaForAllocation() == nullptr && _impl_.registerrequest_ != nullptr) {
+    delete _impl_.registerrequest_;
   }
-  _impl_.clientregister_ = nullptr;
+  _impl_.registerrequest_ = nullptr;
 }
-inline const ::QXSCMsg::ClientRegister& MsgBase::_internal_clientregister() const {
-  const ::QXSCMsg::ClientRegister* p = _impl_.clientregister_;
-  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ClientRegister&>(
-      ::QXSCMsg::_ClientRegister_default_instance_);
+inline const ::QXSCMsg::ClientRegisterRequest& MsgBase::_internal_registerrequest() const {
+  const ::QXSCMsg::ClientRegisterRequest* p = _impl_.registerrequest_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ClientRegisterRequest&>(
+      ::QXSCMsg::_ClientRegisterRequest_default_instance_);
 }
-inline const ::QXSCMsg::ClientRegister& MsgBase::clientregister() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.clientRegister)
-  return _internal_clientregister();
+inline const ::QXSCMsg::ClientRegisterRequest& MsgBase::registerrequest() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.registerRequest)
+  return _internal_registerrequest();
 }
-inline void MsgBase::unsafe_arena_set_allocated_clientregister(
-    ::QXSCMsg::ClientRegister* clientregister) {
+inline void MsgBase::unsafe_arena_set_allocated_registerrequest(
+    ::QXSCMsg::ClientRegisterRequest* registerrequest) {
   if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.clientregister_);
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.registerrequest_);
   }
-  _impl_.clientregister_ = clientregister;
-  if (clientregister) {
+  _impl_.registerrequest_ = registerrequest;
+  if (registerrequest) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.clientRegister)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.registerRequest)
 }
-inline ::QXSCMsg::ClientRegister* MsgBase::release_clientregister() {
+inline ::QXSCMsg::ClientRegisterRequest* MsgBase::release_registerrequest() {
   
-  ::QXSCMsg::ClientRegister* temp = _impl_.clientregister_;
-  _impl_.clientregister_ = nullptr;
+  ::QXSCMsg::ClientRegisterRequest* temp = _impl_.registerrequest_;
+  _impl_.registerrequest_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
   auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
   temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
@@ -1706,85 +2526,85 @@ inline ::QXSCMsg::ClientRegister* MsgBase::release_clientregister() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::QXSCMsg::ClientRegister* MsgBase::unsafe_arena_release_clientregister() {
-  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.clientRegister)
+inline ::QXSCMsg::ClientRegisterRequest* MsgBase::unsafe_arena_release_registerrequest() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.registerRequest)
   
-  ::QXSCMsg::ClientRegister* temp = _impl_.clientregister_;
-  _impl_.clientregister_ = nullptr;
+  ::QXSCMsg::ClientRegisterRequest* temp = _impl_.registerrequest_;
+  _impl_.registerrequest_ = nullptr;
   return temp;
 }
-inline ::QXSCMsg::ClientRegister* MsgBase::_internal_mutable_clientregister() {
+inline ::QXSCMsg::ClientRegisterRequest* MsgBase::_internal_mutable_registerrequest() {
   
-  if (_impl_.clientregister_ == nullptr) {
-    auto* p = CreateMaybeMessage<::QXSCMsg::ClientRegister>(GetArenaForAllocation());
-    _impl_.clientregister_ = p;
+  if (_impl_.registerrequest_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::ClientRegisterRequest>(GetArenaForAllocation());
+    _impl_.registerrequest_ = p;
   }
-  return _impl_.clientregister_;
+  return _impl_.registerrequest_;
 }
-inline ::QXSCMsg::ClientRegister* MsgBase::mutable_clientregister() {
-  ::QXSCMsg::ClientRegister* _msg = _internal_mutable_clientregister();
-  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.clientRegister)
+inline ::QXSCMsg::ClientRegisterRequest* MsgBase::mutable_registerrequest() {
+  ::QXSCMsg::ClientRegisterRequest* _msg = _internal_mutable_registerrequest();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.registerRequest)
   return _msg;
 }
-inline void MsgBase::set_allocated_clientregister(::QXSCMsg::ClientRegister* clientregister) {
+inline void MsgBase::set_allocated_registerrequest(::QXSCMsg::ClientRegisterRequest* registerrequest) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
-    delete _impl_.clientregister_;
+    delete _impl_.registerrequest_;
   }
-  if (clientregister) {
+  if (registerrequest) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(clientregister);
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(registerrequest);
     if (message_arena != submessage_arena) {
-      clientregister = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, clientregister, submessage_arena);
+      registerrequest = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, registerrequest, submessage_arena);
     }
     
   } else {
     
   }
-  _impl_.clientregister_ = clientregister;
-  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.clientRegister)
+  _impl_.registerrequest_ = registerrequest;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.registerRequest)
 }
 
-// .QXSCMsg.ClientRegisterReply clientRegisterReply = 3;
-inline bool MsgBase::_internal_has_clientregisterreply() const {
-  return this != internal_default_instance() && _impl_.clientregisterreply_ != nullptr;
+// .QXSCMsg.ServerRegisterChallenge registerChallenge = 3;
+inline bool MsgBase::_internal_has_registerchallenge() const {
+  return this != internal_default_instance() && _impl_.registerchallenge_ != nullptr;
 }
-inline bool MsgBase::has_clientregisterreply() const {
-  return _internal_has_clientregisterreply();
+inline bool MsgBase::has_registerchallenge() const {
+  return _internal_has_registerchallenge();
 }
-inline void MsgBase::clear_clientregisterreply() {
-  if (GetArenaForAllocation() == nullptr && _impl_.clientregisterreply_ != nullptr) {
-    delete _impl_.clientregisterreply_;
+inline void MsgBase::clear_registerchallenge() {
+  if (GetArenaForAllocation() == nullptr && _impl_.registerchallenge_ != nullptr) {
+    delete _impl_.registerchallenge_;
   }
-  _impl_.clientregisterreply_ = nullptr;
+  _impl_.registerchallenge_ = nullptr;
 }
-inline const ::QXSCMsg::ClientRegisterReply& MsgBase::_internal_clientregisterreply() const {
-  const ::QXSCMsg::ClientRegisterReply* p = _impl_.clientregisterreply_;
-  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ClientRegisterReply&>(
-      ::QXSCMsg::_ClientRegisterReply_default_instance_);
+inline const ::QXSCMsg::ServerRegisterChallenge& MsgBase::_internal_registerchallenge() const {
+  const ::QXSCMsg::ServerRegisterChallenge* p = _impl_.registerchallenge_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ServerRegisterChallenge&>(
+      ::QXSCMsg::_ServerRegisterChallenge_default_instance_);
 }
-inline const ::QXSCMsg::ClientRegisterReply& MsgBase::clientregisterreply() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.clientRegisterReply)
-  return _internal_clientregisterreply();
+inline const ::QXSCMsg::ServerRegisterChallenge& MsgBase::registerchallenge() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.registerChallenge)
+  return _internal_registerchallenge();
 }
-inline void MsgBase::unsafe_arena_set_allocated_clientregisterreply(
-    ::QXSCMsg::ClientRegisterReply* clientregisterreply) {
+inline void MsgBase::unsafe_arena_set_allocated_registerchallenge(
+    ::QXSCMsg::ServerRegisterChallenge* registerchallenge) {
   if (GetArenaForAllocation() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.clientregisterreply_);
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.registerchallenge_);
   }
-  _impl_.clientregisterreply_ = clientregisterreply;
-  if (clientregisterreply) {
+  _impl_.registerchallenge_ = registerchallenge;
+  if (registerchallenge) {
     
   } else {
     
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.clientRegisterReply)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.registerChallenge)
 }
-inline ::QXSCMsg::ClientRegisterReply* MsgBase::release_clientregisterreply() {
+inline ::QXSCMsg::ServerRegisterChallenge* MsgBase::release_registerchallenge() {
   
-  ::QXSCMsg::ClientRegisterReply* temp = _impl_.clientregisterreply_;
-  _impl_.clientregisterreply_ = nullptr;
+  ::QXSCMsg::ServerRegisterChallenge* temp = _impl_.registerchallenge_;
+  _impl_.registerchallenge_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
   auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
   temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
@@ -1796,97 +2616,981 @@ inline ::QXSCMsg::ClientRegisterReply* MsgBase::release_clientregisterreply() {
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
   return temp;
 }
-inline ::QXSCMsg::ClientRegisterReply* MsgBase::unsafe_arena_release_clientregisterreply() {
-  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.clientRegisterReply)
+inline ::QXSCMsg::ServerRegisterChallenge* MsgBase::unsafe_arena_release_registerchallenge() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.registerChallenge)
   
-  ::QXSCMsg::ClientRegisterReply* temp = _impl_.clientregisterreply_;
-  _impl_.clientregisterreply_ = nullptr;
+  ::QXSCMsg::ServerRegisterChallenge* temp = _impl_.registerchallenge_;
+  _impl_.registerchallenge_ = nullptr;
   return temp;
 }
-inline ::QXSCMsg::ClientRegisterReply* MsgBase::_internal_mutable_clientregisterreply() {
+inline ::QXSCMsg::ServerRegisterChallenge* MsgBase::_internal_mutable_registerchallenge() {
   
-  if (_impl_.clientregisterreply_ == nullptr) {
-    auto* p = CreateMaybeMessage<::QXSCMsg::ClientRegisterReply>(GetArenaForAllocation());
-    _impl_.clientregisterreply_ = p;
+  if (_impl_.registerchallenge_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::ServerRegisterChallenge>(GetArenaForAllocation());
+    _impl_.registerchallenge_ = p;
   }
-  return _impl_.clientregisterreply_;
+  return _impl_.registerchallenge_;
 }
-inline ::QXSCMsg::ClientRegisterReply* MsgBase::mutable_clientregisterreply() {
-  ::QXSCMsg::ClientRegisterReply* _msg = _internal_mutable_clientregisterreply();
-  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.clientRegisterReply)
+inline ::QXSCMsg::ServerRegisterChallenge* MsgBase::mutable_registerchallenge() {
+  ::QXSCMsg::ServerRegisterChallenge* _msg = _internal_mutable_registerchallenge();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.registerChallenge)
   return _msg;
 }
-inline void MsgBase::set_allocated_clientregisterreply(::QXSCMsg::ClientRegisterReply* clientregisterreply) {
+inline void MsgBase::set_allocated_registerchallenge(::QXSCMsg::ServerRegisterChallenge* registerchallenge) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   if (message_arena == nullptr) {
-    delete _impl_.clientregisterreply_;
+    delete _impl_.registerchallenge_;
   }
-  if (clientregisterreply) {
+  if (registerchallenge) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(clientregisterreply);
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(registerchallenge);
     if (message_arena != submessage_arena) {
-      clientregisterreply = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, clientregisterreply, submessage_arena);
+      registerchallenge = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, registerchallenge, submessage_arena);
     }
     
   } else {
     
   }
-  _impl_.clientregisterreply_ = clientregisterreply;
-  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.clientRegisterReply)
+  _impl_.registerchallenge_ = registerchallenge;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.registerChallenge)
+}
+
+// .QXSCMsg.ClientRegisterChallengeReply registerChallengeReply = 4;
+inline bool MsgBase::_internal_has_registerchallengereply() const {
+  return this != internal_default_instance() && _impl_.registerchallengereply_ != nullptr;
+}
+inline bool MsgBase::has_registerchallengereply() const {
+  return _internal_has_registerchallengereply();
+}
+inline void MsgBase::clear_registerchallengereply() {
+  if (GetArenaForAllocation() == nullptr && _impl_.registerchallengereply_ != nullptr) {
+    delete _impl_.registerchallengereply_;
+  }
+  _impl_.registerchallengereply_ = nullptr;
+}
+inline const ::QXSCMsg::ClientRegisterChallengeReply& MsgBase::_internal_registerchallengereply() const {
+  const ::QXSCMsg::ClientRegisterChallengeReply* p = _impl_.registerchallengereply_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ClientRegisterChallengeReply&>(
+      ::QXSCMsg::_ClientRegisterChallengeReply_default_instance_);
+}
+inline const ::QXSCMsg::ClientRegisterChallengeReply& MsgBase::registerchallengereply() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.registerChallengeReply)
+  return _internal_registerchallengereply();
+}
+inline void MsgBase::unsafe_arena_set_allocated_registerchallengereply(
+    ::QXSCMsg::ClientRegisterChallengeReply* registerchallengereply) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.registerchallengereply_);
+  }
+  _impl_.registerchallengereply_ = registerchallengereply;
+  if (registerchallengereply) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.registerChallengeReply)
+}
+inline ::QXSCMsg::ClientRegisterChallengeReply* MsgBase::release_registerchallengereply() {
+  
+  ::QXSCMsg::ClientRegisterChallengeReply* temp = _impl_.registerchallengereply_;
+  _impl_.registerchallengereply_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::QXSCMsg::ClientRegisterChallengeReply* MsgBase::unsafe_arena_release_registerchallengereply() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.registerChallengeReply)
+  
+  ::QXSCMsg::ClientRegisterChallengeReply* temp = _impl_.registerchallengereply_;
+  _impl_.registerchallengereply_ = nullptr;
+  return temp;
+}
+inline ::QXSCMsg::ClientRegisterChallengeReply* MsgBase::_internal_mutable_registerchallengereply() {
+  
+  if (_impl_.registerchallengereply_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::ClientRegisterChallengeReply>(GetArenaForAllocation());
+    _impl_.registerchallengereply_ = p;
+  }
+  return _impl_.registerchallengereply_;
+}
+inline ::QXSCMsg::ClientRegisterChallengeReply* MsgBase::mutable_registerchallengereply() {
+  ::QXSCMsg::ClientRegisterChallengeReply* _msg = _internal_mutable_registerchallengereply();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.registerChallengeReply)
+  return _msg;
+}
+inline void MsgBase::set_allocated_registerchallengereply(::QXSCMsg::ClientRegisterChallengeReply* registerchallengereply) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.registerchallengereply_;
+  }
+  if (registerchallengereply) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(registerchallengereply);
+    if (message_arena != submessage_arena) {
+      registerchallengereply = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, registerchallengereply, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.registerchallengereply_ = registerchallengereply;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.registerChallengeReply)
+}
+
+// .QXSCMsg.ServerRegisterFinish registerFinish = 5;
+inline bool MsgBase::_internal_has_registerfinish() const {
+  return this != internal_default_instance() && _impl_.registerfinish_ != nullptr;
+}
+inline bool MsgBase::has_registerfinish() const {
+  return _internal_has_registerfinish();
+}
+inline void MsgBase::clear_registerfinish() {
+  if (GetArenaForAllocation() == nullptr && _impl_.registerfinish_ != nullptr) {
+    delete _impl_.registerfinish_;
+  }
+  _impl_.registerfinish_ = nullptr;
+}
+inline const ::QXSCMsg::ServerRegisterFinish& MsgBase::_internal_registerfinish() const {
+  const ::QXSCMsg::ServerRegisterFinish* p = _impl_.registerfinish_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ServerRegisterFinish&>(
+      ::QXSCMsg::_ServerRegisterFinish_default_instance_);
+}
+inline const ::QXSCMsg::ServerRegisterFinish& MsgBase::registerfinish() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.registerFinish)
+  return _internal_registerfinish();
+}
+inline void MsgBase::unsafe_arena_set_allocated_registerfinish(
+    ::QXSCMsg::ServerRegisterFinish* registerfinish) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.registerfinish_);
+  }
+  _impl_.registerfinish_ = registerfinish;
+  if (registerfinish) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.registerFinish)
+}
+inline ::QXSCMsg::ServerRegisterFinish* MsgBase::release_registerfinish() {
+  
+  ::QXSCMsg::ServerRegisterFinish* temp = _impl_.registerfinish_;
+  _impl_.registerfinish_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::QXSCMsg::ServerRegisterFinish* MsgBase::unsafe_arena_release_registerfinish() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.registerFinish)
+  
+  ::QXSCMsg::ServerRegisterFinish* temp = _impl_.registerfinish_;
+  _impl_.registerfinish_ = nullptr;
+  return temp;
+}
+inline ::QXSCMsg::ServerRegisterFinish* MsgBase::_internal_mutable_registerfinish() {
+  
+  if (_impl_.registerfinish_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::ServerRegisterFinish>(GetArenaForAllocation());
+    _impl_.registerfinish_ = p;
+  }
+  return _impl_.registerfinish_;
+}
+inline ::QXSCMsg::ServerRegisterFinish* MsgBase::mutable_registerfinish() {
+  ::QXSCMsg::ServerRegisterFinish* _msg = _internal_mutable_registerfinish();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.registerFinish)
+  return _msg;
+}
+inline void MsgBase::set_allocated_registerfinish(::QXSCMsg::ServerRegisterFinish* registerfinish) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.registerfinish_;
+  }
+  if (registerfinish) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(registerfinish);
+    if (message_arena != submessage_arena) {
+      registerfinish = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, registerfinish, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.registerfinish_ = registerfinish;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.registerFinish)
+}
+
+// .QXSCMsg.TransMsg transMsg = 6;
+inline bool MsgBase::_internal_has_transmsg() const {
+  return this != internal_default_instance() && _impl_.transmsg_ != nullptr;
+}
+inline bool MsgBase::has_transmsg() const {
+  return _internal_has_transmsg();
+}
+inline void MsgBase::clear_transmsg() {
+  if (GetArenaForAllocation() == nullptr && _impl_.transmsg_ != nullptr) {
+    delete _impl_.transmsg_;
+  }
+  _impl_.transmsg_ = nullptr;
+}
+inline const ::QXSCMsg::TransMsg& MsgBase::_internal_transmsg() const {
+  const ::QXSCMsg::TransMsg* p = _impl_.transmsg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::TransMsg&>(
+      ::QXSCMsg::_TransMsg_default_instance_);
+}
+inline const ::QXSCMsg::TransMsg& MsgBase::transmsg() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.MsgBase.transMsg)
+  return _internal_transmsg();
+}
+inline void MsgBase::unsafe_arena_set_allocated_transmsg(
+    ::QXSCMsg::TransMsg* transmsg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.transmsg_);
+  }
+  _impl_.transmsg_ = transmsg;
+  if (transmsg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.MsgBase.transMsg)
+}
+inline ::QXSCMsg::TransMsg* MsgBase::release_transmsg() {
+  
+  ::QXSCMsg::TransMsg* temp = _impl_.transmsg_;
+  _impl_.transmsg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::QXSCMsg::TransMsg* MsgBase::unsafe_arena_release_transmsg() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.MsgBase.transMsg)
+  
+  ::QXSCMsg::TransMsg* temp = _impl_.transmsg_;
+  _impl_.transmsg_ = nullptr;
+  return temp;
+}
+inline ::QXSCMsg::TransMsg* MsgBase::_internal_mutable_transmsg() {
+  
+  if (_impl_.transmsg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::TransMsg>(GetArenaForAllocation());
+    _impl_.transmsg_ = p;
+  }
+  return _impl_.transmsg_;
+}
+inline ::QXSCMsg::TransMsg* MsgBase::mutable_transmsg() {
+  ::QXSCMsg::TransMsg* _msg = _internal_mutable_transmsg();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.MsgBase.transMsg)
+  return _msg;
+}
+inline void MsgBase::set_allocated_transmsg(::QXSCMsg::TransMsg* transmsg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.transmsg_;
+  }
+  if (transmsg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(transmsg);
+    if (message_arena != submessage_arena) {
+      transmsg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, transmsg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.transmsg_ = transmsg;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.MsgBase.transMsg)
 }
 
 // -------------------------------------------------------------------
 
-// ClientRegister
+// ClientRegisterRequest
 
 // uint32 clientId = 1;
-inline void ClientRegister::clear_clientid() {
+inline void ClientRegisterRequest::clear_clientid() {
   _impl_.clientid_ = 0u;
 }
-inline uint32_t ClientRegister::_internal_clientid() const {
+inline uint32_t ClientRegisterRequest::_internal_clientid() const {
   return _impl_.clientid_;
 }
-inline uint32_t ClientRegister::clientid() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.ClientRegister.clientId)
+inline uint32_t ClientRegisterRequest::clientid() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ClientRegisterRequest.clientId)
   return _internal_clientid();
 }
-inline void ClientRegister::_internal_set_clientid(uint32_t value) {
+inline void ClientRegisterRequest::_internal_set_clientid(uint32_t value) {
   
   _impl_.clientid_ = value;
 }
-inline void ClientRegister::set_clientid(uint32_t value) {
+inline void ClientRegisterRequest::set_clientid(uint32_t value) {
   _internal_set_clientid(value);
-  // @@protoc_insertion_point(field_set:QXSCMsg.ClientRegister.clientId)
+  // @@protoc_insertion_point(field_set:QXSCMsg.ClientRegisterRequest.clientId)
+}
+
+// uint32 cipherSuite = 2;
+inline void ClientRegisterRequest::clear_ciphersuite() {
+  _impl_.ciphersuite_ = 0u;
+}
+inline uint32_t ClientRegisterRequest::_internal_ciphersuite() const {
+  return _impl_.ciphersuite_;
+}
+inline uint32_t ClientRegisterRequest::ciphersuite() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ClientRegisterRequest.cipherSuite)
+  return _internal_ciphersuite();
+}
+inline void ClientRegisterRequest::_internal_set_ciphersuite(uint32_t value) {
+  
+  _impl_.ciphersuite_ = value;
+}
+inline void ClientRegisterRequest::set_ciphersuite(uint32_t value) {
+  _internal_set_ciphersuite(value);
+  // @@protoc_insertion_point(field_set:QXSCMsg.ClientRegisterRequest.cipherSuite)
 }
 
 // -------------------------------------------------------------------
 
-// ClientRegisterReply
+// ServerRegisterChallenge
 
-// int32 errCode = 1;
-inline void ClientRegisterReply::clear_errcode() {
-  _impl_.errcode_ = 0;
+// bytes cipherRand = 1;
+inline void ServerRegisterChallenge::clear_cipherrand() {
+  _impl_.cipherrand_.ClearToEmpty();
 }
-inline int32_t ClientRegisterReply::_internal_errcode() const {
-  return _impl_.errcode_;
+inline const std::string& ServerRegisterChallenge::cipherrand() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ServerRegisterChallenge.cipherRand)
+  return _internal_cipherrand();
 }
-inline int32_t ClientRegisterReply::errcode() const {
-  // @@protoc_insertion_point(field_get:QXSCMsg.ClientRegisterReply.errCode)
-  return _internal_errcode();
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ServerRegisterChallenge::set_cipherrand(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.cipherrand_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:QXSCMsg.ServerRegisterChallenge.cipherRand)
 }
-inline void ClientRegisterReply::_internal_set_errcode(int32_t value) {
+inline std::string* ServerRegisterChallenge::mutable_cipherrand() {
+  std::string* _s = _internal_mutable_cipherrand();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.ServerRegisterChallenge.cipherRand)
+  return _s;
+}
+inline const std::string& ServerRegisterChallenge::_internal_cipherrand() const {
+  return _impl_.cipherrand_.Get();
+}
+inline void ServerRegisterChallenge::_internal_set_cipherrand(const std::string& value) {
   
-  _impl_.errcode_ = value;
+  _impl_.cipherrand_.Set(value, GetArenaForAllocation());
 }
-inline void ClientRegisterReply::set_errcode(int32_t value) {
-  _internal_set_errcode(value);
-  // @@protoc_insertion_point(field_set:QXSCMsg.ClientRegisterReply.errCode)
+inline std::string* ServerRegisterChallenge::_internal_mutable_cipherrand() {
+  
+  return _impl_.cipherrand_.Mutable(GetArenaForAllocation());
+}
+inline std::string* ServerRegisterChallenge::release_cipherrand() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.ServerRegisterChallenge.cipherRand)
+  return _impl_.cipherrand_.Release();
+}
+inline void ServerRegisterChallenge::set_allocated_cipherrand(std::string* cipherrand) {
+  if (cipherrand != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.cipherrand_.SetAllocated(cipherrand, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.cipherrand_.IsDefault()) {
+    _impl_.cipherrand_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.ServerRegisterChallenge.cipherRand)
+}
+
+// -------------------------------------------------------------------
+
+// ClientRegisterChallengeReply
+
+// bytes plainRand = 1;
+inline void ClientRegisterChallengeReply::clear_plainrand() {
+  _impl_.plainrand_.ClearToEmpty();
+}
+inline const std::string& ClientRegisterChallengeReply::plainrand() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ClientRegisterChallengeReply.plainRand)
+  return _internal_plainrand();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ClientRegisterChallengeReply::set_plainrand(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.plainrand_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:QXSCMsg.ClientRegisterChallengeReply.plainRand)
+}
+inline std::string* ClientRegisterChallengeReply::mutable_plainrand() {
+  std::string* _s = _internal_mutable_plainrand();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.ClientRegisterChallengeReply.plainRand)
+  return _s;
+}
+inline const std::string& ClientRegisterChallengeReply::_internal_plainrand() const {
+  return _impl_.plainrand_.Get();
+}
+inline void ClientRegisterChallengeReply::_internal_set_plainrand(const std::string& value) {
+  
+  _impl_.plainrand_.Set(value, GetArenaForAllocation());
+}
+inline std::string* ClientRegisterChallengeReply::_internal_mutable_plainrand() {
+  
+  return _impl_.plainrand_.Mutable(GetArenaForAllocation());
+}
+inline std::string* ClientRegisterChallengeReply::release_plainrand() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.ClientRegisterChallengeReply.plainRand)
+  return _impl_.plainrand_.Release();
+}
+inline void ClientRegisterChallengeReply::set_allocated_plainrand(std::string* plainrand) {
+  if (plainrand != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.plainrand_.SetAllocated(plainrand, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.plainrand_.IsDefault()) {
+    _impl_.plainrand_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.ClientRegisterChallengeReply.plainRand)
+}
+
+// bytes cipherRand = 2;
+inline void ClientRegisterChallengeReply::clear_cipherrand() {
+  _impl_.cipherrand_.ClearToEmpty();
+}
+inline const std::string& ClientRegisterChallengeReply::cipherrand() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ClientRegisterChallengeReply.cipherRand)
+  return _internal_cipherrand();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ClientRegisterChallengeReply::set_cipherrand(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.cipherrand_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:QXSCMsg.ClientRegisterChallengeReply.cipherRand)
+}
+inline std::string* ClientRegisterChallengeReply::mutable_cipherrand() {
+  std::string* _s = _internal_mutable_cipherrand();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.ClientRegisterChallengeReply.cipherRand)
+  return _s;
+}
+inline const std::string& ClientRegisterChallengeReply::_internal_cipherrand() const {
+  return _impl_.cipherrand_.Get();
+}
+inline void ClientRegisterChallengeReply::_internal_set_cipherrand(const std::string& value) {
+  
+  _impl_.cipherrand_.Set(value, GetArenaForAllocation());
+}
+inline std::string* ClientRegisterChallengeReply::_internal_mutable_cipherrand() {
+  
+  return _impl_.cipherrand_.Mutable(GetArenaForAllocation());
+}
+inline std::string* ClientRegisterChallengeReply::release_cipherrand() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.ClientRegisterChallengeReply.cipherRand)
+  return _impl_.cipherrand_.Release();
+}
+inline void ClientRegisterChallengeReply::set_allocated_cipherrand(std::string* cipherrand) {
+  if (cipherrand != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.cipherrand_.SetAllocated(cipherrand, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.cipherrand_.IsDefault()) {
+    _impl_.cipherrand_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.ClientRegisterChallengeReply.cipherRand)
+}
+
+// -------------------------------------------------------------------
+
+// ServerRegisterFinish
+
+// bytes plainRand = 1;
+inline void ServerRegisterFinish::clear_plainrand() {
+  _impl_.plainrand_.ClearToEmpty();
+}
+inline const std::string& ServerRegisterFinish::plainrand() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ServerRegisterFinish.plainRand)
+  return _internal_plainrand();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ServerRegisterFinish::set_plainrand(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.plainrand_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:QXSCMsg.ServerRegisterFinish.plainRand)
+}
+inline std::string* ServerRegisterFinish::mutable_plainrand() {
+  std::string* _s = _internal_mutable_plainrand();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.ServerRegisterFinish.plainRand)
+  return _s;
+}
+inline const std::string& ServerRegisterFinish::_internal_plainrand() const {
+  return _impl_.plainrand_.Get();
+}
+inline void ServerRegisterFinish::_internal_set_plainrand(const std::string& value) {
+  
+  _impl_.plainrand_.Set(value, GetArenaForAllocation());
+}
+inline std::string* ServerRegisterFinish::_internal_mutable_plainrand() {
+  
+  return _impl_.plainrand_.Mutable(GetArenaForAllocation());
+}
+inline std::string* ServerRegisterFinish::release_plainrand() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.ServerRegisterFinish.plainRand)
+  return _impl_.plainrand_.Release();
+}
+inline void ServerRegisterFinish::set_allocated_plainrand(std::string* plainrand) {
+  if (plainrand != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.plainrand_.SetAllocated(plainrand, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.plainrand_.IsDefault()) {
+    _impl_.plainrand_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.ServerRegisterFinish.plainRand)
+}
+
+// .QXSCMsg.CipherContent cipherContent = 2;
+inline bool ServerRegisterFinish::_internal_has_ciphercontent() const {
+  return this != internal_default_instance() && _impl_.ciphercontent_ != nullptr;
+}
+inline bool ServerRegisterFinish::has_ciphercontent() const {
+  return _internal_has_ciphercontent();
+}
+inline void ServerRegisterFinish::clear_ciphercontent() {
+  if (GetArenaForAllocation() == nullptr && _impl_.ciphercontent_ != nullptr) {
+    delete _impl_.ciphercontent_;
+  }
+  _impl_.ciphercontent_ = nullptr;
+}
+inline const ::QXSCMsg::CipherContent& ServerRegisterFinish::_internal_ciphercontent() const {
+  const ::QXSCMsg::CipherContent* p = _impl_.ciphercontent_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::CipherContent&>(
+      ::QXSCMsg::_CipherContent_default_instance_);
+}
+inline const ::QXSCMsg::CipherContent& ServerRegisterFinish::ciphercontent() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.ServerRegisterFinish.cipherContent)
+  return _internal_ciphercontent();
+}
+inline void ServerRegisterFinish::unsafe_arena_set_allocated_ciphercontent(
+    ::QXSCMsg::CipherContent* ciphercontent) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.ciphercontent_);
+  }
+  _impl_.ciphercontent_ = ciphercontent;
+  if (ciphercontent) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.ServerRegisterFinish.cipherContent)
+}
+inline ::QXSCMsg::CipherContent* ServerRegisterFinish::release_ciphercontent() {
+  
+  ::QXSCMsg::CipherContent* temp = _impl_.ciphercontent_;
+  _impl_.ciphercontent_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::QXSCMsg::CipherContent* ServerRegisterFinish::unsafe_arena_release_ciphercontent() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.ServerRegisterFinish.cipherContent)
+  
+  ::QXSCMsg::CipherContent* temp = _impl_.ciphercontent_;
+  _impl_.ciphercontent_ = nullptr;
+  return temp;
+}
+inline ::QXSCMsg::CipherContent* ServerRegisterFinish::_internal_mutable_ciphercontent() {
+  
+  if (_impl_.ciphercontent_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::CipherContent>(GetArenaForAllocation());
+    _impl_.ciphercontent_ = p;
+  }
+  return _impl_.ciphercontent_;
+}
+inline ::QXSCMsg::CipherContent* ServerRegisterFinish::mutable_ciphercontent() {
+  ::QXSCMsg::CipherContent* _msg = _internal_mutable_ciphercontent();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.ServerRegisterFinish.cipherContent)
+  return _msg;
+}
+inline void ServerRegisterFinish::set_allocated_ciphercontent(::QXSCMsg::CipherContent* ciphercontent) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.ciphercontent_;
+  }
+  if (ciphercontent) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(ciphercontent);
+    if (message_arena != submessage_arena) {
+      ciphercontent = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, ciphercontent, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.ciphercontent_ = ciphercontent;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.ServerRegisterFinish.cipherContent)
+}
+
+// -------------------------------------------------------------------
+
+// CipherContent
+
+// uint32 cipherSuite = 1;
+inline void CipherContent::clear_ciphersuite() {
+  _impl_.ciphersuite_ = 0u;
+}
+inline uint32_t CipherContent::_internal_ciphersuite() const {
+  return _impl_.ciphersuite_;
+}
+inline uint32_t CipherContent::ciphersuite() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.CipherContent.cipherSuite)
+  return _internal_ciphersuite();
+}
+inline void CipherContent::_internal_set_ciphersuite(uint32_t value) {
+  
+  _impl_.ciphersuite_ = value;
+}
+inline void CipherContent::set_ciphersuite(uint32_t value) {
+  _internal_set_ciphersuite(value);
+  // @@protoc_insertion_point(field_set:QXSCMsg.CipherContent.cipherSuite)
+}
+
+// bytes cipherSM4Key = 2;
+inline void CipherContent::clear_ciphersm4key() {
+  _impl_.ciphersm4key_.ClearToEmpty();
+}
+inline const std::string& CipherContent::ciphersm4key() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.CipherContent.cipherSM4Key)
+  return _internal_ciphersm4key();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void CipherContent::set_ciphersm4key(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.ciphersm4key_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:QXSCMsg.CipherContent.cipherSM4Key)
+}
+inline std::string* CipherContent::mutable_ciphersm4key() {
+  std::string* _s = _internal_mutable_ciphersm4key();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.CipherContent.cipherSM4Key)
+  return _s;
+}
+inline const std::string& CipherContent::_internal_ciphersm4key() const {
+  return _impl_.ciphersm4key_.Get();
+}
+inline void CipherContent::_internal_set_ciphersm4key(const std::string& value) {
+  
+  _impl_.ciphersm4key_.Set(value, GetArenaForAllocation());
+}
+inline std::string* CipherContent::_internal_mutable_ciphersm4key() {
+  
+  return _impl_.ciphersm4key_.Mutable(GetArenaForAllocation());
+}
+inline std::string* CipherContent::release_ciphersm4key() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.CipherContent.cipherSM4Key)
+  return _impl_.ciphersm4key_.Release();
+}
+inline void CipherContent::set_allocated_ciphersm4key(std::string* ciphersm4key) {
+  if (ciphersm4key != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.ciphersm4key_.SetAllocated(ciphersm4key, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.ciphersm4key_.IsDefault()) {
+    _impl_.ciphersm4key_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.CipherContent.cipherSM4Key)
+}
+
+// -------------------------------------------------------------------
+
+// TransMsg
+
+// .QXSCMsg.ClientInfo from = 1;
+inline bool TransMsg::_internal_has_from() const {
+  return this != internal_default_instance() && _impl_.from_ != nullptr;
+}
+inline bool TransMsg::has_from() const {
+  return _internal_has_from();
+}
+inline void TransMsg::clear_from() {
+  if (GetArenaForAllocation() == nullptr && _impl_.from_ != nullptr) {
+    delete _impl_.from_;
+  }
+  _impl_.from_ = nullptr;
+}
+inline const ::QXSCMsg::ClientInfo& TransMsg::_internal_from() const {
+  const ::QXSCMsg::ClientInfo* p = _impl_.from_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ClientInfo&>(
+      ::QXSCMsg::_ClientInfo_default_instance_);
+}
+inline const ::QXSCMsg::ClientInfo& TransMsg::from() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.TransMsg.from)
+  return _internal_from();
+}
+inline void TransMsg::unsafe_arena_set_allocated_from(
+    ::QXSCMsg::ClientInfo* from) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.from_);
+  }
+  _impl_.from_ = from;
+  if (from) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.TransMsg.from)
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::release_from() {
+  
+  ::QXSCMsg::ClientInfo* temp = _impl_.from_;
+  _impl_.from_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::unsafe_arena_release_from() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.TransMsg.from)
+  
+  ::QXSCMsg::ClientInfo* temp = _impl_.from_;
+  _impl_.from_ = nullptr;
+  return temp;
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::_internal_mutable_from() {
+  
+  if (_impl_.from_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::ClientInfo>(GetArenaForAllocation());
+    _impl_.from_ = p;
+  }
+  return _impl_.from_;
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::mutable_from() {
+  ::QXSCMsg::ClientInfo* _msg = _internal_mutable_from();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.TransMsg.from)
+  return _msg;
+}
+inline void TransMsg::set_allocated_from(::QXSCMsg::ClientInfo* from) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.from_;
+  }
+  if (from) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(from);
+    if (message_arena != submessage_arena) {
+      from = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, from, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.from_ = from;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.TransMsg.from)
+}
+
+// .QXSCMsg.ClientInfo to = 2;
+inline bool TransMsg::_internal_has_to() const {
+  return this != internal_default_instance() && _impl_.to_ != nullptr;
+}
+inline bool TransMsg::has_to() const {
+  return _internal_has_to();
+}
+inline void TransMsg::clear_to() {
+  if (GetArenaForAllocation() == nullptr && _impl_.to_ != nullptr) {
+    delete _impl_.to_;
+  }
+  _impl_.to_ = nullptr;
+}
+inline const ::QXSCMsg::ClientInfo& TransMsg::_internal_to() const {
+  const ::QXSCMsg::ClientInfo* p = _impl_.to_;
+  return p != nullptr ? *p : reinterpret_cast<const ::QXSCMsg::ClientInfo&>(
+      ::QXSCMsg::_ClientInfo_default_instance_);
+}
+inline const ::QXSCMsg::ClientInfo& TransMsg::to() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.TransMsg.to)
+  return _internal_to();
+}
+inline void TransMsg::unsafe_arena_set_allocated_to(
+    ::QXSCMsg::ClientInfo* to) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.to_);
+  }
+  _impl_.to_ = to;
+  if (to) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:QXSCMsg.TransMsg.to)
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::release_to() {
+  
+  ::QXSCMsg::ClientInfo* temp = _impl_.to_;
+  _impl_.to_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::unsafe_arena_release_to() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.TransMsg.to)
+  
+  ::QXSCMsg::ClientInfo* temp = _impl_.to_;
+  _impl_.to_ = nullptr;
+  return temp;
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::_internal_mutable_to() {
+  
+  if (_impl_.to_ == nullptr) {
+    auto* p = CreateMaybeMessage<::QXSCMsg::ClientInfo>(GetArenaForAllocation());
+    _impl_.to_ = p;
+  }
+  return _impl_.to_;
+}
+inline ::QXSCMsg::ClientInfo* TransMsg::mutable_to() {
+  ::QXSCMsg::ClientInfo* _msg = _internal_mutable_to();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.TransMsg.to)
+  return _msg;
+}
+inline void TransMsg::set_allocated_to(::QXSCMsg::ClientInfo* to) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete _impl_.to_;
+  }
+  if (to) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(to);
+    if (message_arena != submessage_arena) {
+      to = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, to, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.to_ = to;
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.TransMsg.to)
+}
+
+// string msg = 3;
+inline void TransMsg::clear_msg() {
+  _impl_.msg_.ClearToEmpty();
+}
+inline const std::string& TransMsg::msg() const {
+  // @@protoc_insertion_point(field_get:QXSCMsg.TransMsg.msg)
+  return _internal_msg();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void TransMsg::set_msg(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.msg_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:QXSCMsg.TransMsg.msg)
+}
+inline std::string* TransMsg::mutable_msg() {
+  std::string* _s = _internal_mutable_msg();
+  // @@protoc_insertion_point(field_mutable:QXSCMsg.TransMsg.msg)
+  return _s;
+}
+inline const std::string& TransMsg::_internal_msg() const {
+  return _impl_.msg_.Get();
+}
+inline void TransMsg::_internal_set_msg(const std::string& value) {
+  
+  _impl_.msg_.Set(value, GetArenaForAllocation());
+}
+inline std::string* TransMsg::_internal_mutable_msg() {
+  
+  return _impl_.msg_.Mutable(GetArenaForAllocation());
+}
+inline std::string* TransMsg::release_msg() {
+  // @@protoc_insertion_point(field_release:QXSCMsg.TransMsg.msg)
+  return _impl_.msg_.Release();
+}
+inline void TransMsg::set_allocated_msg(std::string* msg) {
+  if (msg != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.msg_.SetAllocated(msg, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.msg_.IsDefault()) {
+    _impl_.msg_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:QXSCMsg.TransMsg.msg)
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -1908,6 +3612,11 @@ template <> struct is_proto_enum< ::QXSCMsg::MsgType> : ::std::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::QXSCMsg::MsgType>() {
   return ::QXSCMsg::MsgType_descriptor();
+}
+template <> struct is_proto_enum< ::QXSCMsg::CipherSuite> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::QXSCMsg::CipherSuite>() {
+  return ::QXSCMsg::CipherSuite_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

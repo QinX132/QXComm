@@ -10,6 +10,8 @@ enum MsgType {
 	QX_MS_MSG_TYPE_SVR_HEALTH_REPORT				= 1;
 	QX_MS_MSG_TYPE_STOP_WORKER						= 3;
 	QX_MS_MSG_TYPE_STOP_WORKER_REPLY				= 4;
+	QX_MS_MSG_TYPE_START_WORKER						= 5;
+	QX_MS_MSG_TYPE_START_WORKER_REPLY				= 6;
 }
 
 message MsgPayload {
@@ -37,5 +39,6 @@ message ClientInfo {
 
 message SvrHealthReport {
 	float						cpuUsage				= 1;
-	repeated ClientInfo			clientInfo				= 2;
+    float                       memUsage                = 2;
+	repeated ClientInfo			clientInfo				= 3;
 }

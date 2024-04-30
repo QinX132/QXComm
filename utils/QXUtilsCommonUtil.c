@@ -2,6 +2,7 @@
 
 #include <sys/resource.h>
 #include <sys/time.h>
+
 void
 QXUtil_MakeDaemon(
     void
@@ -112,6 +113,48 @@ CommonReturn:
     return ret;
 }
 
+QX_ERR_T 
+QXUtil_GetMemUsage(
+    float *Usage
+    )
+{
+    QX_ERR_T ret = QX_SUCCESS;
+    FILE* fp = NULL;
+    char buff[256] = {0};
+    long unsigned int memTotal = 0, memFree = 0, buffers = 0, cached = 0, usedMem = 0;
+
+    fp = fopen("/proc/meminfo", "r");
+    if (!fp || !Usage) 
+    {
+        ret = -QX_EIO;
+        goto CommonReturn;
+    }
+
+    while (fgets(buff, sizeof(buff), fp)) {
+        if (strncmp(buff, "MemTotal:", strlen("MemTotal:")) == 0) {
+            sscanf(buff, "%*s %lu", &memTotal);
+        } else if  (strncmp(buff, "MemFree:", strlen("MemFree:")) == 0) {
+            sscanf(buff, "%*s %lu", &memFree);
+        } else if  (strncmp(buff, "Buffers:", strlen("Buffers:")) == 0) {
+            sscanf(buff, "%*s %lu", &buffers);
+        } else if  (strncmp(buff, "Cached:", strlen("Cached:")) == 0) {
+            sscanf(buff, "%*s %lu", &cached);
+        } else {
+            // do nothing
+        }
+        memset(buff, 0, sizeof(buff));
+    }
+    usedMem = memTotal - memFree - buffers - cached;
+    *Usage = ((float)usedMem / (float)memTotal) * 100.0;
+
+CommonReturn:
+    if (fp)
+    {
+        fclose(fp);
+    }
+    return ret;
+}
+
 uint64_t 
 QXUtil_htonll(
     uint64_t value
@@ -184,4 +227,45 @@ QXUtil_ParseStringToIpv4AndPort(
     *Port = port;
 
     return 0;
+}
+#include "QXUtilsLogIO.h"
+void 
+QXUtil_Hexdump(
+    const char *Title, 
+    unsigned char *Buff, 
+    int Length
+    )
+{
+    unsigned char *ptrTmp = Buff;
+    int i = 0;
+    int count = 0;
+    char* logBuff = NULL;
+    size_t logBuffLen = QX_BUFF_4096;
+    size_t logBuffOffset = 0;
+
+    logBuff = (char*)calloc(QX_BUFF_4096, sizeof(char));
+    if (!logBuff) {
+        goto CommRet;
+    }
+
+    logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, 
+        "--------------	%s: (start @%p  length %4d)------------------\n", Title, Buff, Length);
+    
+    for(i = 0; i< Length; i++, count++)
+    {
+        if(i%16 == 0)
+            logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "%08x:	", count);
+        logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "%02x ", ptrTmp[i]);
+        if(i%16 == 15 && i != Length - 1)
+            logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "\n");
+    }
+    logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "\n");
+    logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "--------------	%s: (end)------------------\n", Title);
+    
+CommRet:
+    if (logBuff) {
+        LogInfo("\n%s", logBuff);
+        free(logBuff);
+    }
+    return ;
 }

@@ -100,7 +100,7 @@ _UT_Timer_ForwardT(
     }
 
     ret = QXUtil_TimerAdd(_UT_Timer_OneTimeFunc, UT_TIMER_CB_TIMEVAL, (void*)UT_TIMER_ONT_TIME_ARG, 
-                    QX_UTIL_TIMER_TYPE_ONE_TIME, NULL);
+                    QX_UTIL_TIMER_TYPE_ONE_TIME, FALSE, NULL);
     if (ret)
     {
         UTLog("Timer one time add failed!\n");
@@ -108,7 +108,7 @@ _UT_Timer_ForwardT(
     }
 
     ret = QXUtil_TimerAdd(_UT_Timer_LoopFunc, UT_TIMER_CB_TIMEVAL, (void*)UT_TIMER_LOOP_ARG, 
-                    QX_UTIL_TIMER_TYPE_LOOP, &handle);
+                    QX_UTIL_TIMER_TYPE_LOOP, FALSE, &handle);
     if (ret || !handle)
     {
         UTLog("Timer loop add failed!\n");

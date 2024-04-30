@@ -35,6 +35,14 @@ public final class QXMSMsg {
      * <code>QX_MS_MSG_TYPE_STOP_WORKER_REPLY = 4;</code>
      */
     QX_MS_MSG_TYPE_STOP_WORKER_REPLY(4),
+    /**
+     * <code>QX_MS_MSG_TYPE_START_WORKER = 5;</code>
+     */
+    QX_MS_MSG_TYPE_START_WORKER(5),
+    /**
+     * <code>QX_MS_MSG_TYPE_START_WORKER_REPLY = 6;</code>
+     */
+    QX_MS_MSG_TYPE_START_WORKER_REPLY(6),
     UNRECOGNIZED(-1),
     ;
 
@@ -54,6 +62,14 @@ public final class QXMSMsg {
      * <code>QX_MS_MSG_TYPE_STOP_WORKER_REPLY = 4;</code>
      */
     public static final int QX_MS_MSG_TYPE_STOP_WORKER_REPLY_VALUE = 4;
+    /**
+     * <code>QX_MS_MSG_TYPE_START_WORKER = 5;</code>
+     */
+    public static final int QX_MS_MSG_TYPE_START_WORKER_VALUE = 5;
+    /**
+     * <code>QX_MS_MSG_TYPE_START_WORKER_REPLY = 6;</code>
+     */
+    public static final int QX_MS_MSG_TYPE_START_WORKER_REPLY_VALUE = 6;
 
 
     public final int getNumber() {
@@ -84,6 +100,8 @@ public final class QXMSMsg {
         case 1: return QX_MS_MSG_TYPE_SVR_HEALTH_REPORT;
         case 3: return QX_MS_MSG_TYPE_STOP_WORKER;
         case 4: return QX_MS_MSG_TYPE_STOP_WORKER_REPLY;
+        case 5: return QX_MS_MSG_TYPE_START_WORKER;
+        case 6: return QX_MS_MSG_TYPE_START_WORKER_REPLY;
         default: return null;
       }
     }
@@ -3176,25 +3194,31 @@ public final class QXMSMsg {
     float getCpuUsage();
 
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>float memUsage = 2;</code>
+     * @return The memUsage.
+     */
+    float getMemUsage();
+
+    /**
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     java.util.List<QXCommMngr.QXMSMsg.ClientInfo> 
         getClientInfoList();
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     QXCommMngr.QXMSMsg.ClientInfo getClientInfo(int index);
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     int getClientInfoCount();
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     java.util.List<? extends QXCommMngr.QXMSMsg.ClientInfoOrBuilder> 
         getClientInfoOrBuilderList();
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     QXCommMngr.QXMSMsg.ClientInfoOrBuilder getClientInfoOrBuilder(
         int index);
@@ -3251,18 +3275,29 @@ public final class QXMSMsg {
       return cpuUsage_;
     }
 
-    public static final int CLIENTINFO_FIELD_NUMBER = 2;
+    public static final int MEMUSAGE_FIELD_NUMBER = 2;
+    private float memUsage_ = 0F;
+    /**
+     * <code>float memUsage = 2;</code>
+     * @return The memUsage.
+     */
+    @java.lang.Override
+    public float getMemUsage() {
+      return memUsage_;
+    }
+
+    public static final int CLIENTINFO_FIELD_NUMBER = 3;
     @SuppressWarnings("serial")
     private java.util.List<QXCommMngr.QXMSMsg.ClientInfo> clientInfo_;
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     @java.lang.Override
     public java.util.List<QXCommMngr.QXMSMsg.ClientInfo> getClientInfoList() {
       return clientInfo_;
     }
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     @java.lang.Override
     public java.util.List<? extends QXCommMngr.QXMSMsg.ClientInfoOrBuilder> 
@@ -3270,21 +3305,21 @@ public final class QXMSMsg {
       return clientInfo_;
     }
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     @java.lang.Override
     public int getClientInfoCount() {
       return clientInfo_.size();
     }
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     @java.lang.Override
     public QXCommMngr.QXMSMsg.ClientInfo getClientInfo(int index) {
       return clientInfo_.get(index);
     }
     /**
-     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+     * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
      */
     @java.lang.Override
     public QXCommMngr.QXMSMsg.ClientInfoOrBuilder getClientInfoOrBuilder(
@@ -3309,8 +3344,11 @@ public final class QXMSMsg {
       if (java.lang.Float.floatToRawIntBits(cpuUsage_) != 0) {
         output.writeFloat(1, cpuUsage_);
       }
+      if (java.lang.Float.floatToRawIntBits(memUsage_) != 0) {
+        output.writeFloat(2, memUsage_);
+      }
       for (int i = 0; i < clientInfo_.size(); i++) {
-        output.writeMessage(2, clientInfo_.get(i));
+        output.writeMessage(3, clientInfo_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -3325,9 +3363,13 @@ public final class QXMSMsg {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(1, cpuUsage_);
       }
+      if (java.lang.Float.floatToRawIntBits(memUsage_) != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(2, memUsage_);
+      }
       for (int i = 0; i < clientInfo_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, clientInfo_.get(i));
+          .computeMessageSize(3, clientInfo_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -3347,6 +3389,9 @@ public final class QXMSMsg {
       if (java.lang.Float.floatToIntBits(getCpuUsage())
           != java.lang.Float.floatToIntBits(
               other.getCpuUsage())) return false;
+      if (java.lang.Float.floatToIntBits(getMemUsage())
+          != java.lang.Float.floatToIntBits(
+              other.getMemUsage())) return false;
       if (!getClientInfoList()
           .equals(other.getClientInfoList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -3363,6 +3408,9 @@ public final class QXMSMsg {
       hash = (37 * hash) + CPUUSAGE_FIELD_NUMBER;
       hash = (53 * hash) + java.lang.Float.floatToIntBits(
           getCpuUsage());
+      hash = (37 * hash) + MEMUSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + java.lang.Float.floatToIntBits(
+          getMemUsage());
       if (getClientInfoCount() > 0) {
         hash = (37 * hash) + CLIENTINFO_FIELD_NUMBER;
         hash = (53 * hash) + getClientInfoList().hashCode();
@@ -3497,13 +3545,14 @@ public final class QXMSMsg {
         super.clear();
         bitField0_ = 0;
         cpuUsage_ = 0F;
+        memUsage_ = 0F;
         if (clientInfoBuilder_ == null) {
           clientInfo_ = java.util.Collections.emptyList();
         } else {
           clientInfo_ = null;
           clientInfoBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -3538,9 +3587,9 @@ public final class QXMSMsg {
 
       private void buildPartialRepeatedFields(QXCommMngr.QXMSMsg.SvrHealthReport result) {
         if (clientInfoBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) != 0)) {
+          if (((bitField0_ & 0x00000004) != 0)) {
             clientInfo_ = java.util.Collections.unmodifiableList(clientInfo_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.clientInfo_ = clientInfo_;
         } else {
@@ -3552,6 +3601,9 @@ public final class QXMSMsg {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.cpuUsage_ = cpuUsage_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.memUsage_ = memUsage_;
         }
       }
 
@@ -3602,11 +3654,14 @@ public final class QXMSMsg {
         if (other.getCpuUsage() != 0F) {
           setCpuUsage(other.getCpuUsage());
         }
+        if (other.getMemUsage() != 0F) {
+          setMemUsage(other.getMemUsage());
+        }
         if (clientInfoBuilder_ == null) {
           if (!other.clientInfo_.isEmpty()) {
             if (clientInfo_.isEmpty()) {
               clientInfo_ = other.clientInfo_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureClientInfoIsMutable();
               clientInfo_.addAll(other.clientInfo_);
@@ -3619,7 +3674,7 @@ public final class QXMSMsg {
               clientInfoBuilder_.dispose();
               clientInfoBuilder_ = null;
               clientInfo_ = other.clientInfo_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
               clientInfoBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getClientInfoFieldBuilder() : null;
@@ -3659,7 +3714,12 @@ public final class QXMSMsg {
                 bitField0_ |= 0x00000001;
                 break;
               } // case 13
-              case 18: {
+              case 21: {
+                memUsage_ = input.readFloat();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 21
+              case 26: {
                 QXCommMngr.QXMSMsg.ClientInfo m =
                     input.readMessage(
                         QXCommMngr.QXMSMsg.ClientInfo.parser(),
@@ -3671,7 +3731,7 @@ public final class QXMSMsg {
                   clientInfoBuilder_.addMessage(m);
                 }
                 break;
-              } // case 18
+              } // case 26
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -3721,12 +3781,44 @@ public final class QXMSMsg {
         return this;
       }
 
+      private float memUsage_ ;
+      /**
+       * <code>float memUsage = 2;</code>
+       * @return The memUsage.
+       */
+      @java.lang.Override
+      public float getMemUsage() {
+        return memUsage_;
+      }
+      /**
+       * <code>float memUsage = 2;</code>
+       * @param value The memUsage to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMemUsage(float value) {
+        
+        memUsage_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>float memUsage = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMemUsage() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        memUsage_ = 0F;
+        onChanged();
+        return this;
+      }
+
       private java.util.List<QXCommMngr.QXMSMsg.ClientInfo> clientInfo_ =
         java.util.Collections.emptyList();
       private void ensureClientInfoIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           clientInfo_ = new java.util.ArrayList<QXCommMngr.QXMSMsg.ClientInfo>(clientInfo_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -3734,7 +3826,7 @@ public final class QXMSMsg {
           QXCommMngr.QXMSMsg.ClientInfo, QXCommMngr.QXMSMsg.ClientInfo.Builder, QXCommMngr.QXMSMsg.ClientInfoOrBuilder> clientInfoBuilder_;
 
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public java.util.List<QXCommMngr.QXMSMsg.ClientInfo> getClientInfoList() {
         if (clientInfoBuilder_ == null) {
@@ -3744,7 +3836,7 @@ public final class QXMSMsg {
         }
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public int getClientInfoCount() {
         if (clientInfoBuilder_ == null) {
@@ -3754,7 +3846,7 @@ public final class QXMSMsg {
         }
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public QXCommMngr.QXMSMsg.ClientInfo getClientInfo(int index) {
         if (clientInfoBuilder_ == null) {
@@ -3764,7 +3856,7 @@ public final class QXMSMsg {
         }
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder setClientInfo(
           int index, QXCommMngr.QXMSMsg.ClientInfo value) {
@@ -3781,7 +3873,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder setClientInfo(
           int index, QXCommMngr.QXMSMsg.ClientInfo.Builder builderForValue) {
@@ -3795,7 +3887,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder addClientInfo(QXCommMngr.QXMSMsg.ClientInfo value) {
         if (clientInfoBuilder_ == null) {
@@ -3811,7 +3903,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder addClientInfo(
           int index, QXCommMngr.QXMSMsg.ClientInfo value) {
@@ -3828,7 +3920,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder addClientInfo(
           QXCommMngr.QXMSMsg.ClientInfo.Builder builderForValue) {
@@ -3842,7 +3934,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder addClientInfo(
           int index, QXCommMngr.QXMSMsg.ClientInfo.Builder builderForValue) {
@@ -3856,7 +3948,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder addAllClientInfo(
           java.lang.Iterable<? extends QXCommMngr.QXMSMsg.ClientInfo> values) {
@@ -3871,12 +3963,12 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder clearClientInfo() {
         if (clientInfoBuilder_ == null) {
           clientInfo_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           clientInfoBuilder_.clear();
@@ -3884,7 +3976,7 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public Builder removeClientInfo(int index) {
         if (clientInfoBuilder_ == null) {
@@ -3897,14 +3989,14 @@ public final class QXMSMsg {
         return this;
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public QXCommMngr.QXMSMsg.ClientInfo.Builder getClientInfoBuilder(
           int index) {
         return getClientInfoFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public QXCommMngr.QXMSMsg.ClientInfoOrBuilder getClientInfoOrBuilder(
           int index) {
@@ -3914,7 +4006,7 @@ public final class QXMSMsg {
         }
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public java.util.List<? extends QXCommMngr.QXMSMsg.ClientInfoOrBuilder> 
            getClientInfoOrBuilderList() {
@@ -3925,14 +4017,14 @@ public final class QXMSMsg {
         }
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public QXCommMngr.QXMSMsg.ClientInfo.Builder addClientInfoBuilder() {
         return getClientInfoFieldBuilder().addBuilder(
             QXCommMngr.QXMSMsg.ClientInfo.getDefaultInstance());
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public QXCommMngr.QXMSMsg.ClientInfo.Builder addClientInfoBuilder(
           int index) {
@@ -3940,7 +4032,7 @@ public final class QXMSMsg {
             index, QXCommMngr.QXMSMsg.ClientInfo.getDefaultInstance());
       }
       /**
-       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 2;</code>
+       * <code>repeated .QXMSMsg.ClientInfo clientInfo = 3;</code>
        */
       public java.util.List<QXCommMngr.QXMSMsg.ClientInfo.Builder> 
            getClientInfoBuilderList() {
@@ -3953,7 +4045,7 @@ public final class QXMSMsg {
           clientInfoBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               QXCommMngr.QXMSMsg.ClientInfo, QXCommMngr.QXMSMsg.ClientInfo.Builder, QXCommMngr.QXMSMsg.ClientInfoOrBuilder>(
                   clientInfo_,
-                  ((bitField0_ & 0x00000002) != 0),
+                  ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
                   isClean());
           clientInfo_ = null;
@@ -4066,13 +4158,16 @@ public final class QXMSMsg {
       "Info\022\020\n\010serverId\030\001 \001(\r\022\022\n\nserverName\030\002 \001" +
       "(\t\"M\n\007MsgBase\022\017\n\007msgType\030\001 \001(\r\0221\n\017svrHea" +
       "lthReport\030\002 \001(\0132\030.QXMSMsg.SvrHealthRepor" +
-      "t\"\036\n\nClientInfo\022\020\n\010clientId\030\001 \001(\r\"L\n\017Svr" +
-      "HealthReport\022\020\n\010cpuUsage\030\001 \001(\002\022\'\n\nclient" +
-      "Info\030\002 \003(\0132\023.QXMSMsg.ClientInfo*\220\001\n\007MsgT" +
-      "ype\022\031\n\025QX_MS_MSG_TYPE_UKNOWN\020\000\022$\n QX_MS_" +
-      "MSG_TYPE_SVR_HEALTH_REPORT\020\001\022\036\n\032QX_MS_MS" +
-      "G_TYPE_STOP_WORKER\020\003\022$\n QX_MS_MSG_TYPE_S" +
-      "TOP_WORKER_REPLY\020\004B\014\n\nQXCommMngrb\006proto3"
+      "t\"\036\n\nClientInfo\022\020\n\010clientId\030\001 \001(\r\"^\n\017Svr" +
+      "HealthReport\022\020\n\010cpuUsage\030\001 \001(\002\022\020\n\010memUsa" +
+      "ge\030\002 \001(\002\022\'\n\nclientInfo\030\003 \003(\0132\023.QXMSMsg.C" +
+      "lientInfo*\330\001\n\007MsgType\022\031\n\025QX_MS_MSG_TYPE_" +
+      "UKNOWN\020\000\022$\n QX_MS_MSG_TYPE_SVR_HEALTH_RE" +
+      "PORT\020\001\022\036\n\032QX_MS_MSG_TYPE_STOP_WORKER\020\003\022$" +
+      "\n QX_MS_MSG_TYPE_STOP_WORKER_REPLY\020\004\022\037\n\033" +
+      "QX_MS_MSG_TYPE_START_WORKER\020\005\022%\n!QX_MS_M" +
+      "SG_TYPE_START_WORKER_REPLY\020\006B\014\n\nQXCommMn" +
+      "grb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -4107,7 +4202,7 @@ public final class QXMSMsg {
     internal_static_QXMSMsg_SvrHealthReport_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_QXMSMsg_SvrHealthReport_descriptor,
-        new java.lang.String[] { "CpuUsage", "ClientInfo", });
+        new java.lang.String[] { "CpuUsage", "MemUsage", "ClientInfo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

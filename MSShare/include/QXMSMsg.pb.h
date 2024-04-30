@@ -76,12 +76,14 @@ enum MsgType : int {
   QX_MS_MSG_TYPE_SVR_HEALTH_REPORT = 1,
   QX_MS_MSG_TYPE_STOP_WORKER = 3,
   QX_MS_MSG_TYPE_STOP_WORKER_REPLY = 4,
+  QX_MS_MSG_TYPE_START_WORKER = 5,
+  QX_MS_MSG_TYPE_START_WORKER_REPLY = 6,
   MsgType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   MsgType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool MsgType_IsValid(int value);
 constexpr MsgType MsgType_MIN = QX_MS_MSG_TYPE_UKNOWN;
-constexpr MsgType MsgType_MAX = QX_MS_MSG_TYPE_STOP_WORKER_REPLY;
+constexpr MsgType MsgType_MAX = QX_MS_MSG_TYPE_START_WORKER_REPLY;
 constexpr int MsgType_ARRAYSIZE = MsgType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MsgType_descriptor();
@@ -927,10 +929,11 @@ class SvrHealthReport final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kClientInfoFieldNumber = 2,
+    kClientInfoFieldNumber = 3,
     kCpuUsageFieldNumber = 1,
+    kMemUsageFieldNumber = 2,
   };
-  // repeated .QXMSMsg.ClientInfo clientInfo = 2;
+  // repeated .QXMSMsg.ClientInfo clientInfo = 3;
   int clientinfo_size() const;
   private:
   int _internal_clientinfo_size() const;
@@ -957,6 +960,15 @@ class SvrHealthReport final :
   void _internal_set_cpuusage(float value);
   public:
 
+  // float memUsage = 2;
+  void clear_memusage();
+  float memusage() const;
+  void set_memusage(float value);
+  private:
+  float _internal_memusage() const;
+  void _internal_set_memusage(float value);
+  public:
+
   // @@protoc_insertion_point(class_scope:QXMSMsg.SvrHealthReport)
  private:
   class _Internal;
@@ -967,6 +979,7 @@ class SvrHealthReport final :
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::QXMSMsg::ClientInfo > clientinfo_;
     float cpuusage_;
+    float memusage_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1509,7 +1522,27 @@ inline void SvrHealthReport::set_cpuusage(float value) {
   // @@protoc_insertion_point(field_set:QXMSMsg.SvrHealthReport.cpuUsage)
 }
 
-// repeated .QXMSMsg.ClientInfo clientInfo = 2;
+// float memUsage = 2;
+inline void SvrHealthReport::clear_memusage() {
+  _impl_.memusage_ = 0;
+}
+inline float SvrHealthReport::_internal_memusage() const {
+  return _impl_.memusage_;
+}
+inline float SvrHealthReport::memusage() const {
+  // @@protoc_insertion_point(field_get:QXMSMsg.SvrHealthReport.memUsage)
+  return _internal_memusage();
+}
+inline void SvrHealthReport::_internal_set_memusage(float value) {
+  
+  _impl_.memusage_ = value;
+}
+inline void SvrHealthReport::set_memusage(float value) {
+  _internal_set_memusage(value);
+  // @@protoc_insertion_point(field_set:QXMSMsg.SvrHealthReport.memUsage)
+}
+
+// repeated .QXMSMsg.ClientInfo clientInfo = 3;
 inline int SvrHealthReport::_internal_clientinfo_size() const {
   return _impl_.clientinfo_.size();
 }

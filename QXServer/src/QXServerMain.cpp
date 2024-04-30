@@ -17,7 +17,7 @@ static QXServerWorker *sg_ServerWorkers = NULL;
 static QXCommMngrClient *sg_MngrClient = NULL;
 static int sg_ServerWorkerTotalNum = 0;
 
-int 
+static int 
 QXS_CmdGetAllClientMap(char* InBuff, size_t InBuffLen, char* OutBuff, size_t OutBuffLen) {
     size_t offset = 0;
     UNUSED(InBuff);
@@ -59,6 +59,7 @@ static QX_ERR_T _QXS_MainPreRegisterUtil(void) {
     QX_ERR_T ret = QX_SUCCESS;
     QX_UTIL_CMD_EXTERNAL_CONT cmdLineCont;
     // register out special cmd line
+    // show status
     memset(&cmdLineCont, 0 ,sizeof(cmdLineCont));
     cmdLineCont.Argc = 2;
     (void)snprintf(cmdLineCont.Opt, sizeof(cmdLineCont.Opt), "GetAllClientMap");
@@ -79,7 +80,6 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     ifstream file(confFilePath);
     QX_UTIL_MODULES_INIT_PARAM initParam;
     string RoleName(QX_SERVER_ROLE_NAME);
-    int32_t loop = 0;
     QXS_WORKER_INIT_PARAM workerInitParam;
     QX_COMM_MNGR_CLIENT_INIT_PARAM mngrClientConf;
     json fileJson;
@@ -146,26 +146,31 @@ static QX_ERR_T _QXS_MainInit(int Argc, char* Argv[]) {
     }
     // init server workers
     try {
-        loop = fileJson["ServerWorkerConf"]["WorkerNum"];
-        sg_ServerWorkers = new QXServerWorker[loop];
-        workerInitParam.PortRange.first = fileJson["ServerWorkerConf"]["WorkerPortStart"];
-        workerInitParam.PortRange.second = workerInitParam.PortRange.first + loop - 1;
-        workerInitParam.WorkerLoad = fileJson["ServerWorkerConf"]["LoadPerWorker"];
-        for (loop -= 1 ; loop >= 0; loop --) {
-            workerInitParam.WorkerName = "ServerWorker" + to_string(loop);
-            ret = sg_ServerWorkers[loop].Init(workerInitParam);
-            if (ret != QX_SUCCESS) {
-                continue;
+        if (fileJson.find("ServerWorkerConf") != fileJson.end()) {
+            json serverWorkerArray = fileJson["ServerWorkerConf"];
+            if (serverWorkerArray.size() <= 0) {
+                throw std::runtime_error("no array");
             }
-            sg_ServerWorkerTotalNum ++;
+            sg_ServerWorkers = new QXServerWorker[serverWorkerArray.size()];
+            for (const auto& serverWorker : serverWorkerArray) {
+                workerInitParam.Port = serverWorker["Port"];
+                workerInitParam.Load = serverWorker["Load"];
+                workerInitParam.WorkPath = serverWorker["WorkPath"];
+                workerInitParam.Sm2PriKeyPwd = serverWorker["Sm2PriPwd"];
+                sg_ServerWorkers[sg_ServerWorkerTotalNum].MngrClient = sg_MngrClient;
+                ret = sg_ServerWorkers[sg_ServerWorkerTotalNum].Init(workerInitParam);
+                if (ret != QX_SUCCESS) {
+                    LogWarn("Init server worker failed! ret %d", ret);
+                }
+                sg_ServerWorkerTotalNum ++;
+            }
+        } else {
+            LogErr("Array 'ServerWorkerConf' not found in JSON");
+            return -QX_EIO;
         }
     } catch (...){
         ret = -QX_EIO;
         LogErr("Init server failed!");
-        goto CommErr;
-    }
-    if (sg_ServerWorkerTotalNum <= 0){
-        ret = -QX_ENOENT;
         goto CommErr;
     }
 
@@ -178,6 +183,7 @@ Success:
         file.close();
     return ret;
 }
+
 static void
 _QXS_MainLoop(
     void
@@ -187,6 +193,7 @@ _QXS_MainLoop(
         sleep(1000);
     }
 }
+
 int main(
     int argc,
     char* argv[]
