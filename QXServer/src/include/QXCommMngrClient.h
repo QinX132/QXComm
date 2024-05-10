@@ -52,6 +52,7 @@ private:
 public:
     QX_ERR_T Init(QX_COMM_MNGR_CLIENT_INIT_PARAM);
     void Exit();
+    QX_ERR_T GetPubKeyAfterGotClientId(uint32_t, SM2_KEY &);
     QXCommMngrClient();
     ~QXCommMngrClient();
 };

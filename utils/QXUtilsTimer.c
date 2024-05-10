@@ -189,6 +189,7 @@ QXUtil_TimerAdd(
     uint32_t IntervalMs,
     void* Arg,
     QX_UTIL_TIMER_TYPE TimerType,
+    BOOL ActiveNow,
     __out TIMER_HANDLE *TimerHandle
     )
 {
@@ -228,6 +229,9 @@ QXUtil_TimerAdd(
         QX_LIST_ADD_TAIL(&node->List, &sg_TimerWorker.EventList);
         sg_TimerWorker.EventListLen ++;
         pthread_mutex_unlock(&sg_TimerWorker.Lock);
+        if (ActiveNow) {
+            event_active(node->Event, EV_READ, 0);
+        }
         *TimerHandle = node;
     }
     else

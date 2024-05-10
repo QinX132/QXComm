@@ -9,7 +9,7 @@ for subdir in */ ; do
 		pushd "$subdir" > /dev/null
 		echo "Building $subdir"
 		rm -rf build && mkdir build && pushd build > /dev/null
-        cmake -DBUILD_SHARED_LIBS=OFF -Dprotobuf_BUILD_TESTS=OFF ..
+		cmake -DBUILD_SHARED_LIBS=OFF ..
 #		cmake ..
         make -B
         popd > /dev/null

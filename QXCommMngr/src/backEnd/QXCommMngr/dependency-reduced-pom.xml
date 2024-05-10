@@ -51,7 +51,7 @@
       <artifactId>GmSSLJNI</artifactId>
       <version>2.1.0-dev</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/lib/GmSSLJNI-2.1.0-dev.jar</systemPath>
+      <systemPath>${project.basedir}/src/main/resources/lib/GmSSLJNI-2.1.0-dev.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

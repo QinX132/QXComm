@@ -81,6 +81,19 @@ QXUtil_ParseStringToIpv4AndPort(
     uint32_t *Ip,
     uint16_t *Port
     );
+
+QX_ERR_T 
+QXUtil_GetMemUsage(
+    float *Usage
+    );
+
+void 
+QXUtil_Hexdump(
+    const char *Title, 
+    unsigned char *Buff, 
+    int Length
+    );
+
 #ifdef __cplusplus
  }
 #endif

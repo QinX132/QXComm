@@ -13,6 +13,7 @@
 
 # Compiled Dynamic libraries
 *.so
+!QXCommMngr/src/backEnd/QXCommMngr/src/main/resources/lib/*.so
 *.dylib
 *.dll
 

@@ -84,6 +84,7 @@ PROTOBUF_CONSTEXPR SvrHealthReport::SvrHealthReport(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.clientinfo_)*/{}
   , /*decltype(_impl_.cpuusage_)*/0
+  , /*decltype(_impl_.memusage_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct SvrHealthReportDefaultTypeInternal {
   PROTOBUF_CONSTEXPR SvrHealthReportDefaultTypeInternal()
@@ -142,6 +143,7 @@ const uint32_t TableStruct_QXMSMsg_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::QXMSMsg::SvrHealthReport, _impl_.cpuusage_),
+  PROTOBUF_FIELD_OFFSET(::QXMSMsg::SvrHealthReport, _impl_.memusage_),
   PROTOBUF_FIELD_OFFSET(::QXMSMsg::SvrHealthReport, _impl_.clientinfo_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
@@ -169,17 +171,20 @@ const char descriptor_table_protodef_QXMSMsg_2eproto[] PROTOBUF_SECTION_VARIABLE
   "Info\022\020\n\010serverId\030\001 \001(\r\022\022\n\nserverName\030\002 \001"
   "(\t\"M\n\007MsgBase\022\017\n\007msgType\030\001 \001(\r\0221\n\017svrHea"
   "lthReport\030\002 \001(\0132\030.QXMSMsg.SvrHealthRepor"
-  "t\"\036\n\nClientInfo\022\020\n\010clientId\030\001 \001(\r\"L\n\017Svr"
-  "HealthReport\022\020\n\010cpuUsage\030\001 \001(\002\022\'\n\nclient"
-  "Info\030\002 \003(\0132\023.QXMSMsg.ClientInfo*\220\001\n\007MsgT"
-  "ype\022\031\n\025QX_MS_MSG_TYPE_UKNOWN\020\000\022$\n QX_MS_"
-  "MSG_TYPE_SVR_HEALTH_REPORT\020\001\022\036\n\032QX_MS_MS"
-  "G_TYPE_STOP_WORKER\020\003\022$\n QX_MS_MSG_TYPE_S"
-  "TOP_WORKER_REPLY\020\004B\014\n\nQXCommMngrb\006proto3"
+  "t\"\036\n\nClientInfo\022\020\n\010clientId\030\001 \001(\r\"^\n\017Svr"
+  "HealthReport\022\020\n\010cpuUsage\030\001 \001(\002\022\020\n\010memUsa"
+  "ge\030\002 \001(\002\022\'\n\nclientInfo\030\003 \003(\0132\023.QXMSMsg.C"
+  "lientInfo*\330\001\n\007MsgType\022\031\n\025QX_MS_MSG_TYPE_"
+  "UKNOWN\020\000\022$\n QX_MS_MSG_TYPE_SVR_HEALTH_RE"
+  "PORT\020\001\022\036\n\032QX_MS_MSG_TYPE_STOP_WORKER\020\003\022$"
+  "\n QX_MS_MSG_TYPE_STOP_WORKER_REPLY\020\004\022\037\n\033"
+  "QX_MS_MSG_TYPE_START_WORKER\020\005\022%\n!QX_MS_M"
+  "SG_TYPE_START_WORKER_REPLY\020\006B\014\n\nQXCommMn"
+  "grb\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_QXMSMsg_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_QXMSMsg_2eproto = {
-    false, false, 600, descriptor_table_protodef_QXMSMsg_2eproto,
+    false, false, 690, descriptor_table_protodef_QXMSMsg_2eproto,
     "QXMSMsg.proto",
     &descriptor_table_QXMSMsg_2eproto_once, nullptr, 0, 5,
     schemas, file_default_instances, TableStruct_QXMSMsg_2eproto::offsets,
@@ -203,6 +208,8 @@ bool MsgType_IsValid(int value) {
     case 1:
     case 3:
     case 4:
+    case 5:
+    case 6:
       return true;
     default:
       return false;
@@ -1229,10 +1236,13 @@ SvrHealthReport::SvrHealthReport(const SvrHealthReport& from)
   new (&_impl_) Impl_{
       decltype(_impl_.clientinfo_){from._impl_.clientinfo_}
     , decltype(_impl_.cpuusage_){}
+    , decltype(_impl_.memusage_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _this->_impl_.cpuusage_ = from._impl_.cpuusage_;
+  ::memcpy(&_impl_.cpuusage_, &from._impl_.cpuusage_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.memusage_) -
+    reinterpret_cast<char*>(&_impl_.cpuusage_)) + sizeof(_impl_.memusage_));
   // @@protoc_insertion_point(copy_constructor:QXMSMsg.SvrHealthReport)
 }
 
@@ -1243,6 +1253,7 @@ inline void SvrHealthReport::SharedCtor(
   new (&_impl_) Impl_{
       decltype(_impl_.clientinfo_){arena}
     , decltype(_impl_.cpuusage_){0}
+    , decltype(_impl_.memusage_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -1272,7 +1283,9 @@ void SvrHealthReport::Clear() {
   (void) cached_has_bits;
 
   _impl_.clientinfo_.Clear();
-  _impl_.cpuusage_ = 0;
+  ::memset(&_impl_.cpuusage_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.memusage_) -
+      reinterpret_cast<char*>(&_impl_.cpuusage_)) + sizeof(_impl_.memusage_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1290,16 +1303,24 @@ const char* SvrHealthReport::_InternalParse(const char* ptr, ::_pbi::ParseContex
         } else
           goto handle_unusual;
         continue;
-      // repeated .QXMSMsg.ClientInfo clientInfo = 2;
+      // float memUsage = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 21)) {
+          _impl_.memusage_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          ptr += sizeof(float);
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated .QXMSMsg.ClientInfo clientInfo = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
           ptr -= 1;
           do {
             ptr += 1;
             ptr = ctx->ParseMessage(_internal_add_clientinfo(), ptr);
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
         } else
           goto handle_unusual;
         continue;
@@ -1342,12 +1363,22 @@ uint8_t* SvrHealthReport::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteFloatToArray(1, this->_internal_cpuusage(), target);
   }
 
-  // repeated .QXMSMsg.ClientInfo clientInfo = 2;
+  // float memUsage = 2;
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  float tmp_memusage = this->_internal_memusage();
+  uint32_t raw_memusage;
+  memcpy(&raw_memusage, &tmp_memusage, sizeof(tmp_memusage));
+  if (raw_memusage != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteFloatToArray(2, this->_internal_memusage(), target);
+  }
+
+  // repeated .QXMSMsg.ClientInfo clientInfo = 3;
   for (unsigned i = 0,
       n = static_cast<unsigned>(this->_internal_clientinfo_size()); i < n; i++) {
     const auto& repfield = this->_internal_clientinfo(i);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-        InternalWriteMessage(2, repfield, repfield.GetCachedSize(), target, stream);
+        InternalWriteMessage(3, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1366,7 +1397,7 @@ size_t SvrHealthReport::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .QXMSMsg.ClientInfo clientInfo = 2;
+  // repeated .QXMSMsg.ClientInfo clientInfo = 3;
   total_size += 1UL * this->_internal_clientinfo_size();
   for (const auto& msg : this->_impl_.clientinfo_) {
     total_size +=
@@ -1379,6 +1410,15 @@ size_t SvrHealthReport::ByteSizeLong() const {
   uint32_t raw_cpuusage;
   memcpy(&raw_cpuusage, &tmp_cpuusage, sizeof(tmp_cpuusage));
   if (raw_cpuusage != 0) {
+    total_size += 1 + 4;
+  }
+
+  // float memUsage = 2;
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  float tmp_memusage = this->_internal_memusage();
+  uint32_t raw_memusage;
+  memcpy(&raw_memusage, &tmp_memusage, sizeof(tmp_memusage));
+  if (raw_memusage != 0) {
     total_size += 1 + 4;
   }
 
@@ -1408,6 +1448,13 @@ void SvrHealthReport::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const 
   if (raw_cpuusage != 0) {
     _this->_internal_set_cpuusage(from._internal_cpuusage());
   }
+  static_assert(sizeof(uint32_t) == sizeof(float), "Code assumes uint32_t and float are the same size.");
+  float tmp_memusage = from._internal_memusage();
+  uint32_t raw_memusage;
+  memcpy(&raw_memusage, &tmp_memusage, sizeof(tmp_memusage));
+  if (raw_memusage != 0) {
+    _this->_internal_set_memusage(from._internal_memusage());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -1426,7 +1473,12 @@ void SvrHealthReport::InternalSwap(SvrHealthReport* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.clientinfo_.InternalSwap(&other->_impl_.clientinfo_);
-  swap(_impl_.cpuusage_, other->_impl_.cpuusage_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SvrHealthReport, _impl_.memusage_)
+      + sizeof(SvrHealthReport::_impl_.memusage_)
+      - PROTOBUF_FIELD_OFFSET(SvrHealthReport, _impl_.cpuusage_)>(
+          reinterpret_cast<char*>(&_impl_.cpuusage_),
+          reinterpret_cast<char*>(&other->_impl_.cpuusage_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SvrHealthReport::GetMetadata() const {

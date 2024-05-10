@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 ############################## project name #################################
 project(QXServer VERSION 1.0.0)
 ############################### c++ standard ################################
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 ########################## project directories ##############################
 set(BUILD_ROOT .)
 set(UTILS_ROOT ${BUILD_ROOT}/../../utils)
@@ -11,8 +11,6 @@ set(THIRD_PARTY_ROOT ${BUILD_ROOT}/../../third_party)
 set(SC_SHARE_ROOT ${BUILD_ROOT}/../../SCShare)
 set(MS_SHARE_ROOT ${BUILD_ROOT}/../../MSShare)
 ######################### global set ########################################
-## find static lib first
-set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 find_package(Protobuf REQUIRED)
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -20,7 +18,7 @@ find_package(OpenSSL REQUIRED)
 set(SOURCES
 	QXServerMain.cpp
 	QXServerWorker.cpp
-	QXServerMsgBussiness.cpp
+	QXServerMsgHandler.cpp
     QXCommMngrClient.cpp
     ${MS_SHARE_ROOT}/QXMSMsg.pb.cc
 )
@@ -46,13 +44,17 @@ endif()
 target_compile_options(${PROJECT_NAME} PRIVATE -g -O0)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 ############################ lib options ####################################
-## set all static include libc/libc++
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 ## set link dir
+## find static lib first
+set(OLD_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
+# static link these
+set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
 find_library(EVENT_LIBRARY NAMES event PATHS ${THIRD_PARTY_ROOT}/libevent/build/lib NO_DEFAULT_PATH)
-find_library(GMSSL_LIBRARY NAMES gmssl PATHS ${THIRD_PARTY_ROOT}/GmSSL/build/bin NO_DEFAULT_PATH)
-find_library(QXUTILS_LIBRARY NAMES QXUtils PATHS ${UTILS_ROOT}/build/lib NO_DEFAULT_PATH)
 find_library(QXSCSHARE_LIBRARY NAMES QXSCShare PATHS ${SC_SHARE_ROOT}/build/lib NO_DEFAULT_PATH)
+find_library(QXUTILS_LIBRARY NAMES QXUtils PATHS ${UTILS_ROOT}/build/lib NO_DEFAULT_PATH)
+find_library(GMSSL_LIBRARY NAMES gmssl PATHS ${THIRD_PARTY_ROOT}/GmSSL/build/bin NO_DEFAULT_PATH)
+# dynamic link others
+set(CMAKE_FIND_LIBRARY_SUFFIXES ${OLD_CMAKE_FIND_LIBRARY_SUFFIXES})
 ## link 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     ${QXSCSHARE_LIBRARY} 

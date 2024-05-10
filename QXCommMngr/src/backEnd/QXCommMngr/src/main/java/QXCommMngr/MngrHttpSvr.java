@@ -21,6 +21,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoException;
+import org.gmssl.*;
 
 public class MngrHttpSvr extends Thread{
     private String RedisUrl;
@@ -32,7 +33,12 @@ public class MngrHttpSvr extends Thread{
     private Logger Log;
     MongoDatabase Database;
     Jedis Redis;
-
+    static {
+        System.loadLibrary("gmssljni");
+    }
+    
+    public static final String Register_Key = "/api/register";
+    public static final String Login_Key = "/api/login";
     public static final String GetAllClientMap_Key = "/api/getAllClientMap";
     public static final String GetAllIntraDomain_Key = "/api/getAllIntraDomain";
     public static final String GetBestServer_Key = "/api/getBestServer";
@@ -94,6 +100,8 @@ public class MngrHttpSvr extends Thread{
         // 创建httpserver
         HttpServer server = HttpServer.create(new InetSocketAddress(Port), 0);
         // handler map
+        server.createContext(Register_Key, new MngrHttpHandler(Log, Register_Key));
+        server.createContext(Login_Key, new MngrHttpHandler(Log, Login_Key));
         server.createContext(GetAllClientMap_Key, new MngrHttpHandler(Log, GetAllClientMap_Key));
         server.createContext(GetBestServer_Key, new MngrHttpHandler(Log, GetBestServer_Key));
         server.createContext(GetAllIntraDomain_Key, new MngrHttpHandler(Log, GetAllIntraDomain_Key));
@@ -131,53 +139,66 @@ public class MngrHttpSvr extends Thread{
             // 定义响应消息体
             String response = "NULL";
 
-            switch (Key) {
-                case GetAllClientMap_Key :
-                    if (!"GET".equals(exchange.getRequestMethod())) {
-                        Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
-                    }
-                    response = GetAllClientMap_Key;
-                    break;
-                case GetBestServer_Key :
-                    if (!"GET".equals(exchange.getRequestMethod())) {
-                        Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
-                    }
-                    response = GetBestServer_Key;
-                    break;
-                case GetAllIntraDomain_Key :
-                    if (!"GET".equals(exchange.getRequestMethod())) {
-                        Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
-                    }
-                    String query = exchange.getRequestURI().getQuery();
-                    Map<String, String> parameters = parseQuery(query);
-                    for (String key : parameters.keySet()) {
-                        Log.info("get params " + key + " " + parameters.get(key));
-                    }
-                    response = GetAllIntraDomain_Key;
-                    break;
-                case GetIntraDomainForClient_key :
-                    if (!"GET".equals(exchange.getRequestMethod())) {
-                        Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
-                    }
-                    String qxQuery = exchange.getRequestURI().getQuery();
-                    Map<String, String> qxParameters = parseQuery(qxQuery);
-                    for (String key : qxParameters.keySet()) {
-                        Log.info("get params " + key + " " + qxParameters.get(key));
-                    }
-                    if (!qxParameters.containsKey("ClientId")) {
+            try {
+                switch (Key) {
+                    case Register_Key:
+                        handleRegister(exchange);
+                        Log.error("Err");
+                        response = "1111";
                         break;
-                    }
-                    response = GetIntraDomainForClient_key;
-                    break;
-                case PostIntraDomain_Key :
-                    if (!"POST".equals(exchange.getRequestMethod())) {
-                        Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
-                    }
-                    response = PostIntraDomain_Key;
-                    break;
-                default:
-                    response = "UnKnown Key" + "Key";
-                    break;
+                    case Login_Key:
+                        response = "1111";
+                        break;
+                    case GetAllClientMap_Key :
+                        if (!"GET".equals(exchange.getRequestMethod())) {
+                            Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
+                        }
+                        response = GetAllClientMap_Key;
+                        break;
+                    case GetBestServer_Key :
+                        if (!"GET".equals(exchange.getRequestMethod())) {
+                            Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
+                        }
+                        response = GetBestServer_Key;
+                        break;
+                    case GetAllIntraDomain_Key :
+                        if (!"GET".equals(exchange.getRequestMethod())) {
+                            Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
+                        }
+                        String query = exchange.getRequestURI().getQuery();
+                        Map<String, String> parameters = parseQuery(query);
+                        for (String key : parameters.keySet()) {
+                            Log.info("get params " + key + " " + parameters.get(key));
+                        }
+                        response = GetAllIntraDomain_Key;
+                        break;
+                    case GetIntraDomainForClient_key :
+                        if (!"GET".equals(exchange.getRequestMethod())) {
+                            Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
+                        }
+                        String qxQuery = exchange.getRequestURI().getQuery();
+                        Map<String, String> qxParameters = parseQuery(qxQuery);
+                        for (String key : qxParameters.keySet()) {
+                            Log.info("get params " + key + " " + qxParameters.get(key));
+                        }
+                        if (!qxParameters.containsKey("ClientId")) {
+                            break;
+                        }
+                        response = GetIntraDomainForClient_key;
+                        break;
+                    case PostIntraDomain_Key :
+                        if (!"POST".equals(exchange.getRequestMethod())) {
+                            Log.warn("method " + Key + " cannot handle " + exchange.getRequestMethod());
+                        }
+                        response = PostIntraDomain_Key;
+                        break;
+                    default:
+                        response = "UnKnown Key" + "Key";
+                        break;
+                }
+            } catch (IOException e) {
+                Log.error(e);
+                throw e;
             }
 
             // 设置响应头信息
@@ -188,6 +209,28 @@ public class MngrHttpSvr extends Thread{
             os.write(response.getBytes());
             os.close();
         }
-    }
+        public void handleRegister(HttpExchange exchange) throws IOException {
+            try {
+                Log.info("222222222");
+                Sm2Key sm2_key = new Sm2Key();
+                Log.info("111111111");
+                sm2_key.generateKey();
+                Log.info("111111111");
+                byte[] privateKeyInfo = sm2_key.exportPrivateKeyInfoDer();
+                byte[] publicKeyInfo = sm2_key.exportPublicKeyInfoDer();
 
+                Sm2Key priKey = new Sm2Key();
+                priKey.importPrivateKeyInfoDer(privateKeyInfo);
+                priKey.exportEncryptedPrivateKeyInfoPem("QXComm", "Sm2Pri.pem");
+
+                Sm2Key pubKey = new Sm2Key();
+                pubKey.importPublicKeyInfoDer(publicKeyInfo);
+                pubKey.exportPublicKeyInfoPem("Sm2Pub.pem");
+                Log.info("222222222");
+            } catch (Exception e) {
+                Log.error(e);
+                throw new IOException("Failed to handle register", e);
+            }
+        }
+    }
 }

@@ -48,6 +48,7 @@ QXUtil_TimerAdd(
     uint32_t IntervalMs,
     void* Arg,
     QX_UTIL_TIMER_TYPE TimerType,
+    BOOL ActiveNow,
     __out TIMER_HANDLE *TimerHandle
     );
  

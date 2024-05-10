@@ -5,7 +5,6 @@
 
 #include "QXUtilsModuleCommon.h"
 #include "QXSCShare.h"
-#include "QXSCMsg.pb.h"
 #include "QXClientWorker.h"
 
 using namespace std;
@@ -14,7 +13,7 @@ using json = nlohmann::json;
 #define QX_CLIENT_CONF_FILE_PATH                        "QXClientConf.json"
 #define QX_CLIENT_RULE_NAME                             "QXClient"
 
-static QXClientWorker sg_ClientWorker[1];
+static QXClientWorker sg_ClientWorker[128];
 
 static void _QXC_MainExit(void) {
     for (size_t i=0; i<sizeof(sg_ClientWorker)/sizeof(QXClientWorker); i++)
@@ -48,22 +47,6 @@ static QX_ERR_T _QXC_MainGetSpecailConfFromJson(
         return -QX_EIO;
     }
     InitParam.ClientId = FileJson["ClientConf"]["Id"];
-    if (!FileJson["ClientConf"].contains("Sm2PriPwd") || FileJson["ClientConf"]["Sm2PriPwd"].is_null()) {
-        LogErr("Parse Sm2PriPwd from ClientConf failed!");
-        return -QX_EIO;
-    }
-    InitParam.PriKeyPwd = FileJson["ClientConf"]["Sm2PriPwd"];
-    if (!FileJson["ClientConf"].contains("WorkPath") || FileJson["ClientConf"]["WorkPath"].is_null()) {
-        LogErr("Parse WorkPath from ClientConf failed!");
-        return -QX_EIO;
-    }
-    InitParam.WorkPath = FileJson["ClientConf"]["WorkPath"];
-    if (FileJson["ClientConf"].contains("CryptoSuite") && !FileJson["ClientConf"]["CryptoSuite"].is_null() && 
-        FileJson["ClientConf"]["CryptoSuite"] == "SM4") {
-        InitParam.CryptoSuite = QXSCMsg::QX_SC_CIPHER_SUITE_SM4;
-    } else {
-        InitParam.CryptoSuite = QXSCMsg::QX_SC_CIPHER_SUITE_NONE;
-    }
     return QX_SUCCESS;
 }
 
@@ -111,7 +94,7 @@ static QX_ERR_T _QXC_MainInit(int Argc, char* Argv[]) {
     // init client
     for (loop=0; loop<sizeof(sg_ClientWorker)/sizeof(QXClientWorker); loop++) {
         usleep(500 * 1000);
-        clientWorkerParam.ClientId = loop + 1;
+        clientWorkerParam.ClientId = loop;
         ret = sg_ClientWorker[loop].Init(clientWorkerParam);
         if (ret < QX_SUCCESS) {
             LogErr("Init client%d failed! ret %d", loop, ret);
@@ -129,15 +112,8 @@ _QXC_MainLoop(
     void
     )
 {
-    std::string sendMsg;
-    QX_ERR_T ret = QX_SUCCESS;
-
     while(1) {
-        std::cin >> sendMsg;
-        ret = sg_ClientWorker->SendMsg(1, sendMsg);
-        if (ret) {
-            LogErr("Send msg failed! ret %d", ret);
-        }
+        sleep(1000);
     }
 }
 int main(int argc, char* argv[]) {

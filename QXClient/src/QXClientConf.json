@@ -5,34 +5,19 @@
         },
         {
             "Addr" : "127.0.0.1:13232"
-        },
-        {
-            "Addr" : "127.0.0.1:13233"
-        },
-        {
-            "Addr" : "127.0.0.1:13234"
-        },
-        {
-            "Addr" : "127.0.0.1:13235"
-        },
-        {
-            "Addr" : "127.0.0.1:13236"
-        },
-        {
-            "Addr" : "127.0.0.1:13237"
-        },
-        {
-            "Addr" : "127.0.0.1:13238"
         }
     ],
     "ClientConf" : {
-        "Id" : 13231
+        "WorkPath" : "./QXCWorkPath/",
+        "Id": 13231,
+        "Sm2PriPwd" : "QXClient",
+        "CryptoSuite": "SM4"
     },
     "UtilConf" : {
         "CmdLineInit": false,
         "LogConf": {
             "Init": true,
-            "LogPath": "/var/log/QXCllient.log",
+            "LogPath": "/var/log/QXClient.log",
             "LogLevel": 0,
             "LogSize": 50,
             "LogMaxNum": 1
@@ -54,6 +39,6 @@
             "TimerHealthIntervalS": -1
         },
         "MsgModInit" : true,
-        "TimerModInit" : false
+        "TimerModInit" : true
     }
 }
