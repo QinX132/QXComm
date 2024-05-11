@@ -29,13 +29,13 @@
             "TPoolQueueMaxLen": 0
         },
         "HealthCheckConf": {
-            "Init": true,
+            "Init": false,
             "LogHealthIntervalS": -1,
             "MsgHealthIntervalS": -1,
             "TPoolHealthIntervalS": -1,
             "CmdLineHealthIntervalS": -1,
             "MHHealthIntervalS": -1,
-            "MemHealthIntervalS": 600,
+            "MemHealthIntervalS": -1,
             "TimerHealthIntervalS": -1
         },
         "MsgModInit" : true,
