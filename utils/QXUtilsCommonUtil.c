@@ -240,32 +240,41 @@ QXUtil_Hexdump(
     int i = 0;
     int count = 0;
     char* logBuff = NULL;
-    size_t logBuffLen = QX_BUFF_4096;
-    size_t logBuffOffset = 0;
+    size_t logBuffLen = Length * 3 + Length / 16 * 10 + QX_BUFF_1024; // 每个字节占两个字符，再加上终止符
+    int logBuffOffset = 0;
 
-    logBuff = (char*)calloc(QX_BUFF_4096, sizeof(char));
+    logBuff = (char*)calloc(logBuffLen, sizeof(char));
     if (!logBuff) {
         goto CommRet;
     }
 
     logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, 
-        "--------------	%s: (start @%p  length %4d)------------------\n", Title, Buff, Length);
+        "--------------    %s: (start @%p  length %4d)------------------\n", Title, Buff, Length);
     
-    for(i = 0; i< Length; i++, count++)
-    {
-        if(i%16 == 0)
-            logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "%08x:	", count);
+    for (i = 0; i < Length; i++, count++) {
+        if ((size_t)logBuffOffset >= logBuffLen) {
+            break; // 防止缓冲区溢出
+        }
+        if (i % 16 == 0) {
+            logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "%08x:\t", count);
+        }
+        if ((size_t)logBuffOffset >= logBuffLen) {
+            break; // 防止缓冲区溢出
+        }
         logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "%02x ", ptrTmp[i]);
-        if(i%16 == 15 && i != Length - 1)
+        if (i % 16 == 15 && i != Length - 1) {
             logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "\n");
+        }
     }
-    logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "\n");
-    logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "--------------	%s: (end)------------------\n", Title);
-    
+    if ((size_t)logBuffOffset < logBuffLen) {
+        logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "\n");
+        logBuffOffset += snprintf(logBuff + logBuffOffset, logBuffLen - logBuffOffset, "--------------    %s: (end)------------------\n", Title);
+    }
+    LogInfo("%zu %zu", strlen(logBuff), logBuffLen);
 CommRet:
     if (logBuff) {
         LogInfo("\n%s", logBuff);
         free(logBuff);
     }
-    return ;
+    return;
 }

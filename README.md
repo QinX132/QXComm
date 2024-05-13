@@ -5,36 +5,40 @@ Secure communication and remote management
 
 ### 架构说明
 
-QXComm分为几大模块： QXCommMngr、QXServer、QXClient和一些可以单独部署的小组件（redis/mongo）
+QXComm包含以下模块： QXCommMngr、QXServer、QXClient和一些可以单独部署的小组件（redis/mongo）
 
 #### 1. QXCommMngr
 
-QXCommMngr暴露在公网或部署在局域网，提供以下服务：
+QXCommMngr一般暴露在公网（或部署在局域网），提供以下服务：
 
 1. 提供api接口，为QXClient提供当前负载最小的QXServer地址（可使用安全服务，为数据使用对应Client公钥加密传输）
 2. 管理QXServer，包括：查看QXServer当前机器健康状态、查看当前QXServer当前注册在线的所有Client、使能/关闭QXServer对Client提供服务、为QXServer提供身份认证服务
 3. 出于安全性考虑，QXServer/QXClient的密钥对生成由自身负责，不由QXCommMngr生成。QXCommMngr只能保存/验证parnter/user的身份信息，不能涉入QXServer/QXClient的安全性
 4. 为QXClient、QXServer提供注册服务，并导入公钥，生成id，将id-公钥作为唯一身份信息（写入mongo）
 5. 为QXClient提供互通域管理服务，只有在互通域之中的QXClient才能相互传递消息（写入mongo）
-6. 前后端通过api的方式交互，以前后端分离的协商，可以将后端部署在私网，或者使用nginx反向代理部署后端集群
+6. 前后端通过api的方式交互，以前后端分离的形式部署。可将后端部署在私网，可使用nginx反向代理部署后端集群
 
 #### 2. QXServer
 
-QXServer暴露在公网或部署在局域网，提供以下服务：
+QXServer可选暴露在公网或部署在局域网，提供以下服务：
 
-1. 在注册之前，执行命令，输入私钥文件密码，生成公私钥
+1. 在注册之前，自动生成公私钥
 2. 可以创建集群，多个QXServer作为负载均衡；或创建私有QXServer只为指定QXClient提供连接
-3. 对外暴露接口，提供给QXClient提供连接，且只接受在QXCommMngr上注册过的QXClient的注册
-4. 为互通域内的QXClient转发消息，拒绝非互通域内的消息转发
-5. 向QXCommMngr提供所在机器的健康情况，以及QXServer的工作情况（写入redis）
+3. 从QXCommMngr自动同步互通域，明确哪些QXClient可以相互转发消息
+4. 对外暴露接口，提供给QXClient提供连接，且只接受在QXCommMngr上注册过的QXClient的注册
+5. 对初次链接的QXClient进行双向挑战应答，进行身份识别和会话密钥协商
+6. 为互通域内的QXClient转发消息，拒绝非互通域内的消息转发，转发过程可选protobug明文/SM4加密传输
+7. 向QXCommMngr提供所在机器的健康情况，以及QXServer的工作情况（写入redis）
 
 #### 3. QXClient
 
-QXClient暴露在公网或部署在局域网，提供以下服务：
+QXClient出于安全考虑，一般部署在局域网，提供以下服务：
 
-1. 在注册之前，执行命令或点击按钮（QXClient_Qt开发完成后），输入私钥文件密码，生成公私钥
-2. 注册后，并且添加互通域后，可以向指定QXClient发送消息
-3. 对QXServer集群可以自动切换，在当前的QXServer连接出问题时，自动切换集群中其他备机
+1. 在注册之前，自动生成公私钥
+2. 通过数字信封的形式，对QXCommMngr请求QXServer地址进行连接
+3. 与QXServer双向挑战应答，进行身份认证和会话密钥协商
+4. 注册后，并且添加互通域后，可以向指定QXClient发送消息
+5. 对QXServer集群可以自动切换，在当前的QXServer连接出问题时，自动切换集群中其他备机
 
 #### 4. 数据库服务
 
@@ -309,18 +313,15 @@ util组件是作者用c语言开发的使用工具仓，旨在为上层应用提
 * 提供QXCommMngrServer自动重连逻辑√
 * 定期向QXCommMngr上报监控数据√
 * 定期flush长期未注册成功的QXClient×
-* 完善QXCommMngr注册机制（50%）×
+* 完善QXCommMngr注册机制（50%）√
 * 与QXClient之间引入SM4加解密√
 
 ### QXClient
 
 * 提供QXServer自动重连逻辑√
 * 增加QXServer断连自动重试状态机√
-* 完善QXServer注册逻辑（50%）×
+* 完善QXServer注册逻辑（50%）√
 * 增加QXServer注册失败自动重试状态机√
-* 引入SM4加解密×
+* 引入SM4加解密√
+* 从QXCommMngr获取QXServer相关信息×
 * 为主流客户端提供图形化界面（via Qt）×
-
-### Mongo
-
-### Redis

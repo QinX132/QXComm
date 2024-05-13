@@ -275,6 +275,10 @@ QX_ERR_T QXServerMsgHandler::RegisterClient(
                 mutable_registerfinish()->mutable_ciphercontent()->set_ciphersuite(ServerWorker->ClientMap[Fd]->RegisterCtx.TransCipherSuite);
             ServerWorker->ClientMap[Fd]->RegisterCtx.Status = QX_SC_MSG_TYPE_REGISTER_FINISH;
             ServerWorker->ClientCurrentNum.fetch_add(1);
+            if (ServerWorker->ClientFdMap.find(ServerWorker->ClientMap[Fd]->ClientId) == ServerWorker->ClientFdMap.end()) {
+                ServerWorker->ClientFdMap[ServerWorker->ClientMap[Fd]->ClientId] = Fd;
+                LogInfo("Insert id-fd:%u %d", ServerWorker->ClientMap[Fd]->ClientId, Fd);
+            }
             break;
         default:
             LogErr("Ignore invalid type %u", MsgPayload.msgbase().msgtype());
@@ -299,15 +303,26 @@ QX_ERR_T QXServerMsgHandler::TransmitMsg(
     const MsgPayload RecvMsgPayload
     ) 
 {
-    int32_t peerFd = Fd;    // todo
+    int32_t peerFd = -1;    // todo
     QXSCMsg::MsgPayload sendMsgPayload;
     QX_ERR_T ret = QX_SUCCESS;
     
+    if (ServerWorker->ClientFdMap.find(RecvMsgPayload.msgbase().transmsg().to().clientid()) == 
+        ServerWorker->ClientFdMap.end()) {
+        sendMsgPayload.mutable_msgbase()->mutable_transmsg()->set_msg("Peer not registered!");
+        ret = -QX_EINVAL;
+        LogErr("Peer not registered, clientid %d", RecvMsgPayload.msgbase().transmsg().to().clientid());
+        goto CommErr;
+    }
+
+    peerFd = ServerWorker->ClientFdMap[RecvMsgPayload.msgbase().transmsg().to().clientid()];
     if (ServerWorker->ClientMap[Fd]->RegisterCtx.Status != QXSCMsg::QX_SC_MSG_TYPE_REGISTER_FINISH ||
+        ServerWorker->ClientMap.find(peerFd) == ServerWorker->ClientMap.end() ||
         ServerWorker->ClientMap[peerFd]->RegisterCtx.Status != QXSCMsg::QX_SC_MSG_TYPE_REGISTER_FINISH) {
+        sendMsgPayload.mutable_msgbase()->mutable_transmsg()->set_msg("Not registered, please wait or check!");
         ret = -QX_EINVAL;
         LogErr("Not registered, please wait or check!");
-        goto CommRet;
+        goto CommErr;
     }
 
     sendMsgPayload.mutable_msgbase()->set_msgtype(QXSCMsg::QX_SC_MSG_TYPE_MSG_TRANS_S_2_C);
@@ -317,14 +332,22 @@ QX_ERR_T QXServerMsgHandler::TransmitMsg(
         RecvMsgPayload.msgbase().transmsg().from().clientid());
     sendMsgPayload.mutable_msgbase()->mutable_transmsg()->set_msg(
         RecvMsgPayload.msgbase().transmsg().msg());
+    goto CommRet;
 
-    ret = SendMsgAsync(sendMsgPayload, peerFd);
-    if (ret) {
-        LogErr("Send msg async failed! ret %d", ret);
-        goto CommRet;
-    }
+CommErr:
+    peerFd = Fd;
+    sendMsgPayload.set_errcode(QX_ECONNREFUSED);
+    sendMsgPayload.mutable_msgbase()->set_msgtype(QXSCMsg::QX_SC_MSG_TYPE_MSG_TRANS_S_2_C);
+    sendMsgPayload.mutable_msgbase()->mutable_transmsg()->mutable_from()->set_clientid(
+        RecvMsgPayload.msgbase().transmsg().from().clientid());
+    sendMsgPayload.mutable_msgbase()->mutable_transmsg()->mutable_to()->set_clientid(
+        RecvMsgPayload.msgbase().transmsg().from().clientid());
 
 CommRet:
+    if (SendMsgAsync(sendMsgPayload, peerFd)) {
+        LogErr("Send msg async failed!");
+        goto CommRet;
+    }
     return ret;
 }
 

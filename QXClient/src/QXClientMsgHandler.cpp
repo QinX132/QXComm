@@ -68,13 +68,13 @@ QX_ERR_T QXClientMsgHandler::DispatchMsg(MsgPayload MsgPayload) {
     
     ProtoInitMsg(sendMsg);
 
-    if (MsgPayload.errcode() != 0) {
-        ClientWorker->RegisterCtx.Status = 0;
-        goto CommRet;
-    }
 
     switch (MsgPayload.msgbase().msgtype()) {
         case QX_SC_MSG_TYPE_REGISTER_CHALLENGE:
+            if (MsgPayload.errcode() != 0) {
+                ClientWorker->RegisterCtx.Status = 0;
+                goto CommRet;
+            }
             // decrypt cipherrand and send
             receivedRand = MsgPayload.msgbase().registerchallenge().cipherrand();
             if (receivedRand.size() <= randTmpBuffLen) {
@@ -125,6 +125,10 @@ QX_ERR_T QXClientMsgHandler::DispatchMsg(MsgPayload MsgPayload) {
             LogInfo("Send Msg: %s", sendMsg.ShortDebugString().c_str());
             break;
         case QX_SC_MSG_TYPE_REGISTER_FINISH:
+            if (MsgPayload.errcode() != 0) {
+                ClientWorker->RegisterCtx.Status = 0;
+                goto CommRet;
+            }
             // check decrypt rand
             receivedRand = MsgPayload.msgbase().registerfinish().plainrand();
             if (receivedRand.size() <= randTmpBuffLen) {
