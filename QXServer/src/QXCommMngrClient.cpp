@@ -298,7 +298,7 @@ QX_ERR_T QXCommMngrClient::InitEventBaseAndRun(void) {
         goto CommRet;
     }
     
-    tv.tv_sec = 10;
+    tv.tv_sec = 60;
     tv.tv_usec = 0;
     KeepaliveEvent = event_new(EventBase, -1, EV_READ|EV_PERSIST, _Keepalive, (void*)this);
     if (!KeepaliveEvent) {
@@ -309,7 +309,7 @@ QX_ERR_T QXCommMngrClient::InitEventBaseAndRun(void) {
     event_add(KeepaliveEvent, &tv);
     event_active(KeepaliveEvent, 0, EV_READ);   // Must be actively activated once, otherwise it will not run
 
-    tv.tv_sec = 10;
+    tv.tv_sec = 60;
     tv.tv_usec = 0;
     HealthMonitorEvent = event_new(EventBase, -1, EV_READ|EV_PERSIST, _HealthMonitor, (void*)this);
     if (!HealthMonitorEvent) {

@@ -144,9 +144,14 @@ void QXServerWorker::EraseClient_NL(int32_t Fd) {
                 clientNode->RegisterCtx.Status = 0;
                 ClientCurrentNum.fetch_sub(1);
             }
-            if (clientNode->Fd >= 0) 
+            if (clientNode->Fd >= 0) {
                 close(clientNode->Fd);
+            }
             Free(clientNode);
+            auto iter = ClientFdMap.find(clientNode->ClientId);
+            if (iter != ClientFdMap.end()) {
+                ClientFdMap.erase(clientNode->ClientId);
+            }
         }
         ClientMap.erase(it);
     }
@@ -469,6 +474,9 @@ void QXServerWorker::Exit() {
                 Free(clientNode);
             }
             it = ClientMap.erase(it);
+        }
+        for (auto it = ClientFdMap.begin(); it != ClientFdMap.end(); ) {
+            it = ClientFdMap.erase(it);
         }
         pthread_spin_unlock(&Lock);
         pthread_spin_destroy(&Lock);

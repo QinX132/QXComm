@@ -51,7 +51,6 @@ private:
     struct epoll_event ListenEvent;
     pthread_t ThreadId;
     std::atomic<uint32_t> ClientCurrentNum;               // size of map is O(log n), so we use num
-    std::map<int, uint32_t> ClientIdMap;
     pthread_spinlock_t Lock;   // this lock for client map
 
     QX_ERR_T InitPath(std::string);
@@ -67,6 +66,7 @@ private:
     QXServerMsgHandler *MsgHandler;
 public:
     std::map<int, QXS_CLIENT_NODE*> ClientMap;
+    std::unordered_map<uint32_t, int> ClientFdMap;
     QXCommMngrClient *MngrClient;
     void* Calloc(size_t);
     void Free(void*);
